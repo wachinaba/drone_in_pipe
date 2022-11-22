@@ -18,4 +18,8 @@
     "E203,F722",
   ],
   "python.defaultInterpreterPath": "/usr/bin/python3",
+  "ros.distro": "noetic",
+  "python.autoComplete.extraPaths": [
+    "/opt/ros/noetic/lib/python3/dist-packages"
+  ],
 }
