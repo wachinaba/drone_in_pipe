@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, List, Any, Generic, TypeVar
+from typing import Tuple, List, Any, Generic, TypeVar, Optional
 
 
 VI = TypeVar("VI")
@@ -32,14 +32,39 @@ class LinearConverter(Generic[VI, VO], BaseConverter[VI, VO], ABC):
 
 
 class PWMConverter(LinearConverter[int, float]):
-    def __init__(self, pwm_range: Tuple[int, int]) -> None:
-        super().__init__(pwm_range, (-1.0, 1.0))
+    def __init__(self, pwm_range: Tuple[int, int], out_range: Optional[Tuple[float, float]]) -> None:
+        super().__init__(pwm_range, (-1.0, 1.0) if out_range is None else out_range)
 
     def convert(self, value_src: int) -> float:
         return float(super().convert(value_src))
 
     def invert(self, value_dst: float) -> int:
         return int(super().invert(value_dst))
+
+
+class PolarityPWMConverter(BaseConverter[int, float]):
+    def __init__(self, pwm_range: Tuple[int, int, int]) -> None:
+        self.reversed = False if pwm_range[0] < pwm_range[2] else True
+        if self.reversed:
+            self.lower_converter = PWMConverter((pwm_range[2], pwm_range[1]), (1.0, 0.0))
+            self.upper_converter = PWMConverter((pwm_range[1], pwm_range[0]), (0.0, -1.0))
+        else:
+            self.lower_converter = PWMConverter((pwm_range[0], pwm_range[1]), (-1.0, 0.0))
+            self.upper_converter = PWMConverter((pwm_range[1], pwm_range[2]), (0.0, 1.0))
+
+        self.src_center = pwm_range[1]
+
+    def convert(self, value_src: int) -> float:
+        if value_src < self.src_center:
+            return self.lower_converter.convert(value_src)
+        else:
+            return self.upper_converter.convert(value_src)
+
+    def invert(self, value_dst: float) -> int:
+        if value_dst < 0 if not self.reversed else value_dst > 0:
+            return self.lower_converter.invert(value_dst)
+        else:
+            return self.upper_converter.invert(value_dst)
 
 
 class AnalogToStateConverter(BaseConverter[int, int]):
