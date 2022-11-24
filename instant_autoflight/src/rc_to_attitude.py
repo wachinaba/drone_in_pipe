@@ -7,7 +7,7 @@ from rospy import Subscriber, Publisher, Time
 from sensor_msgs.msg import Range
 from mavros_msgs.msg import RCIn, AttitudeTarget
 
-from instant_autoflight.normalizer import PWMChannelsNormalizer, PWMConverter, AnalogToStateConverter
+from instant_autoflight.normalizer import PWMChannelsNormalizer, PolarityPWMConverter, AnalogToStateConverter
 
 
 class RCToAttitudeNode:
@@ -35,7 +35,7 @@ class RCToAttitudeNode:
         target_attitude.type_mask = 1 & 2 & 4
 
         pose_quat = Rotation.from_euler(
-            "ZYX", np.array([self.yaw * 10, self.thrust_x * 20, self.thrust_y * -20]), True
+            "ZYX", np.array([self.yaw * 40, self.thrust_x * 20, self.thrust_y * -20]), True
         ).as_quat()
         target_attitude.orientation.w = pose_quat[3]
         target_attitude.orientation.x = pose_quat[0]
@@ -45,13 +45,22 @@ class RCToAttitudeNode:
         target_attitude.thrust = self.thrust_z
 
         self.attitude_publisher.publish(target_attitude)
+        rospy.loginfo(f"normalized ctrl: {self.normalized_control_in}")
         rospy.loginfo(f"publish att tgt: {target_attitude}")
 
     def rangefinder_cb(self, msg: Range) -> None:
         self.current_altitude = msg.range
 
+    def set_thrust(self):
+        self.thrust_z = (self.normalized_control_in[2] + 1.0) / 2.0
+        self.thrust_x = self.normalized_control_in[0]
+        self.thrust_y = self.normalized_control_in[1]
+        self.yaw = self.normalized_control_in[3]
+
     def rc_cb(self, msg: RCIn) -> None:
         self.normalized_control_in = self.pwm_normalizer.convert(msg.channels)
+        self.set_thrust()
+        self.publish_attitude()
 
 
 def main():
@@ -59,16 +68,16 @@ def main():
 
     pwm_normalizer = PWMChannelsNormalizer(
         [
-            PWMConverter((1095, 1915)),
-            PWMConverter((1925, 1105)),
-            PWMConverter((1136, 1925)),
-            PWMConverter((1085, 1906)),
+            PolarityPWMConverter((1095, 1502, 1915)),
+            PolarityPWMConverter((1925, 1505, 1105)),
+            PolarityPWMConverter((1136, 1499, 1925)),
+            PolarityPWMConverter((1085, 1498, 1906)),
             AnalogToStateConverter((1101, 1515, 1680, 1927)),
             AnalogToStateConverter((965, 2065)),
             AnalogToStateConverter((1101, 1927)),
             AnalogToStateConverter((1101, 1515, 1927)),
             AnalogToStateConverter((965, 2065)),
-            PWMConverter((965, 2065)),
+            PolarityPWMConverter((965, 1510, 2065)),
         ]
     )
 
