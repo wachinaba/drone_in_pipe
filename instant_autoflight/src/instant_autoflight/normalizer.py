@@ -55,6 +55,9 @@ class AnalogToStateConverter(BaseConverter[int, int]):
             i += 1
         return i
 
+    def invert(self, value_dst: int) -> int:
+        return self.states[value_dst]
+
 
 TypeConverter = TypeVar("TypeConverter", bound=BaseConverter)
 
