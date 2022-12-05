@@ -13,56 +13,6 @@ from mavros_msgs.srv import CommandLong, CommandBool
 from instant_autoflight.normalizer import PWMChannelsNormalizer, PolarityPWMConverter, AnalogToStateConverter
 
 
-class PID:
-    def __init__(self, p: float, ti: float, td: float, const: float, postprocessor: Callable) -> None:
-        self.gain_p, self.time_i, self.time_d = p, ti, td
-        self.current_control_p = 0.0
-        self.current_control_i = 0.0
-        self.current_control_d = 0.0
-        self.constant_control = const
-        self.error_history = [0.0, 0.0]
-        self.observed_history = [0.0, 0.0, 0.0]
-        self.timestamp_history = []
-        self.postprocessor = postprocessor
-
-    def calc(self, observed: float, target: float, stamp: datetime) -> float:
-        error = target - observed
-        self.error_history.insert(0, error)
-        self.error_history = self.error_history[0:2]
-
-        self.observed_history.insert(0, observed)
-        self.observed_history = self.observed_history[0:3]
-
-        self.timestamp_history.insert(0, stamp)
-        self.timestamp_history = self.timestamp_history[0:3]
-
-        if len(self.timestamp_history) < 3:
-            print("prepareing controller...")
-            return 0.0
-
-        timedelta_01 = (self.timestamp_history[0] - self.timestamp_history[1]).total_seconds()
-
-        error_integ_01 = (self.error_history[0] + self.error_history[1]) * timedelta_01 / 2
-
-        observed_diff_01 = (self.observed_history[0] - self.observed_history[1]) / timedelta_01
-
-        self.current_control_p = self.gain_p * error
-        self.current_control_i = self.postprocessor(
-            self.current_control_i + self.gain_p * (error_integ_01 / self.time_i)
-        )
-        self.current_control_d = self.gain_p * (observed_diff_01 * self.time_d)
-
-        self.current_control = (
-            self.current_control_p + self.current_control_i + self.current_control_d + self.constant_control
-        )
-
-        print(
-            f"O={observed:.3f}, E={error:.3f}: {self.current_control_p:.3f}, {self.current_control_i:.3f}, {self.current_control_d:.3f}"
-        )
-        # print(self.error_history)
-        return self.postprocessor(self.current_control)
-
-
 class RCToAttitudeNode:
     def __init__(self, pwm_normalizer: PWMChannelsNormalizer) -> None:
         self.thrust_x = 0.0
@@ -79,13 +29,8 @@ class RCToAttitudeNode:
         self.pwm_normalizer = pwm_normalizer
         self.normalized_control_in = [0] * 16
 
-        self.pid_controller = PID(0.09, 6.0, 0.18, 0.35, lambda x: min(max(x, 0.0), 1.0))
-
         rospy.wait_for_service("/mavros/cmd/command")
         self.command = ServiceProxy("/mavros/cmd/command", CommandLong)
-
-        rospy.wait_for_service("/mavros/cmd/arming")
-        self.command_arm = ServiceProxy("/mavros/cmd/arming", CommandBool)
 
         self.rc_subscriber = Subscriber("/mavros/rc/in", RCIn, self.rc_cb, queue_size=1)
         self.rangefinder_subscriber = Subscriber(
@@ -94,8 +39,6 @@ class RCToAttitudeNode:
         self.imu_subscriber = Subscriber("/mavros/imu/data", Imu, self.imu_cb, queue_size=1)
 
         self.attitude_publisher = Publisher("/mavros/setpoint_raw/attitude", AttitudeTarget, queue_size=5)
-
-        self.arm()
 
     def publish_attitude(self) -> None:
         if self.initial_yaw is None:
@@ -177,22 +120,6 @@ def main():
             PolarityPWMConverter((965, 1510, 2065)),
         ]
     )
-    """
-    pwm_normalizer = PWMChannelsNormalizer(
-        [
-            PolarityPWMConverter((1000, 1500, 2000)),
-            PolarityPWMConverter((1000, 1500, 2000)),
-            PolarityPWMConverter((1000, 1500, 2000)),
-            PolarityPWMConverter((1000, 1500, 2000)),
-            AnalogToStateConverter((1101, 1515, 1680, 1927)),
-            AnalogToStateConverter((965, 2065)),
-            AnalogToStateConverter((1101, 1927)),
-            AnalogToStateConverter((1101, 1515, 1927)),
-            AnalogToStateConverter((965, 2065)),
-            PolarityPWMConverter((965, 1510, 2065)),
-        ]
-    )
-    """
 
     RCToAttitudeNode(pwm_normalizer)
 
