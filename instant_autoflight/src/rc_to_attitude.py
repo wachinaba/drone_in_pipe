@@ -177,6 +177,7 @@ def main():
             PolarityPWMConverter((965, 1510, 2065)),
         ]
     )
+    """
     pwm_normalizer = PWMChannelsNormalizer(
         [
             PolarityPWMConverter((1000, 1500, 2000)),
@@ -191,6 +192,7 @@ def main():
             PolarityPWMConverter((965, 1510, 2065)),
         ]
     )
+    """
 
     RCToAttitudeNode(pwm_normalizer)
 
