@@ -1,4 +1,13 @@
 <launch>
+
+	<!-- distance sensors -->
+	<node pkg="tfmini_ros" type="tfmini_ros_node" name="tfmini_bottom_node">
+		<param name="serial_port" type="string" value="/dev/ttyAMA0"/>
+		<param name="baud_rate" type="int" value="115200"/>
+		<remap from="~TFmini" to="mavros/distance_sensor/rangefinder_sub"/>
+	</node>
+
+	<!-- apm -->
 	<arg name="fcu_url" default="/dev/ttyACM0:57600" />
 	<arg name="gcs_url" default="" />
 	<arg name="tgt_system" default="1" />
@@ -17,6 +26,7 @@
 		<arg name="respawn_mavros" value="$(arg respawn_mavros)" />
 	</include>
 
+	<!-- stream rate -->
   <node name="stream_rate_publisher" pkg="instant_autoflight" type="stream_rate_publisher.py" >
     <arg name="stream_rate" value="50" />
     <arg name="message_ids" value="65,132" />
