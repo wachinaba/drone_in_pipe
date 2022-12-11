@@ -28,7 +28,7 @@
 
 	<!-- stream rate -->
   <node name="stream_rate_publisher" pkg="instant_autoflight" type="stream_rate_publisher.py" >
-    <arg name="stream_rate" value="50" />
-    <arg name="message_ids" value="65,132" />
+    <param name="stream_rate" value="50" />
+    <param name="message_ids" value="65,132" />
   </node>
 </launch>
