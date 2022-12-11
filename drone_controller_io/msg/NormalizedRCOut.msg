@@ -1,0 +1,5 @@
+std_msgs/Header header
+ChannelOutput roll
+ChannelOutput pitch
+ChannelOutput yaw
+ChannelOutput thrust
