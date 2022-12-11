@@ -6,20 +6,12 @@ plugin_blacklist:
 - hil
 - waypoint
 - rallypoint
-- local_position
-- global_position
-- setpoint_position
-- setpoint_velocity
 - geofence
-- setpoint_accel
 # extras
 - debug_value
 - image_pub
 - px4flow
 - vibration
-- vision_speed_estimate
 - wheel_odometry
-- home_position
-
 plugin_whitelist: []
 #- 'sys_*'
