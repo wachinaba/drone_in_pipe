@@ -30,13 +30,17 @@
 	<node pkg="drone_controller_io" type="rc_behaviour.py" name="rc_behaviour_node" />
 
 	<!-- t265 vision pose -->
-	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_frame_publisher" args="0.18 0 0 0 0 0 base_link camera_odom_frame">
+	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_pose_to_base_link" args="-0.18 0 0 0 -0.063 0 camera_pose_frame base_link">
+	</node>
+	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_odom_to_map" args="0 0 0 0 0 0 map camera_odom_frame">
 	</node>
 
 	<include file="$(find realsense2_camera)/launch/rs_t265.launch">
 	</include>
 
 	<include file="$(find vision_to_mavros)/launch/t265_tf_to_mavros.launch">
+		<arg name="target_frame_id" value="/map"/>
+		<arg name="source_frame_id" value="/base_link"/>
 	</include>
 
 
