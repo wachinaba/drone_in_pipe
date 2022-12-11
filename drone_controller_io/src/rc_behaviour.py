@@ -1,9 +1,12 @@
+from copy import deepcopy
+
 import rospy
-from rospy import Subscriber, Publisher
+from rospy import Subscriber, Publisher, ServiceException, ServiceProxy
 
 from drone_controller_io.msg import NormalizedRCIn, ChannelState
 
 from mavros_msgs.msg import RCIn
+from mavros_msgs.srv import SetMode
 
 from instant_autoflight.normalizer import PWMChannelsNormalizer, PolarityPWMConverter, AnalogToStateConverter
 
@@ -11,14 +14,21 @@ from instant_autoflight.normalizer import PWMChannelsNormalizer, PolarityPWMConv
 class RCBehaviourNode:
     def __init__(self, pwm_normalizer: PWMChannelsNormalizer):
         self.normalized_control_in = [0] * 16
+        self.previous_control_in = [0] * 16
         self.pwm_normalizer = pwm_normalizer
 
         self.rc_subscriber = Subscriber("/mavros/rc/in", RCIn, self.rc_cb, queue_size=1)
         self.normalized_rc_publisher = Publisher("/normalized_rc/in", NormalizedRCIn, queue_size=1)
 
+        rospy.wait_for_service("/mavros/set_mode")
+        self.set_mode = ServiceProxy("/mavros/set_mode", SetMode)
+
     def rc_cb(self, msg: RCIn) -> None:
+        self.previous_control_in = deepcopy(self.normalized_control_in)
         self.normalized_control_in = self.pwm_normalizer.convert(msg.channels)
         self.publish_normalized_rc()
+
+        self.mode_behaviour()
 
     def publish_normalized_rc(self) -> None:
         norm_rcin = NormalizedRCIn()
@@ -30,6 +40,21 @@ class RCBehaviourNode:
                 norm_rcin.channel_states[i].value = norm_value
 
         self.normalized_rc_publisher.publish(norm_rcin)
+
+    def mode_behaviour(self) -> None:
+        if self.previous_control_in[5] == self.normalized_control_in[5]:
+            return
+
+        if self.normalized_control_in[5] == 1:
+            mode = "LOITER"
+        else:
+            mode = "LAND"
+
+        try:
+            result = self.set_mode(custom_mode=mode)
+            rospy.logerr(f"set mode[{mode}] result: {result}")
+        except ServiceException as e:
+            print(f"Service call failed: {e}")
 
 
 def main():
