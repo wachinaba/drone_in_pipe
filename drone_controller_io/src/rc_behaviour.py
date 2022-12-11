@@ -42,6 +42,8 @@ class RCBehaviourNode:
         self.normalized_rc_publisher.publish(norm_rcin)
 
     def mode_behaviour(self) -> None:
+        if len(self.normalized_control_in) < 6:
+            return
         if self.previous_control_in[5] == self.normalized_control_in[5]:
             return
 
