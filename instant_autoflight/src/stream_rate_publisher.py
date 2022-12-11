@@ -18,7 +18,7 @@ class StreamRatePublisherNode:
                 self.command(False, 511, 1, msg_id, self.stream_interval_msec, 0, 0, 0, 0, 0)
 
         except ServiceException as e:
-            print(f"Service call failed: {e}")
+            rospy.logerr(f"Service call failed: {e}")
 
 
 def main():
@@ -26,6 +26,7 @@ def main():
     stream_rate = int(rospy.get_param("~stream_rate", 50))
     message_ids_string = str(rospy.get_param("~message_ids"))
     message_ids = [int(s) for s in message_ids_string.replace(" ", "").split(",")]
+    rospy.logerr(f"stream_rate_publisher: message_ids={message_ids}")
 
     node = StreamRatePublisherNode(stream_rate, message_ids)
     rate = Rate(stream_rate)
