@@ -8,7 +8,7 @@ from drone_controller_io.msg import NormalizedRCIn, ChannelState
 from mavros_msgs.msg import RCIn
 from mavros_msgs.srv import SetMode
 
-from instant_autoflight.normalizer import PWMChannelsNormalizer, PolarityPWMConverter, AnalogToStateConverter
+from drone_controller_io.normalizer import PWMChannelsNormalizer, PolarityPWMConverter, AnalogToStateConverter
 
 
 class RCBehaviourNode:
