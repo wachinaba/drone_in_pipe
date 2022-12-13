@@ -1,20 +1,17 @@
 from datetime import datetime
-from typing import Callable
 import numpy as np
 from scipy.spatial.transform import Rotation
 
 import rospy
-from rospy import ServiceException, ServiceProxy, Subscriber, Publisher, Time
+from rospy import Rate, Subscriber, Publisher, Time
 
 from sensor_msgs.msg import Range, Imu
-from mavros_msgs.msg import RCIn, AttitudeTarget
-from mavros_msgs.srv import CommandLong, CommandBool
-
-from instant_autoflight.normalizer import PWMChannelsNormalizer, PolarityPWMConverter, AnalogToStateConverter
+from mavros_msgs.msg import AttitudeTarget
+from drone_controller_io.msg import NormalizedRCIn, ChannelState
 
 
 class RCToAttitudeNode:
-    def __init__(self, pwm_normalizer: PWMChannelsNormalizer) -> None:
+    def __init__(self) -> None:
         self.thrust_x = 0.0
         self.thrust_y = 0.0
         self.thrust_z = 0.0
@@ -26,13 +23,9 @@ class RCToAttitudeNode:
         self.current_altitude = 0.0
         self.target_altitude = 1.0
 
-        self.pwm_normalizer = pwm_normalizer
-        self.normalized_control_in = [0] * 16
+        self.normalized_control_in = [ChannelState() for i in range(16)]
 
-        rospy.wait_for_service("/mavros/cmd/command")
-        self.command = ServiceProxy("/mavros/cmd/command", CommandLong)
-
-        self.rc_subscriber = Subscriber("/mavros/rc/in", RCIn, self.rc_cb, queue_size=1)
+        self.rc_subscriber = Subscriber("/normalized_rc/in", NormalizedRCIn, self.rc_cb, queue_size=1)
         self.rangefinder_subscriber = Subscriber(
             "/mavros/distance_sensor/rangefinder_pub", Range, self.rangefinder_cb, queue_size=1
         )
@@ -63,16 +56,6 @@ class RCToAttitudeNode:
 
         self.attitude_publisher.publish(target_attitude)
 
-    def rangefinder_cb(self, msg: Range) -> None:
-        self.set_stream_rate()
-        self.current_altitude = msg.range
-        print(f"range:{self.current_altitude}")
-        self.thrust_z = self.pid_controller.calc(
-            self.current_altitude, self.target_altitude, datetime.fromtimestamp(Time.now().to_time())
-        )
-
-        self.publish_attitude()
-
     def imu_cb(self, msg: Imu) -> None:
         self.current_orientaion = Rotation(
             np.array([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
@@ -81,49 +64,23 @@ class RCToAttitudeNode:
             self.initial_yaw = self.current_orientaion.as_euler("ZYX", degrees=True)[0]
 
     def set_thrust(self):
-        self.thrust_x = self.normalized_control_in[1]
-        self.thrust_y = self.normalized_control_in[3]
-        self.yaw += self.normalized_control_in[0] * -1
+        self.thrust_x = self.normalized_control_in[1].value
+        self.thrust_y = self.normalized_control_in[3].value
+        self.yaw += self.normalized_control_in[0].value * -1
 
-    def rc_cb(self, msg: RCIn) -> None:
-        self.normalized_control_in = self.pwm_normalizer.convert(msg.channels)
+    def rc_cb(self, msg: NormalizedRCIn) -> None:
+        self.normalized_control_in = msg.channel_states
         self.set_thrust()
-
-    def set_stream_rate(self) -> None:
-        try:
-            self.command(False, 511, 1, 65, 20000, 0, 0, 0, 0, 0)
-            self.command(False, 511, 1, 132, 20000, 0, 0, 0, 0, 0)
-        except ServiceException as e:
-            print(f"Service call failed: {e}")
-
-    def arm(self) -> None:
-        try:
-            self.command_arm(True)
-        except ServiceException as e:
-            print(f"Arming failed: {e}")
 
 
 def main():
     rospy.init_node("rc_to_attitude")
 
-    pwm_normalizer = PWMChannelsNormalizer(
-        [
-            PolarityPWMConverter((1095, 1502, 1915)),
-            PolarityPWMConverter((1925, 1505, 1105)),
-            PolarityPWMConverter((1136, 1499, 1925)),
-            PolarityPWMConverter((1085, 1498, 1906)),
-            AnalogToStateConverter((1101, 1515, 1680, 1927)),
-            AnalogToStateConverter((965, 2065)),
-            AnalogToStateConverter((1101, 1927)),
-            AnalogToStateConverter((1101, 1515, 1927)),
-            AnalogToStateConverter((965, 2065)),
-            PolarityPWMConverter((965, 1510, 2065)),
-        ]
-    )
+    node = RCToAttitudeNode()
 
-    RCToAttitudeNode(pwm_normalizer)
-
-    rospy.spin()
+    while not rospy.is_shutdown():
+        node.publish_attitude()
+        Rate(60).sleep()
 
 
 if __name__ == "__main__":
