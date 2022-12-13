@@ -63,10 +63,10 @@ def main():
     rospy.init_node("rc_behaviour")
     pwm_normalizer = PWMChannelsNormalizer(
         [
-            PolarityPWMConverter((1095, 1502, 1915)),
+            PolarityPWMConverter((1915, 1502, 1095)),
             PolarityPWMConverter((1925, 1505, 1105)),
             PolarityPWMConverter((1136, 1499, 1925)),
-            PolarityPWMConverter((1085, 1498, 1906)),
+            PolarityPWMConverter((1906, 1498, 1085)),
             AnalogToStateConverter((1101, 1515, 1680, 1927)),
             AnalogToStateConverter((965, 2065)),
             AnalogToStateConverter((1101, 1927)),
