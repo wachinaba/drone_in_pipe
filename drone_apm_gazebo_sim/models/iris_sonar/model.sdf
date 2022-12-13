@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+  <model name='iris_sonar'>
+
+    <include>
+      <uri>model://iris_with_ardupilot_without_cam</uri>
+    </include>
+
+    
+
+  </model>
+</sdf>
