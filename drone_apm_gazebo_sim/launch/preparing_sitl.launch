@@ -1,0 +1,33 @@
+<launch>
+	<!-- apm -->
+	<arg name="fcu_url" default="udp://127.0.0.1:14551@14555" />
+	<arg name="gcs_url" default="" />
+	<arg name="tgt_system" default="1" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+	<arg name="fcu_protocol" default="v2.0" />
+	<arg name="respawn_mavros" default="false" />
+
+	<include file="$(find instant_autoflight)/launch/apm.launch">
+		<arg name="fcu_url" value="$(arg fcu_url)" />
+		<arg name="gcs_url" value="$(arg gcs_url)" />
+		<arg name="tgt_system" value="$(arg tgt_system)" />
+		<arg name="tgt_component" value="$(arg tgt_component)" />
+		<arg name="log_output" value="$(arg log_output)" />
+		<arg name="fcu_protocol" value="$(arg fcu_protocol)" />
+		<arg name="respawn_mavros" value="$(arg respawn_mavros)" />
+	</include>
+<remap from="~TFmini" to="mavros/distance_sensor/rangefinder_sub"/>
+	<!-- controller_io -->
+	<node pkg="drone_controller_io" type="rc_behaviour_sim.py" name="rc_behaviour_node" />
+
+	<node pkg="instant_autoflight" type="rc_to_attitude.py" name="rc_to_attitude">
+		<remap from="/mavros/distance_sensor/rangefinder_sub" to="/rangefinder_bottom/range"/>
+	</node>
+
+	<!-- stream rate -->
+  <node name="stream_rate_publisher" pkg="instant_autoflight" type="stream_rate_publisher.py" >
+    <param name="stream_rate" value="50" />
+    <param name="message_ids" value="65,132" />
+  </node>
+</launch>
