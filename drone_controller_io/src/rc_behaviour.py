@@ -6,7 +6,7 @@ from rospy import Subscriber, Publisher, ServiceException, ServiceProxy
 from drone_controller_io.msg import NormalizedRCIn, ChannelState
 
 from mavros_msgs.msg import RCIn
-from mavros_msgs.srv import SetMode
+from mavros_msgs.srv import SetMode, CommandBool
 
 from drone_controller_io.normalizer import PWMChannelsNormalizer, PolarityPWMConverter, AnalogToStateConverter
 
@@ -23,12 +23,16 @@ class RCBehaviourNode:
         rospy.wait_for_service("/mavros/set_mode")
         self.set_mode = ServiceProxy("/mavros/set_mode", SetMode)
 
+        rospy.wait_for_service("/mavros/cmd/arming")
+        self.arming = ServiceProxy("/mavros/cmd/arming", CommandBool)
+
     def rc_cb(self, msg: RCIn) -> None:
         self.previous_control_in = deepcopy(self.normalized_control_in)
         self.normalized_control_in = self.pwm_normalizer.convert(msg.channels)
         self.publish_normalized_rc()
 
         self.mode_behaviour()
+        self.arming_behaviour()
 
     def publish_normalized_rc(self) -> None:
         norm_rcin = NormalizedRCIn()
@@ -55,6 +59,23 @@ class RCBehaviourNode:
         try:
             result = self.set_mode(custom_mode=mode)
             rospy.logerr(f"set mode[{mode}] result: {result}")
+        except ServiceException as e:
+            print(f"Service call failed: {e}")
+
+    def arming_behaviour(self) -> None:
+        if len(self.normalized_control_in) < 10:
+            return
+        if self.previous_control_in[8] == self.normalized_control_in[8]:
+            return
+
+        if self.normalized_control_in[8] == 1:
+            arm = True
+        else:
+            arm = False
+
+        try:
+            result = self.arming(arm)
+            rospy.logerr(f"arming: [{arm}] result: {result}")
         except ServiceException as e:
             print(f"Service call failed: {e}")
 
