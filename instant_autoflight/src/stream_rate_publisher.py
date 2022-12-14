@@ -8,6 +8,7 @@ from mavros_msgs.srv import CommandLong
 
 class StreamRatePublisherNode:
     def __init__(self, stream_rate: int, msg_ids: List[int]) -> None:
+        rospy.wait_for_service("/mavros/cmd/command")
         self.command = ServiceProxy("/mavros/cmd/command", CommandLong)
         self.stream_interval_msec = 1000000 // stream_rate
         self.msg_ids = msg_ids
