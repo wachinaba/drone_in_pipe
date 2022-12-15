@@ -44,6 +44,7 @@
 	<include file="$(find vision_to_mavros)/launch/t265_tf_to_mavros.launch">
 		<arg name="target_frame_id" value="/map"/>
 		<arg name="source_frame_id" value="/body_center"/>
+		<arg name="gamma_world" value="-1.5707963" />
 	</include>
 
 
