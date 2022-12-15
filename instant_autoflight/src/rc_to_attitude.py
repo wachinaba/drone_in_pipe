@@ -53,7 +53,9 @@ class RCToAttitudeNode:
         target_attitude.orientation.x = pose_quat[0]
         target_attitude.orientation.y = pose_quat[1]
         target_attitude.orientation.z = pose_quat[2]
-        # print(f"tgt: {Rotation(pose_quat).as_euler('ZYX', degrees=True)}")
+        rospy.logwarn(
+            f"tgt: {Rotation(pose_quat).as_euler('ZYX', degrees=True)}, curyaw: {self.current_orientaion.as_euler('ZYX', degrees=True)[0]}"
+        )
 
         target_attitude.thrust = self.thrust_z
 
@@ -71,6 +73,8 @@ class RCToAttitudeNode:
 
         if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
             self.thrust_z = (self.normalized_control_in[2].value + 1.0) / 2.0
+        else:
+            rospy.logwarn(f"auto alt: thrust={self.thrust_z}")
 
         self.previous_altitude = msg.range
 
@@ -84,7 +88,8 @@ class RCToAttitudeNode:
     def set_thrust(self):
         self.thrust_x = self.normalized_control_in[1].value
         self.thrust_y = self.normalized_control_in[3].value
-        self.yaw += self.normalized_control_in[0].value
+        if abs(self.normalized_control_in[0].value) > 0.1:
+            self.yaw += self.normalized_control_in[0].value
 
     def rc_cb(self, msg: NormalizedRCIn) -> None:
         self.normalized_control_in = msg.channel_states
