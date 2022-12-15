@@ -11,6 +11,7 @@ def main():
     update_rate = int(rospy.get_param("~update_rate", 10))
     rate = Rate(update_rate)
 
+    rospy.wait_for_service("/mavros/set_stream_rate")
     command = ServiceProxy("/mavros/set_stream_rate")
 
     while not rospy.is_shutdown():
