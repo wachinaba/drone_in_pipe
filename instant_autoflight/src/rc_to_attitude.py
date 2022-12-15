@@ -1,4 +1,3 @@
-from datetime import datetime
 import numpy as np
 from scipy.spatial.transform import Rotation
 
@@ -6,7 +5,7 @@ import rospy
 from rospy import Rate, Subscriber, Publisher, Time
 
 from sensor_msgs.msg import Range, Imu
-from mavros_msgs.msg import AttitudeTarget
+from mavros_msgs.msg import AttitudeTarget, State
 from drone_controller_io.msg import NormalizedRCIn, ChannelState
 
 
@@ -25,8 +24,11 @@ class RCToAttitudeNode:
 
         self.normalized_control_in = [ChannelState() for i in range(16)]
 
+        self.state = State()
+
         self.rc_subscriber = Subscriber("/normalized_rc/in", NormalizedRCIn, self.rc_cb, queue_size=1)
         self.imu_subscriber = Subscriber("/mavros/imu/data", Imu, self.imu_cb, queue_size=1)
+        self.state_subscriber = Subscriber("/mavros/state", State, self.state_cb, queue_size=3)
 
         self.rangefinder_subscriber = Subscriber(
             "/mavros/distance_sensor/rangefinder_sub", Range, self.rangefinder_cb, queue_size=1
@@ -57,6 +59,9 @@ class RCToAttitudeNode:
 
         self.attitude_publisher.publish(target_attitude)
 
+    def state_cb(self, msg: State):
+        self.state = msg
+
     def rangefinder_cb(self, msg: Range):
         error = self.target_altitude - msg.range
         if msg.range > 0.2:
@@ -73,7 +78,7 @@ class RCToAttitudeNode:
         self.current_orientaion = Rotation(
             np.array([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
         )
-        if self.initial_yaw is None:
+        if not self.state.armed:
             self.initial_yaw = self.current_orientaion.as_euler("ZYX", degrees=True)[0]
 
     def set_thrust(self):
