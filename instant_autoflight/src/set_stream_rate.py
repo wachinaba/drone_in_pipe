@@ -12,11 +12,11 @@ def main():
     rate = Rate(update_rate)
 
     rospy.wait_for_service("/mavros/set_stream_rate")
-    command = ServiceProxy("/mavros/set_stream_rate")
+    command = ServiceProxy("/mavros/set_stream_rate", StreamRate)
 
     while not rospy.is_shutdown():
         try:
-            command(StreamRate(0, stream_rate, True))
+            command(0, stream_rate, True)
         except ServiceException as e:
             rospy.logerr(f"Service call failed: {e}")
         rate.sleep()
