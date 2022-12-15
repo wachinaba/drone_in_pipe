@@ -20,7 +20,7 @@ class RCToAttitudeNode:
         self.current_orientaion = Rotation.from_matrix(np.eye(3))
         self.initial_yaw = None
 
-        self.target_altitude = 1.0
+        self.target_altitude = 0.6
         self.previous_altitude = 0.0
 
         self.normalized_control_in = [ChannelState() for i in range(16)]
@@ -36,7 +36,7 @@ class RCToAttitudeNode:
 
     def publish_attitude(self) -> None:
         if self.initial_yaw is None:
-            print("initial yaw hasn't estimated yet!")
+            rospy.logwarn("initial yaw hasn't estimated yet!")
             return
 
         target_attitude = AttitudeTarget()
@@ -60,11 +60,11 @@ class RCToAttitudeNode:
     def rangefinder_cb(self, msg: Range):
         error = self.target_altitude - msg.range
         if msg.range > 0.2:
-            self.thrust_z = min(error / 3.0 + 0.5 - (msg.range - self.previous_altitude) / 0.2, 0.7)
+            self.thrust_z = min(error / 3.0 + 0.5 - (msg.range - self.previous_altitude) / 0.2, 0.65)
         else:
-            self.thrust_z = min(error + 0.5 - (msg.range - self.previous_altitude) / 0.1, 1.0)
+            self.thrust_z = min(error + 0.5 - (msg.range - self.previous_altitude) / 0.1, 0.8)
 
-        if abs(self.normalized_control_in[2].value) > 0.1:
+        if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
             self.thrust_z = (self.normalized_control_in[2].value + 1.0) / 2.0
 
         self.previous_altitude = msg.range
