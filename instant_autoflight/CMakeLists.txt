@@ -171,6 +171,7 @@ catkin_install_python(PROGRAMS
   src/joy_to_attitude.py
   src/rc_to_attitude.py
   src/stream_rate_publisher.py
+  src/set_stream_rate.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
