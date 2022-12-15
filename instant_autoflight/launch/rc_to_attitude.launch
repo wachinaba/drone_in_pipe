@@ -33,7 +33,7 @@
 	<node pkg="instant_autoflight" type="rc_to_attitude.py" name="rc_to_attitude" />
 
 	<!-- t265 vision pose -->
-	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_pose_to_base_link" args="-0.18 0 0 0 -0.063 0 camera_pose_frame base_link">
+	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_pose_to_base_link" args="-0.18 0 0 0 -0.063 0 camera_pose_frame body_center">
 	</node>
 	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_odom_to_map" args="0 0 0 0 0 0 map camera_odom_frame">
 	</node>
@@ -43,7 +43,7 @@
 
 	<include file="$(find vision_to_mavros)/launch/t265_tf_to_mavros.launch">
 		<arg name="target_frame_id" value="/map"/>
-		<arg name="source_frame_id" value="/base_link"/>
+		<arg name="source_frame_id" value="/body_center"/>
 	</include>
 
 
