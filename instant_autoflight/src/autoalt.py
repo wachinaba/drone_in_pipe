@@ -34,7 +34,7 @@ class AutoAlt:
         if msg.range > 0.2:
             self.thrust_z = min(error / 3.0 + 0.5 - (msg.range - self.previous_altitude) / 0.2, 0.65)
         else:
-            self.thrust_z = min(error + 0.7 - (msg.range - self.previous_altitude) / 0.1, 0.8)
+            self.thrust_z = min(error + 0.9 - (msg.range - self.previous_altitude) / 0.1, 1.0)
 
         if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
             self.thrust_z = (self.normalized_control_in[2].value + 1.0) / 2.0
