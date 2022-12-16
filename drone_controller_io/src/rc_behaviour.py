@@ -3,7 +3,7 @@ from copy import deepcopy
 import rospy
 from rospy import Subscriber, Publisher, ServiceException, ServiceProxy
 
-from drone_controller_io.msg import NormalizedRCIn, ChannelState
+from drone_controller_io.msg import NormalizedRCIn, ChannelState, NormalizedRCOut
 
 from mavros_msgs.msg import RCIn
 from mavros_msgs.srv import SetMode, CommandBool
@@ -18,6 +18,9 @@ class RCBehaviourNode:
         self.pwm_normalizer = pwm_normalizer
 
         self.rc_subscriber = Subscriber("/mavros/rc/in", RCIn, self.rc_cb, queue_size=1)
+        self.normalized_rc_subscriber = Subscriber(
+            "/normalized_rc/out", NormalizedRCOut, self.normalized_rc_cb, queue_size=1
+        )
         self.normalized_rc_publisher = Publisher("/normalized_rc/in", NormalizedRCIn, queue_size=1)
 
         rospy.wait_for_service("/mavros/set_mode")
@@ -42,6 +45,11 @@ class RCBehaviourNode:
                 norm_rcin.channel_states[i].state = norm_value
             elif isinstance(norm_value, float):
                 norm_rcin.channel_states[i].value = norm_value
+
+        norm_rcin.roll = norm_rcin.channel_states[1]
+        norm_rcin.pitch = norm_rcin.channel_states[3]
+        norm_rcin.yaw = norm_rcin.channel_states[0]
+        norm_rcin.thrust = norm_rcin.channel_states[2]
 
         self.normalized_rc_publisher.publish(norm_rcin)
 
