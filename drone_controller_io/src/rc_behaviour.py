@@ -67,15 +67,16 @@ class RCBehaviourNode:
         self.normalized_rc_publisher.publish(norm_rcin)
 
     def mode_behaviour(self) -> None:
-        if len(self.normalized_control_in) < 6:
-            return
-        if self.previous_control_in[5] == self.normalized_control_in[5]:
-            return
+        try:
+            if self.previous_control_in[5] == self.normalized_control_in[5]:
+                return
 
-        if self.normalized_control_in[5] == 1:
-            mode = "LOITER"
-        else:
-            mode = "LAND"
+            if self.normalized_control_in[5] == 1:
+                mode = "LOITER"
+            else:
+                mode = "LAND"
+        except IndexError:
+            return
 
         try:
             result = self.set_mode(custom_mode=mode)
@@ -84,15 +85,16 @@ class RCBehaviourNode:
             print(f"Service call failed: {e}")
 
     def arming_behaviour(self) -> None:
-        if len(self.normalized_control_in) < 10:
-            return
-        if self.previous_control_in[8] == self.normalized_control_in[8]:
-            return
+        try:
+            if self.previous_control_in[8] == self.normalized_control_in[8]:
+                return
 
-        if self.normalized_control_in[8] == 1:
-            arm = True
-        else:
-            arm = False
+            if self.normalized_control_in[8] == 1:
+                arm = True
+            else:
+                arm = False
+        except IndexError:
+            return
 
         try:
             result = self.arming(arm)
