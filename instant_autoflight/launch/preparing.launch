@@ -41,12 +41,13 @@
 	<include file="$(find vision_to_mavros)/launch/t265_tf_to_mavros.launch">
 		<arg name="target_frame_id" value="/map"/>
 		<arg name="source_frame_id" value="/base_link"/>
+		<arg name="gamma_world" value="-1.5707963" />
 	</include>
 
 
 	<!-- stream rate -->
-  <node name="stream_rate_publisher" pkg="instant_autoflight" type="stream_rate_publisher.py" >
+  <node name="stream_rate_publisher" pkg="instant_autoflight" type="set_stream_rate.py" >
     <param name="stream_rate" value="50" />
-    <param name="message_ids" value="65,132" />
+		<param name="update_rate" value="5" />
   </node>
 </launch>
