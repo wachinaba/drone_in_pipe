@@ -1,11 +1,11 @@
 from copy import deepcopy
 
 import rospy
-from rospy import Subscriber, Publisher, ServiceException, ServiceProxy
+from rospy import Subscriber, Publisher, ServiceException, ServiceProxy, Rate
 
 from drone_controller_io.msg import NormalizedRCIn, ChannelState, NormalizedRCOut
 
-from mavros_msgs.msg import RCIn
+from mavros_msgs.msg import RCIn, OverrideRCIn
 from mavros_msgs.srv import SetMode, CommandBool
 
 from drone_controller_io.normalizer import PWMChannelsNormalizer, PolarityPWMConverter, AnalogToStateConverter
@@ -17,11 +17,14 @@ class RCBehaviourNode:
         self.previous_control_in = [0] * 16
         self.pwm_normalizer = pwm_normalizer
 
+        self.rc = OverrideRCIn()
+
+        self.normalized_rc_publisher = Publisher("/normalized_rc/in", NormalizedRCIn, queue_size=1)
+        self.override_publisher = Publisher("/mavros/rc/override", OverrideRCIn, queue_size=1)
         self.rc_subscriber = Subscriber("/mavros/rc/in", RCIn, self.rc_cb, queue_size=1)
         self.normalized_rc_subscriber = Subscriber(
             "/normalized_rc/out", NormalizedRCOut, self.normalized_rc_cb, queue_size=1
         )
-        self.normalized_rc_publisher = Publisher("/normalized_rc/in", NormalizedRCIn, queue_size=1)
 
         rospy.wait_for_service("/mavros/set_mode")
         self.set_mode = ServiceProxy("/mavros/set_mode", SetMode)
@@ -36,6 +39,16 @@ class RCBehaviourNode:
 
         self.mode_behaviour()
         self.arming_behaviour()
+
+    def normalized_rc_cb(self, msg: NormalizedRCOut):
+        channels = [msg.yaw, msg.pitch, msg.thrust, msg.roll]
+        self.rc.channels[0:4] = [
+            self.pwm_normalizer.converters[i].invert(max(-1, min(1, channel.value))) if channel.override is True else 0
+            for i, channel in enumerate(channels)
+        ]
+
+    def publish_override(self):
+        self.override_publisher.publish(self.rc)
 
     def publish_normalized_rc(self) -> None:
         norm_rcin = NormalizedRCIn()
@@ -105,9 +118,12 @@ def main():
         ]
     )
 
-    RCBehaviourNode(pwm_normalizer)
+    node = RCBehaviourNode(pwm_normalizer)
 
-    rospy.spin()
+    rate = Rate(50)
+    while not rospy.is_shutdown():
+        node.publish_override()
+        rate.sleep()
 
 
 if __name__ == "__main__":
