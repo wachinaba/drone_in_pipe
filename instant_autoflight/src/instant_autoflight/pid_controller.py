@@ -10,7 +10,7 @@ class LPF:
 
 
 class PIDController:
-    def __init__(self, p, i, d, constant, filter) -> None:
+    def __init__(self, p, i, d, constant, filter, i_limit) -> None:
         self.p = p
         self.i = i
         self.d = d
@@ -22,10 +22,11 @@ class PIDController:
         self.p_output = 0.0
         self.d_output = 0.0
         self.output = 0.0
+        self.i_limit = i_limit
 
     def update(self, input, target) -> float:
         error = target - input
-        self.i_output += error * self.i
+        self.i_output += min(self.i_limit, max(-self.i_limit, error * self.i))
         self.p_output = error * self.p
         self.d_output = self.filter.update(self.prev_input - input) * self.d
 
