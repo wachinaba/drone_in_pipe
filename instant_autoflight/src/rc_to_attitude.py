@@ -4,9 +4,11 @@ from scipy.spatial.transform import Rotation
 import rospy
 from rospy import Rate, Subscriber, Publisher, Time
 
+from std_msgs.msg import Float32
 from sensor_msgs.msg import Range, Imu
 from mavros_msgs.msg import AttitudeTarget, State
 from drone_controller_io.msg import NormalizedRCIn, ChannelState
+from instant_autoflight.pid_controller import LPF, PIDController
 
 
 class RCToAttitudeNode:
@@ -35,6 +37,11 @@ class RCToAttitudeNode:
         )
 
         self.attitude_publisher = Publisher("/mavros/setpoint_raw/attitude", AttitudeTarget, queue_size=5)
+        self.pid_controller = PIDController(0.7, 0.0, 10, 0.5, LPF(0.2))
+
+        self.pid_publisher_p = Publisher("pid_controller/p", Float32, queue_size=1)
+        self.pid_publisher_d = Publisher("pid_controller/d", Float32, queue_size=1)
+        self.pid_publisher = Publisher("pid_controller/out", Float32, queue_size=1)
 
     def publish_attitude(self) -> None:
         if self.initial_yaw is None:
@@ -64,17 +71,27 @@ class RCToAttitudeNode:
     def state_cb(self, msg: State):
         self.state = msg
 
-    def rangefinder_cb(self, msg: Range):
-        error = self.target_altitude - msg.range
-        if msg.range > 0.2:
-            self.thrust_z = min(error / 3.0 + 0.5 - (msg.range - self.previous_altitude) / 0.2, 0.65)
+    def calc_thrust_althold(self, altitude):
+        error = self.target_altitude - altitude
+        if altitude > 0.2:
+            self.thrust_z = min(error / 3.0 + 0.5 - (altitude - self.previous_altitude) / 0.2, 0.65)
         else:
-            self.thrust_z = min(error + 0.5 - (msg.range - self.previous_altitude) / 0.1, 0.8)
+            self.thrust_z = min(error + 0.5 - (altitude - self.previous_altitude) / 0.1, 0.8)
 
         if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
             self.thrust_z = (self.normalized_control_in[2].value + 1.0) / 2.0
         else:
             rospy.logwarn(f"auto alt: thrust={self.thrust_z}")
+
+    def calc_thrust_stabilize(self, altitude):
+        self.thrust_z = min(1, max(0, self.pid_controller.update(altitude, self.target_altitude)))
+        rospy.logwarn(f"auto alt pid: thrust={self.thrust_z}")
+        self.pid_publisher_p.publish(self.pid_controller.p_output)
+        self.pid_publisher_d.publish(self.pid_controller.d_output)
+        self.pid_publisher.publish(self.pid_controller.output)
+
+    def rangefinder_cb(self, msg: Range):
+        self.calc_thrust_stabilize(msg.range)
 
         self.previous_altitude = msg.range
 
