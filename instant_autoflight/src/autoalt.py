@@ -13,9 +13,10 @@ class AutoAlt:
         self.target_altitude = 0.6
 
         self.thrust_calc_stamp = Time()
-        self.pid_controller = PIDController(0.5, 0.05, 16, 0.65, LPF(0.16), 0.1)
+        self.pid_controller = PIDController(0.5, 0.05, 16, 0.65, LPF(0.16), 0.05)
 
         self.pid_publisher_p = Publisher("pid_controller/p", Float32, queue_size=1)
+        self.pid_publisher_i = Publisher("pid_controller/i", Float32, queue_size=1)
         self.pid_publisher_d = Publisher("pid_controller/d", Float32, queue_size=1)
         self.pid_publisher = Publisher("pid_controller/out", Float32, queue_size=1)
         self.pid_publisher_in = Publisher("pid_controller/in", Float32, queue_size=1)
@@ -61,6 +62,7 @@ class AutoAlt:
             rospy.logwarn(f"autoalt enabled: thrust={rc_out.thrust.value:.3f}")
 
         self.pid_publisher_p.publish(self.pid_controller.p_output)
+        self.pid_publisher_i.publish(self.pid_controller.i_output)
         self.pid_publisher_d.publish(self.pid_controller.d_output)
         self.pid_publisher.publish(self.pid_controller.output)
 
