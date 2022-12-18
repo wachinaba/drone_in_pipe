@@ -42,6 +42,8 @@ class AutoAlt:
         self.normalized_control_in = msg.channel_states
 
     def publish_override(self):
+        if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
+            return
         rc_out = NormalizedRCOut()
         rc_out.header.stamp = Time.now()
         rc_out.thrust.value = min(1, max(0, self.pid_controller.output)) * 2 - 1
