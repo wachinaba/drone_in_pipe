@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 import rospy
-from rospy import Subscriber, Publisher, ServiceException, ServiceProxy, Rate
+from rospy import Subscriber, Publisher, ServiceException, ServiceProxy, Rate, Time
 
 from drone_controller_io.msg import NormalizedRCIn, ChannelState, NormalizedRCOut
 
@@ -16,6 +16,7 @@ class RCBehaviourNode:
         self.normalized_control_in = [0] * 16
         self.previous_control_in = [0] * 16
         self.pwm_normalizer = pwm_normalizer
+        self.normalized_control_out = NormalizedRCOut()
 
         self.rc = OverrideRCIn()
 
@@ -41,6 +42,7 @@ class RCBehaviourNode:
         self.arming_behaviour()
 
     def normalized_rc_cb(self, msg: NormalizedRCOut):
+        self.normalized_control_out = msg
         channels = [msg.yaw, msg.pitch, msg.thrust, msg.roll]
         self.rc.channels[0:4] = [
             self.pwm_normalizer.converters[i].invert(max(-1, min(1, channel.value))) if channel.override is True else 0
@@ -48,6 +50,9 @@ class RCBehaviourNode:
         ]
 
     def publish_override(self):
+        if (Time.now() - self.normalized_control_out.header.stamp).to_sec() > 0.1:
+            self.rc = OverrideRCIn()
+            rospy.logerr("override timed out!")
         self.override_publisher.publish(self.rc)
 
     def publish_normalized_rc(self) -> None:
