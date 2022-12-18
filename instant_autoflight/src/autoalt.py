@@ -51,6 +51,10 @@ class AutoAlt:
             rc_out.thrust.override = True
             rospy.logwarn(f"autoalt enabled: thrust={rc_out.thrust.value}")
 
+        self.pid_publisher_p.publish(self.pid_controller.p_output)
+        self.pid_publisher_d.publish(self.pid_controller.d_output)
+        self.pid_publisher.publish(self.pid_controller.output)
+
         self.rc_publisher.publish(rc_out)
 
 
