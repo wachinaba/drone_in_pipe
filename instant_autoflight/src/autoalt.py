@@ -44,8 +44,15 @@ class AutoAlt:
     def publish_override(self):
         rc_out = NormalizedRCOut()
         rc_out.header.stamp = Time.now()
-        if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
-            rospy.logwarn("autoalt disabled.")
+        if (
+            abs(self.normalized_control_in[2].value) > 0.1
+            or self.normalized_control_in[7].state == 0
+            or self.state.mode != "STABILIZE"
+        ):
+            rospy.logwarn(
+                "autoalt disabled. mode: {self.state.mode}, ch-C: {self.normalized_control_in[7].state},"
+                " ch_throttle: {self.normalized_control_in[2].value}"
+            )
         else:
             rc_out.thrust.value = min(1, max(0, self.pid_controller.output)) * 2 - 1
             rc_out.thrust.override = True
