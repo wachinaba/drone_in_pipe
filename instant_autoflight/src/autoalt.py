@@ -1,17 +1,23 @@
 import rospy
-from rospy import Subscriber, Publisher, Time
+from rospy import Subscriber, Publisher, Time, Rate
 
+from std_msgs.msg import Float32
 from sensor_msgs.msg import Range
 from mavros_msgs.msg import State
 from drone_controller_io.msg import NormalizedRCIn, ChannelState, NormalizedRCOut
+from instant_autoflight.pid_controller import PIDController, LPF
 
 
 class AutoAlt:
     def __init__(self) -> None:
-        self.thrust_z = 0.0
-
         self.target_altitude = 0.6
-        self.previous_altitude = 0.0
+
+        self.thrust_calc_stamp = Time()
+        self.pid_controller = PIDController(0.7, 0.0, 10, 0.5, LPF(0.2))
+
+        self.pid_publisher_p = Publisher("pid_controller/p", Float32, queue_size=1)
+        self.pid_publisher_d = Publisher("pid_controller/d", Float32, queue_size=1)
+        self.pid_publisher = Publisher("pid_controller/out", Float32, queue_size=1)
 
         self.normalized_control_in = [ChannelState() for i in range(16)]
 
@@ -30,36 +36,30 @@ class AutoAlt:
         self.state = msg
 
     def rangefinder_cb(self, msg: Range):
-        error = self.target_altitude - msg.range
-        if msg.range > 0.2:
-            self.thrust_z = min(error / 3.0 + 0.5 - (msg.range - self.previous_altitude) / 0.2, 0.65)
-        else:
-            self.thrust_z = min(error + 0.9 - (msg.range - self.previous_altitude) / 0.1, 1.0)
-
-        if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
-            self.thrust_z = (self.normalized_control_in[2].value + 1.0) / 2.0
-        else:
-            rospy.logwarn(f"auto alt: thrust={self.thrust_z}")
-
-        self.previous_altitude = msg.range
-
-        rc_out = NormalizedRCOut()
-        rc_out.header.stamp = Time.now()
-        rc_out.thrust.value = self.thrust_z * 2 - 1
-        rc_out.thrust.override = True
-
-        self.rc_publisher.publish(rc_out)
+        self.pid_controller.update(msg.range, self.target_altitude)
 
     def rc_cb(self, msg: NormalizedRCIn) -> None:
         self.normalized_control_in = msg.channel_states
+
+    def publish_override(self):
+        rc_out = NormalizedRCOut()
+        rc_out.header.stamp = Time.now()
+        rc_out.thrust.value = min(1, max(0, self.pid_controller.output)) * 2 - 1
+        rc_out.thrust.override = True
+
+        self.rc_publisher.publish(rc_out)
 
 
 def main():
     rospy.init_node("rc_to_attitude")
 
-    AutoAlt()
+    node = AutoAlt()
 
-    rospy.spin()
+    rate = Rate(50)
+
+    while True:
+        rate.sleep()
+        node.publish_override()
 
 
 if __name__ == "__main__":
