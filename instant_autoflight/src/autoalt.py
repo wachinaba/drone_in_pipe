@@ -42,12 +42,14 @@ class AutoAlt:
         self.normalized_control_in = msg.channel_states
 
     def publish_override(self):
-        if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
-            return
         rc_out = NormalizedRCOut()
         rc_out.header.stamp = Time.now()
-        rc_out.thrust.value = min(1, max(0, self.pid_controller.output)) * 2 - 1
-        rc_out.thrust.override = True
+        if abs(self.normalized_control_in[2].value) > 0.1 or self.normalized_control_in[7].state == 0:
+            rospy.logwarn("autoalt disabled.")
+        else:
+            rc_out.thrust.value = min(1, max(0, self.pid_controller.output)) * 2 - 1
+            rc_out.thrust.override = True
+            rospy.logwarn(f"autoalt enabled: thrust={rc_out.thrust.value}")
 
         self.rc_publisher.publish(rc_out)
 
@@ -59,7 +61,7 @@ def main():
 
     rate = Rate(50)
 
-    while True:
+    while not rospy.is_shutdown():
         rate.sleep()
         node.publish_override()
 
