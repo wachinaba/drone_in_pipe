@@ -26,7 +26,7 @@ class PIDController:
 
     def update(self, input, target) -> float:
         error = target - input
-        self.i_output += min(self.i_limit, max(-self.i_limit, error * self.i))
+        self.i_output = min(self.i_limit, max(-self.i_limit, self.i_output + error * self.i))
         self.p_output = error * self.p
         self.d_output = self.filter.update(self.prev_input - input) * self.d
 
