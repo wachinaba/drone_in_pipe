@@ -18,6 +18,7 @@ class AutoAlt:
         self.pid_publisher_p = Publisher("pid_controller/p", Float32, queue_size=1)
         self.pid_publisher_d = Publisher("pid_controller/d", Float32, queue_size=1)
         self.pid_publisher = Publisher("pid_controller/out", Float32, queue_size=1)
+        self.pid_publisher_in = Publisher("pid_controller/in", Float32, queue_size=1)
 
         self.normalized_control_in = [ChannelState() for i in range(16)]
 
@@ -37,6 +38,7 @@ class AutoAlt:
 
     def rangefinder_cb(self, msg: Range):
         self.pid_controller.update(msg.range, self.target_altitude)
+        self.pid_publisher_in.publish(msg.range)
 
     def rc_cb(self, msg: NormalizedRCIn) -> None:
         self.normalized_control_in = msg.channel_states
