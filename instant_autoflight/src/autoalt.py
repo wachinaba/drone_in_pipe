@@ -13,7 +13,7 @@ class AutoAlt:
         self.target_altitude = 0.6
 
         self.thrust_calc_stamp = Time()
-        self.pid_controller = PIDController(0.7, 0.0, 10, 0.5, LPF(0.2))
+        self.pid_controller = PIDController(0.7, 0.0, 10, 0.65, LPF(0.2))
 
         self.pid_publisher_p = Publisher("pid_controller/p", Float32, queue_size=1)
         self.pid_publisher_d = Publisher("pid_controller/d", Float32, queue_size=1)
