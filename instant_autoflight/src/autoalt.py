@@ -50,13 +50,13 @@ class AutoAlt:
             or self.state.mode != "STABILIZE"
         ):
             rospy.logwarn(
-                "autoalt disabled. mode: {self.state.mode}, ch-C: {self.normalized_control_in[7].state},"
-                " ch_throttle: {self.normalized_control_in[2].value}"
+                f"autoalt disabled. mode: {self.state.mode}, ch-C: {self.normalized_control_in[7].state},"
+                f" ch_throttle: {self.normalized_control_in[2].value:.3f}"
             )
         else:
             rc_out.thrust.value = min(1, max(0, self.pid_controller.output)) * 2 - 1
             rc_out.thrust.override = True
-            rospy.logwarn(f"autoalt enabled: thrust={rc_out.thrust.value}")
+            rospy.logwarn(f"autoalt enabled: thrust={rc_out.thrust.value:.3f}")
 
         self.pid_publisher_p.publish(self.pid_controller.p_output)
         self.pid_publisher_d.publish(self.pid_controller.d_output)
