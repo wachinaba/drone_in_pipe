@@ -1,3 +1,23 @@
+from typing import Tuple
+from rospy import Time
+
+
+class DeltaEstimator:
+    def __init__(self) -> None:
+        self.prev_input = 0.0
+        self.prev_time = Time()
+        self.current_delta = 0.0
+        self.current_duration = 0.0
+
+    def update(self, input, time) -> Tuple[float, float]:
+        duration_sec = (time - self.prev_time).to_sec()
+        if duration_sec < 0.000001:
+            return 0.0, 0.0
+        self.current_delta = input - self.prev_input
+        self.current_duration = duration_sec
+        return input - self.prev_input, duration_sec
+
+
 class LPF:
     def __init__(self, blend) -> None:
         self.prev_output = 0.0
