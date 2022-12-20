@@ -7,6 +7,12 @@
 		<remap from="~TFmini" to="mavros/distance_sensor/rangefinder_sub"/>
 	</node>
 
+	<node pkg="tfmini_ros" type="tfmini_ros_node" name="tfmini_top_node">
+		<param name="serial_port" type="string" value="/dev/ttyAMA1"/>
+		<param name="baud_rate" type="int" value="115200"/>
+		<remap from="~TFmini" to="rangefinder_top"/>
+	</node>
+
 	<!-- apm -->
 	<arg name="fcu_url" default="/dev/ttyACM0:57600" />
 	<arg name="gcs_url" default="" />
@@ -30,7 +36,9 @@
 	<node pkg="drone_controller_io" type="rc_behaviour.py" name="rc_behaviour_node" />
 
 	<!-- auto alt -->
-	<node pkg="instant_autoflight" type="autoalt.py" name="autoalt_node" />
+	<node pkg="instant_autoflight" type="autoalt.py" name="autoalt_node" >
+		<remap from="/rangefinder_bottom" to="/mavros/distance_sensor/rangefinder_sub"/>
+	</node>
 
 
 	<!-- stream rate -->
