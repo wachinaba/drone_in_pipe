@@ -77,7 +77,8 @@ class AutoAlt:
         self.pid_publisher_in.publish(self.current_altitude)
 
         rospy.logwarn(
-            f"D={self.estimated_diameter:.3f} B={self.range_bottom.range:.3f} T={self.range_top.range:.3f} Alt={self.current_altitude:.3f}"
+            f"D={self.estimated_diameter:.3f} B={self.range_bottom.range:.3f} T={self.range_top.range:.3f}"
+            f" Alt={self.current_altitude:.3f} Tgt={self.target_altitude:.3f}"
         )
 
     def rangefinder_bottom_cb(self, msg: Range):
@@ -92,9 +93,12 @@ class AutoAlt:
         self.normalized_control_in = msg.channel_states
 
     def publish_override(self):
+        self.target_altitude = self.normalized_control_in[9].value * 1.5
+
         self.calc_altitude()
         rc_out = NormalizedRCOut()
         rc_out.header.stamp = Time.now()
+
         if (
             abs(self.normalized_control_in[2].value) > 0.1
             or self.normalized_control_in[7].state == 0
