@@ -8,7 +8,7 @@
 	</node>
 
 	<!-- apm -->
-	<arg name="fcu_url" default="/dev/ttyACM0:57600" />
+	<arg name="fcu_url" default="/dev/ttyACM0:921600" />
 	<arg name="gcs_url" default="" />
 	<arg name="tgt_system" default="1" />
 	<arg name="tgt_component" default="1" />
@@ -27,7 +27,9 @@
 	</include>
 
 	<!-- controller_io -->
-	<node pkg="drone_controller_io" type="rc_behaviour.py" name="rc_behaviour_node" />
+	<node pkg="drone_controller_io" type="rc_behaviour.py" name="rc_behaviour_node">
+		<param name="enable_log" value="0"/>
+	</node>
 
 	<!-- t265 vision pose -->
 	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_pose_to_base_link" args="-0.18 0 0 0 -0.063 0 camera_pose_frame base_link">
