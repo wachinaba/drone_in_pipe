@@ -27,6 +27,8 @@ class RCBehaviourNode:
             "/normalized_rc/out", NormalizedRCOut, self.normalized_rc_cb, queue_size=1
         )
 
+        self.enable_log = rospy.get_param("~enable_log", 1)
+
         rospy.wait_for_service("/mavros/set_mode")
         self.set_mode = ServiceProxy("/mavros/set_mode", SetMode)
 
@@ -52,7 +54,8 @@ class RCBehaviourNode:
     def publish_override(self):
         if (Time.now() - self.normalized_control_out.header.stamp).to_sec() > 0.1:
             self.rc = OverrideRCIn()
-            rospy.logerr("override timed out!")
+            if self.enable_log:
+                rospy.logerr("override timed out!")
         self.override_publisher.publish(self.rc)
 
     def publish_normalized_rc(self) -> None:
