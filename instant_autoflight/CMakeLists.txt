@@ -174,6 +174,7 @@ catkin_install_python(PROGRAMS
   src/set_stream_rate.py
   src/orientation_visualizer.py
   src/autoalt.py
+  src/pose_to_path.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
