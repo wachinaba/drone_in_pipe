@@ -1,0 +1,55 @@
+<launch>
+
+	<!-- distance sensors -->
+	<node pkg="tfmini_ros" type="tfmini_ros_node" name="tfmini_bottom_node">
+		<param name="serial_port" type="string" value="/dev/ttyAMA0"/>
+		<param name="baud_rate" type="int" value="115200"/>
+		<remap from="~TFmini" to="mavros/distance_sensor/rangefinder_sub"/>
+	</node>
+
+	<!-- apm -->
+	<arg name="fcu_url" default="/dev/ttyACM0:921600" />
+	<arg name="gcs_url" default="" />
+	<arg name="tgt_system" default="1" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+	<arg name="fcu_protocol" default="v2.0" />
+	<arg name="respawn_mavros" default="false" />
+
+	<include file="$(find instant_autoflight)/launch/apm.launch">
+		<arg name="fcu_url" value="$(arg fcu_url)" />
+		<arg name="gcs_url" value="$(arg gcs_url)" />
+		<arg name="tgt_system" value="$(arg tgt_system)" />
+		<arg name="tgt_component" value="$(arg tgt_component)" />
+		<arg name="log_output" value="$(arg log_output)" />
+		<arg name="fcu_protocol" value="$(arg fcu_protocol)" />
+		<arg name="respawn_mavros" value="$(arg respawn_mavros)" />
+	</include>
+
+	<!-- controller_io -->
+	<node pkg="drone_controller_io" type="rc_behaviour.py" name="rc_behaviour_node">
+		<param name="enable_log" value="0"/>
+	</node>
+
+	<!-- t265 vision pose -->
+	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_pose_to_base_link" args="-0.18 0 0 0 -0.063 0 camera_pose_frame base_link">
+	</node>
+	<node pkg="tf2_ros" type="static_transform_publisher" name="camera_odom_to_map" args="0 0 0 0 0 0 map camera_odom_frame">
+	</node>
+
+	<include file="$(find realsense2_camera)/launch/rs_t265.launch">
+	</include>
+
+	<include file="$(find vision_to_mavros)/launch/t265_tf_to_mavros.launch">
+		<arg name="target_frame_id" value="/map"/>
+		<arg name="source_frame_id" value="/base_link"/>
+		<arg name="gamma_world" value="-1.5707963" />
+	</include>
+
+
+	<!-- stream rate -->
+  <node name="stream_rate_publisher" pkg="instant_autoflight" type="set_stream_rate.py" >
+    <param name="stream_rate" value="50" />
+		<param name="update_rate" value="5" />
+  </node>
+</launch>
