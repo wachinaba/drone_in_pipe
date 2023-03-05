@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find ydlidar)/launch/lidar.launch"/>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="broadcaster_laser_frame" args="0 0 0 0 0 0 base_link laser_frame" />
+</launch>

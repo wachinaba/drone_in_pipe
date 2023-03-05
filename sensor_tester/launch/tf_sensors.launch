@@ -1,0 +1,37 @@
+<launch>
+  <include file="$(find tfmini_ros)/launch/tfmini.launch">
+    <arg name="serial_port" value="/dev/ttyAMA0"/>
+    <arg name="prefix" value="top"/>
+    <arg name="transform_args" value="0 0 0 0 0 0 base_link"/>
+  </include>
+
+  <include file="$(find tfmini_ros)/launch/tfmini.launch">
+    <arg name="serial_port" value="/dev/ttyAMA1"/>
+    <arg name="prefix" value="bottom"/>
+    <arg name="transform_args" value="0 0 0 0 0 0 base_link"/>
+  </include>
+
+  <include file="$(find tfmini_ros)/launch/tfmini.launch">
+    <arg name="serial_port" value="/dev/ttyAMA3"/>
+    <arg name="prefix" value="right"/>
+    <arg name="transform_args" value="0 0 0 0 0 0 base_link"/>
+  </include>
+
+  <include file="$(find tfmini_ros)/launch/tfmini.launch">
+    <arg name="serial_port" value="/dev/serial/by-path/"/>
+    <arg name="prefix" value="left"/>
+    <arg name="transform_args" value="0 0 0 0 0 0 base_link"/>
+  </include>
+
+  <include file="$(find tfmini_ros)/launch/tfmini.launch">
+    <arg name="serial_port" value="/dev/serial/by-path/"/>
+    <arg name="prefix" value="left_front"/>
+    <arg name="transform_args" value="0 0 0 0 0 0 base_link"/>
+  </include>
+
+  <include file="$(find tfmini_ros)/launch/tfmini.launch">
+    <arg name="serial_port" value="/dev/serial/by-path/"/>
+    <arg name="prefix" value="left_back"/>
+    <arg name="transform_args" value="0 0 0 0 0 0 base_link"/>
+  </include>
+</launch>
