@@ -8,7 +8,7 @@
         <collision name="collision_pipe">
           <geometry>
             <mesh>
-                <uri>model://sewage_pipe/sewage_pipe_01.stl</uri>
+                <uri>model://sewage_pipe_01/sewage_pipe_01.stl</uri>
             </mesh>
           </geometry>
           <surface>
@@ -23,7 +23,7 @@
         <visual name="visual_pipe">
           <geometry>
             <mesh>
-                <uri>model://sewage_pipe/sewage_pipe_01.dae</uri>
+                <uri>model://sewage_pipe_01/sewage_pipe_01.dae</uri>
             </mesh>
           </geometry>
         </visual>
