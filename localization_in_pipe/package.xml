@@ -59,6 +59,7 @@
   <build_depend>sensor_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>visualization_msgs</build_depend>
+  <build_depend>tf2_ros</build_depend>
   <build_export_depend>gazebo_ros</build_export_depend>
   <build_export_depend>gazebo_ros_optical_flow</build_export_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
@@ -69,6 +70,7 @@
   <build_export_depend>sensor_msgs</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
   <build_export_depend>visualization_msgs</build_export_depend>
+  <build_export_depend>tf2_ros</build_export_depend>
   <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>gazebo_ros_optical_flow</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
@@ -79,10 +81,16 @@
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>visualization_msgs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+
+  <build_depend>cmake_modules</build_depend>
+  <exec_depend>cmake_modules</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
+    <cpp cflags="`pkg-config --cflags eigen3` -I${prefix}/include `rosboost-cfg --cflags`"
+      lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lplanning_models" />
     <!-- Other tools can request additional information be placed here -->
 
   </export>

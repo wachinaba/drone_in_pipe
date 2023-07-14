@@ -18,7 +18,13 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   visualization_msgs
+  tf2_ros
 )
+
+find_package(cmake_modules REQUIRED)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+find_package(Eigen REQUIRED)
+include_directories(${Eigen_INCLUDE_DIRS})
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -110,10 +116,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES localization_in_pipe
+  INCLUDE_DIRS include
+  LIBRARIES localization_in_pipe
 #  CATKIN_DEPENDS gazebo_ros gazebo_ros_optical_flow_msgs geometry_msgs mavros mavros_msgs roscpp rospy sensor_msgs std_msgs visualization_msgs
-#  DEPENDS system_lib
+  DEPENDS Eigen roscpp rospy
 )
 
 ###########
