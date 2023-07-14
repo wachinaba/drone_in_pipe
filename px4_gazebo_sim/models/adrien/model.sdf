@@ -436,7 +436,7 @@
             </sensor>
         </joint>
 
-        <!-- plugins -->
+        <!-- px4 plugins -->
 
         <plugin name='rosbag' filename='libgazebo_multirotor_base_plugin.so'>
             <robotNamespace />
@@ -456,7 +456,7 @@
             <timeConstantDown>0.025</timeConstantDown>
             <maxRotVelocity>2054</maxRotVelocity>
             <motorConstant>5.35573e-06</motorConstant>
-            <momentConstant>0.03172</momentConstant>
+            <momentConstant>0.01</momentConstant>
             <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
             <motorNumber>0</motorNumber>
             <rotorDragCoefficient>0.0000875</rotorDragCoefficient>
@@ -473,7 +473,7 @@
             <timeConstantDown>0.025</timeConstantDown>
             <maxRotVelocity>2054</maxRotVelocity>
             <motorConstant>5.35573e-06</motorConstant>
-            <momentConstant>0.03172</momentConstant>
+            <momentConstant>0.01</momentConstant>
             <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
             <motorNumber>1</motorNumber>
             <rotorDragCoefficient>0.0000875</rotorDragCoefficient>
@@ -490,7 +490,7 @@
             <timeConstantDown>0.025</timeConstantDown>
             <maxRotVelocity>2054</maxRotVelocity>
             <motorConstant>5.35573e-06</motorConstant>
-            <momentConstant>0.03172</momentConstant>
+            <momentConstant>0.01</momentConstant>
             <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
             <motorNumber>2</motorNumber>
             <rotorDragCoefficient>0.0000875</rotorDragCoefficient>
@@ -507,7 +507,7 @@
             <timeConstantDown>0.025</timeConstantDown>
             <maxRotVelocity>2054</maxRotVelocity>
             <motorConstant>5.35573e-06</motorConstant>
-            <momentConstant>0.03172</momentConstant>
+            <momentConstant>0.01</momentConstant>
             <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
             <motorNumber>3</motorNumber>
             <rotorDragCoefficient>0.0000875</rotorDragCoefficient>
