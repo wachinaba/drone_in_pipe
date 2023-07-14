@@ -1046,5 +1046,521 @@
                 </limit>
             </axis>
         </joint>
+
+        <!-- multi zone lidar -->
+        <link name="multi_zone_lidar_left_link">
+            <pose>0.0075 0.0465 -0.0665 0 0 1.570796</pose>
+
+            <inertial>
+                <mass>0.001</mass>
+                <inertia>
+                    <ixx>1e-6</ixx>
+                    <iyy>1e-6</iyy>
+                    <izz>1e-6</izz>
+                </inertia>
+            </inertial>
+
+            <sensor name="multi_zone_lidar_left" type="ray">
+                <always_on>true</always_on>
+                <update_rate>15</update_rate>
+                <visualize>true</visualize>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle>0.343612</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle> 0.343612</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.09</min>
+                        <max>3.0</max>
+                        <resolution>0.001</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0015</stddev>
+                    </noise>
+                </ray>
+                <plugin name="multi_zone_lidar_left_plugin" filename="libgazebo_ros_block_laser.so">
+                    <topicName>multi_zone_lidar_left_link/scan</topicName>
+                    <frameName>multi_zone_lidar_left_link</frameName>
+                    <min_range>0.09</min_range>
+                    <max_range>3.0</max_range>
+                    <gaussianNoise>0.0015</gaussianNoise>
+                </plugin>
+            </sensor>
+        </link>
+        <joint name="multi_zone_lidar_left_joint" type="revolute">
+            <parent>base_link</parent>
+            <child>multi_zone_lidar_left_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <upper>0</upper>
+                    <lower>0</lower>
+                </limit>
+            </axis>
+        </joint>
+        <link name="multi_zone_lidar_right_link">
+            <pose>0.0075 -0.0465 -0.0665 0 0 -1.570796</pose>
+
+            <inertial>
+                <mass>0.001</mass>
+                <inertia>
+                    <ixx>1e-6</ixx>
+                    <iyy>1e-6</iyy>
+                    <izz>1e-6</izz>
+                </inertia>
+            </inertial>
+
+            <sensor name="multi_zone_lidar_right" type="ray">
+                <always_on>true</always_on>
+                <update_rate>15</update_rate>
+                <visualize>true</visualize>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle>0.343612</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle> 0.343612</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.09</min>
+                        <max>3.0</max>
+                        <resolution>0.001</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0015</stddev>
+                    </noise>
+                </ray>
+                <plugin name="multi_zone_lidar_right_plugin" filename="libgazebo_ros_block_laser.so">
+                    <topicName>multi_zone_lidar_right_link/scan</topicName>
+                    <frameName>multi_zone_lidar_right_link</frameName>
+                    <min_range>0.09</min_range>
+                    <max_range>3.0</max_range>
+                    <gaussianNoise>0.0015</gaussianNoise>
+                </plugin>
+            </sensor>
+        </link>
+        <joint name="multi_zone_lidar_right_joint" type="revolute">
+            <parent>base_link</parent>
+            <child>multi_zone_lidar_right_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <upper>0</upper>
+                    <lower>0</lower>
+                </limit>
+            </axis>
+        </joint>
+
+        <link name="multi_zone_lidar_front_left_link">
+            <pose>0.112103 0.152774 -0.024 0 0 1.17809725</pose>
+
+            <inertial>
+                <mass>0.001</mass>
+                <inertia>
+                    <ixx>1e-6</ixx>
+                    <iyy>1e-6</iyy>
+                    <izz>1e-6</izz>
+                </inertia>
+            </inertial>
+
+            <sensor name="multi_zone_lidar_front_left" type="ray">
+                <always_on>true</always_on>
+                <update_rate>15</update_rate>
+                <visualize>true</visualize>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle>0.343612</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle> 0.343612</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.09</min>
+                        <max>3.0</max>
+                        <resolution>0.001</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0015</stddev>
+                    </noise>
+                </ray>
+                <plugin name="multi_zone_lidar_front_left_plugin"
+                    filename="libgazebo_ros_block_laser.so">
+                    <topicName>multi_zone_lidar_front_left_link/scan</topicName>
+                    <frameName>multi_zone_lidar_front_left_link</frameName>
+                    <min_range>0.09</min_range>
+                    <max_range>3.0</max_range>
+                    <gaussianNoise>0.0015</gaussianNoise>
+                </plugin>
+            </sensor>
+        </link>
+        <joint name="multi_zone_lidar_front_left_joint" type="revolute">
+            <parent>base_link</parent>
+            <child>multi_zone_lidar_front_left_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <upper>0</upper>
+                    <lower>0</lower>
+                </limit>
+            </axis>
+        </joint>
+
+        <link name="multi_zone_lidar_front_right_link">
+            <pose>0.112103 -0.152774 -0.024 0 0 -1.17809725</pose>
+
+            <inertial>
+                <mass>0.001</mass>
+                <inertia>
+                    <ixx>1e-6</ixx>
+                    <iyy>1e-6</iyy>
+                    <izz>1e-6</izz>
+                </inertia>
+            </inertial>
+
+            <sensor name="multi_zone_lidar_front_right" type="ray">
+                <always_on>true</always_on>
+                <update_rate>15</update_rate>
+                <visualize>true</visualize>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle>0.343612</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle> 0.343612</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.09</min>
+                        <max>3.0</max>
+                        <resolution>0.001</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0015</stddev>
+                    </noise>
+                </ray>
+                <plugin name="multi_zone_lidar_front_right_plugin"
+                    filename="libgazebo_ros_block_laser.so">
+                    <topicName>multi_zone_lidar_front_right_link/scan</topicName>
+                    <frameName>multi_zone_lidar_front_right_link</frameName>
+                    <min_range>0.09</min_range>
+                    <max_range>3.0</max_range>
+                    <gaussianNoise>0.0015</gaussianNoise>
+                </plugin>
+            </sensor>
+        </link>
+        <joint name="multi_zone_lidar_front_right_joint" type="revolute">
+            <parent>base_link</parent>
+            <child>multi_zone_lidar_front_right_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <upper>0</upper>
+                    <lower>0</lower>
+                </limit>
+            </axis>
+        </joint>
+
+        <link name="multi_zone_lidar_rear_left_link">
+            <pose>-0.112103 0.152774 -0.024 0 0 1.9634954</pose>
+
+            <inertial>
+                <mass>0.001</mass>
+                <inertia>
+                    <ixx>1e-6</ixx>
+                    <iyy>1e-6</iyy>
+                    <izz>1e-6</izz>
+                </inertia>
+            </inertial>
+
+            <sensor name="multi_zone_lidar_rear_left" type="ray">
+                <always_on>true</always_on>
+                <update_rate>15</update_rate>
+                <visualize>true</visualize>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle>0.343612</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle> 0.343612</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.09</min>
+                        <max>3.0</max>
+                        <resolution>0.001</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0015</stddev>
+                    </noise>
+                </ray>
+                <plugin name="multi_zone_lidar_rear_left_plugin"
+                    filename="libgazebo_ros_block_laser.so">
+                    <topicName>multi_zone_lidar_rear_left_link/scan</topicName>
+                    <frameName>multi_zone_lidar_rear_left_link</frameName>
+                    <min_range>0.09</min_range>
+                    <max_range>3.0</max_range>
+                    <gaussianNoise>0.0015</gaussianNoise>
+                </plugin>
+            </sensor>
+        </link>
+        <joint name="multi_zone_lidar_rear_left_joint" type="revolute">
+            <parent>base_link</parent>
+            <child>multi_zone_lidar_rear_left_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <upper>0</upper>
+                    <lower>0</lower>
+                </limit>
+            </axis>
+        </joint>
+
+
+        <link name="multi_zone_lidar_rear_right_link">
+            <pose>-0.112103 -0.152774 -0.024 0 0 -1.9634954</pose>
+
+            <inertial>
+                <mass>0.001</mass>
+                <inertia>
+                    <ixx>1e-6</ixx>
+                    <iyy>1e-6</iyy>
+                    <izz>1e-6</izz>
+                </inertia>
+            </inertial>
+
+            <sensor name="multi_zone_lidar_rear_right" type="ray">
+                <always_on>true</always_on>
+                <update_rate>15</update_rate>
+                <visualize>true</visualize>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle>0.343612</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>8</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.343612</min_angle>
+                            <max_angle> 0.343612</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.09</min>
+                        <max>3.0</max>
+                        <resolution>0.001</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0015</stddev>
+                    </noise>
+                </ray>
+                <plugin name="multi_zone_lidar_rear_right_plugin"
+                    filename="libgazebo_ros_block_laser.so">
+                    <topicName>multi_zone_lidar_rear_right_link/scan</topicName>
+                    <frameName>multi_zone_lidar_rear_right_link</frameName>
+                    <min_range>0.09</min_range>
+                    <max_range>3.0</max_range>
+                    <gaussianNoise>0.0015</gaussianNoise>
+                </plugin>
+            </sensor>
+        </link>
+        <joint name="multi_zone_lidar_rear_right_joint" type="revolute">
+            <parent>base_link</parent>
+            <child>multi_zone_lidar_rear_right_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <upper>0</upper>
+                    <lower>0</lower>
+                </limit>
+            </axis>
+        </joint>
+
+        <!-- rangefinders -->
+        <link name="single_point_lidar_bottom_link">
+            <pose>0.0875 0 -0.0555 0 1.570796 0</pose>
+
+            <inertial>
+                <mass>0.001</mass>
+                <inertia>
+                    <ixx>1e-6</ixx>
+                    <iyy>1e-6</iyy>
+                    <izz>1e-6</izz>
+                </inertia>
+            </inertial>
+
+            <sensor name="single_point_lidar_bottom" type="ray">
+                <always_on>true</always_on>
+                <update_rate>60</update_rate>
+                <visualize>true</visualize>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>3</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.0314159</min_angle>
+                            <max_angle>0.0314159</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>3</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.0314159</min_angle>
+                            <max_angle>0.0314159</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.09</min>
+                        <max>3.0</max>
+                        <resolution>0.001</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0015</stddev>
+                    </noise>
+                </ray>
+                <plugin filename="libgazebo_ros_range.so" name="single_point_lidar_bottom_plugin">
+                    <robotNamespace></robotNamespace>
+                    <frameName>single_point_lidar_bottom_link</frameName>
+                    <topicName>single_point_lidar_bottom_link/range</topicName>
+                    <radiation>ultrasound</radiation>
+                    <fov>0.0628319</fov>
+                    <gaussianNoise>0.0015</gaussianNoise>
+                    <updateRate>60</updateRate>
+                </plugin>
+            </sensor>
+        </link>
+        <joint name="single_point_lidar_bottom_joint" type="revolute">
+            <parent>base_link</parent>
+            <child>single_point_lidar_bottom_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <upper>0</upper>
+                    <lower>0</lower>
+                </limit>
+            </axis>
+        </joint>
+
+
+        <link name="single_point_lidar_top_link">
+            <pose>0.0875 0 0.026 0 -1.570796 0</pose>
+
+            <inertial>
+                <mass>0.001</mass>
+                <inertia>
+                    <ixx>1e-6</ixx>
+                    <iyy>1e-6</iyy>
+                    <izz>1e-6</izz>
+                </inertia>
+            </inertial>
+
+            <sensor name="single_point_lidar_top" type="ray">
+                <always_on>true</always_on>
+                <update_rate>60</update_rate>
+                <visualize>true</visualize>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>3</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.0314159</min_angle>
+                            <max_angle>0.0314159</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>3</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.0314159</min_angle>
+                            <max_angle>0.0314159</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.09</min>
+                        <max>3.0</max>
+                        <resolution>0.001</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0015</stddev>
+                    </noise>
+                </ray>
+                <plugin filename="libgazebo_ros_range.so" name="single_point_lidar_top_plugin">
+                    <robotNamespace></robotNamespace>
+                    <frameName>single_point_lidar_top_link</frameName>
+                    <topicName>single_point_lidar_top_link/range</topicName>
+                    <radiation>ultrasound</radiation>
+                    <fov>0.0628319</fov>
+                    <gaussianNoise>0.0015</gaussianNoise>
+                    <updateRate>60</updateRate>
+                </plugin>
+            </sensor>
+        </link>
+        <joint name="single_point_lidar_top_joint" type="revolute">
+            <parent>base_link</parent>
+            <child>single_point_lidar_top_link</child>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <upper>0</upper>
+                    <lower>0</lower>
+                </limit>
+            </axis>
+        </joint>
+
     </model>
 </sdf>
