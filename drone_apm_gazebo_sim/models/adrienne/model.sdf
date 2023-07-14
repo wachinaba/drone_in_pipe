@@ -1,0 +1,935 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+    <model name='adrienne'>
+        <pose>0 0 0.2 0 0 0</pose>
+        <link name='base_link'>
+            <velocity_decay>
+                <linear>0.0</linear>
+                <angular>0.0</angular>
+            </velocity_decay>
+            <inertial>
+                <pose>0 0 0 0 0 0</pose>
+                <mass>1.6</mass>
+                <inertia>
+                    <ixx>0.008</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0.015</iyy>
+                    <iyz>0</iyz>
+                    <izz>0.017</izz>
+                </inertia>
+            </inertial>
+            <visual name='base_link_visual'>
+                <geometry>
+                    <mesh>
+                        <uri>model://adrienne/meshes/drone_assembly_wo_props.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+
+            <collision name='front_left_leg_collision'>
+                <pose>0.0989 0.1209 -0.047 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <radius>0.005</radius>
+                        <length>0.09</length>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode>
+                            <max_vel>100.0</max_vel>
+                            <min_depth>0.001</min_depth>
+                        </ode>
+                    </contact>
+                    <friction>
+                        <ode>
+                            <mu>100000.0</mu>
+                            <mu2>100000.0</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <collision name='front_right_leg_collision'>
+                <pose>0.0989 -0.1209 -0.047 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <radius>0.005</radius>
+                        <length>0.09</length>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode>
+                            <max_vel>100.0</max_vel>
+                            <min_depth>0.001</min_depth>
+                        </ode>
+                    </contact>
+                    <friction>
+                        <ode>
+                            <mu>100000.0</mu>
+                            <mu2>100000.0</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <collision name='rear_left_leg_collision'>
+                <pose>-0.0989 0.1209 -0.047 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <radius>0.005</radius>
+                        <length>0.09</length>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode>
+                            <max_vel>100.0</max_vel>
+                            <min_depth>0.001</min_depth>
+                        </ode>
+                    </contact>
+                    <friction>
+                        <ode>
+                            <mu>100000.0</mu>
+                            <mu2>100000.0</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+            <collision name='rear_right_leg_collision'>
+                <pose>-0.0989 -0.1209 -0.047 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <radius>0.005</radius>
+                        <length>0.09</length>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode>
+                            <max_vel>100.0</max_vel>
+                            <min_depth>0.001</min_depth>
+                        </ode>
+                    </contact>
+                    <friction>
+                        <ode>
+                            <mu>100000.0</mu>
+                            <mu2>100000.0</mu2>
+                        </ode>
+                    </friction>
+                </surface>
+            </collision>
+        </link>
+
+        <link name='adrienne/imu_link'>
+            <inertial>
+                <pose>0 0 0 0 0 0</pose>
+                <mass>0.0001</mass>
+                <inertia>
+                    <ixx>0.0001</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0.0001</iyy>
+                    <iyz>0</iyz>
+                    <izz>0.0001</izz>
+                </inertia>
+            </inertial>
+            <sensor name="imu_sensor" type="imu">
+                <pose>0 0 0 3.141593 0 0</pose>
+                <always_on>1</always_on>
+                <update_rate>1000</update_rate>
+            </sensor>
+        </link>
+        <joint name="adrienne/imu_joint" type="revolute">
+            <child>adrienne/imu_link</child>
+            <parent>base_link</parent>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <lower>0</lower>
+                    <upper>0</upper>
+                    <effort>0</effort>
+                    <velocity>0</velocity>
+                </limit>
+                <dynamics>
+                    <damping>1.0</damping>
+                </dynamics>
+                <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+            <physics>
+                <ode>
+                    <implicit_spring_damper>1</implicit_spring_damper>
+                </ode>
+            </physics>
+        </joint>
+
+        <link name='rotor_0'>
+            <pose>0.0989 -0.1209 0.02 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0 0 -0 0</pose>
+                <mass>0.025</mass>
+                <inertia>
+                    <ixx>9.75e-06</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0.000166704</iyy>
+                    <iyz>0</iyz>
+                    <izz>0.000167604</izz>
+                </inertia>
+            </inertial>
+            <collision name='rotor_0_collision'>
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <!-- d = 7 inch disk shape collision -->
+                    <cylinder>
+                        <length>0.005</length>
+                        <radius>0.0889</radius>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode />
+                    </contact>
+                    <friction>
+                        <ode />
+                    </friction>
+                </surface>
+            </collision>
+            <visual name='rotor_0_visual'>
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <mesh>
+                        <scale>1 1 1</scale>
+                        <uri>model://adrienne/meshes/prop_ccw.dae</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Blue</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay />
+            <self_collide>0</self_collide>
+        </link>
+        <joint name='rotor_0_joint' type='revolute'>
+            <child>rotor_0</child>
+            <parent>base_link</parent>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <lower>-1e+16</lower>
+                    <upper>1e+16</upper>
+                </limit>
+                <dynamics>
+                    <damping>0.004</damping>
+                </dynamics>
+                <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+            <physics>
+                <ode>
+                    <implicit_spring_damper>1</implicit_spring_damper>
+                </ode>
+            </physics>
+            <sensor name="force_torque" type="force_torque">
+                <update_rate>30</update_rate>
+            </sensor>
+        </joint>
+        <link name="rotor_1">
+            <pose>-0.0989 0.1209 0.02 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0 0 -0 0</pose>
+                <mass>0.025</mass>
+                <inertia>
+                    <ixx>9.75e-06</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0.000166704</iyy>
+                    <iyz>0</iyz>
+                    <izz>0.000167604</izz>
+                </inertia>
+            </inertial>
+            <collision name="rotor_1_collision">
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <!-- d = 7 inch disk shape collision -->
+                    <cylinder>
+                        <length>0.005</length>
+                        <radius>0.0889</radius>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode />
+                    </contact>
+                    <friction>
+                        <ode />
+                    </friction>
+                </surface>
+            </collision>
+            <visual name="rotor_1_visual">
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <mesh>
+                        <scale>1 1 1</scale>
+                        <uri>model://adrienne/meshes/prop_ccw.dae</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Blue</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay />
+            <self_collide>0</self_collide>
+        </link>
+        <joint name="rotor_1_joint" type="revolute">
+            <child>rotor_1</child>
+            <parent>base_link</parent>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <lower>-1e+16</lower>
+                    <upper>1e+16</upper>
+                </limit>
+                <dynamics>
+                    <damping>0.004</damping>
+                </dynamics>
+                <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+            <physics>
+                <ode>
+                    <implicit_spring_damper>1</implicit_spring_damper>
+                </ode>
+            </physics>
+            <sensor name="force_torque" type="force_torque">
+                <update_rate>30</update_rate>
+            </sensor>
+        </joint>
+        <link name="rotor_2">
+            <pose>0.0989 0.1209 0.02 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0 0 -0 0</pose>
+                <mass>0.025</mass>
+                <inertia>
+                    <ixx>9.75e-06</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0.000166704</iyy>
+                    <iyz>0</iyz>
+                    <izz>0.000167604</izz>
+                </inertia>
+            </inertial>
+            <collision name="rotor_2_collision">
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <!-- d = 7 inch disk shape collision -->
+                    <cylinder>
+                        <length>0.005</length>
+                        <radius>0.0889</radius>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode />
+                    </contact>
+                    <friction>
+                        <ode />
+                    </friction>
+                </surface>
+            </collision>
+            <visual name="rotor_2_visual">
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <mesh>
+                        <scale>1 1 1</scale>
+                        <uri>model://adrienne/meshes/prop_cw.dae</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Blue</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay />
+            <self_collide>0</self_collide>
+        </link>
+        <joint name="rotor_2_joint" type="revolute">
+            <child>rotor_2</child>
+            <parent>base_link</parent>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <lower>-1e+16</lower>
+                    <upper>1e+16</upper>
+                </limit>
+                <dynamics>
+                    <damping>0.004</damping>
+                </dynamics>
+                <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+            <physics>
+                <ode>
+                    <implicit_spring_damper>1</implicit_spring_damper>
+                </ode>
+            </physics>
+            <sensor name="force_torque" type="force_torque">
+                <update_rate>30</update_rate>
+            </sensor>
+        </joint>
+        <link name="rotor_3">
+            <pose>-0.0989 -0.1209 0.02 0 0 0</pose>
+            <inertial>
+                <pose>0 0 0 0 -0 0</pose>
+                <mass>0.025</mass>
+                <inertia>
+                    <ixx>9.75e-06</ixx>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyy>0.000166704</iyy>
+                    <iyz>0</iyz>
+                    <izz>0.000167604</izz>
+                </inertia>
+            </inertial>
+            <collision name="rotor_3_collision">
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <!-- d = 7 inch disk shape collision -->
+                    <cylinder>
+                        <length>0.005</length>
+                        <radius>0.0889</radius>
+                    </cylinder>
+                </geometry>
+                <surface>
+                    <contact>
+                        <ode />
+                    </contact>
+                    <friction>
+                        <ode />
+                    </friction>
+                </surface>
+            </collision>
+            <visual name="rotor_3_visual">
+                <pose>0 0 0 0 -0 0</pose>
+                <geometry>
+                    <mesh>
+                        <scale>1 1 1</scale>
+                        <uri>model://adrienne/meshes/prop_cw.dae</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <script>
+                        <name>Gazebo/Blue</name>
+                        <uri>__default__</uri>
+                    </script>
+                </material>
+            </visual>
+            <gravity>1</gravity>
+            <velocity_decay />
+            <self_collide>0</self_collide>
+        </link>
+        <joint name="rotor_3_joint" type="revolute">
+            <child>rotor_3</child>
+            <parent>base_link</parent>
+            <axis>
+                <xyz>0 0 1</xyz>
+                <limit>
+                    <lower>-1e+16</lower>
+                    <upper>1e+16</upper>
+                </limit>
+                <dynamics>
+                    <damping>0.004</damping>
+                </dynamics>
+                <use_parent_model_frame>1</use_parent_model_frame>
+            </axis>
+            <physics>
+                <ode>
+                    <implicit_spring_damper>1</implicit_spring_damper>
+                </ode>
+            </physics>
+            <sensor name="force_torque" type="force_torque">
+                <update_rate>30</update_rate>
+            </sensor>
+        </joint>
+
+        <!-- plugins -->
+
+        <!-- rotor 0 -->
+        <plugin name="rotor_0_blade_0" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>0.044450 0.000000 0.000000</cp>
+            <forward>0.000000 1.000000 0.000000</forward>
+            <upward>0 0 1</upward>
+            <link_name>adrienne::rotor_0</link_name>
+        </plugin>
+        <plugin name="rotor_0_blade_1" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>-0.022225 0.038495 0.000000</cp>
+            <forward>-0.866025 -0.500000 0.000000</forward>
+            <upward>0 0 1</upward>
+            <link_name>adrienne::rotor_0</link_name>
+        </plugin>
+        <plugin name="rotor_0_blade_2" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>-0.022225 -0.038495 0.000000</cp>
+            <forward>0.866025 -0.500000 0.000000</forward>
+            <upward>0 0 1</upward>
+            <link_name>adrienne::rotor_0</link_name>
+        </plugin>
+
+        <!-- rotor 1 -->
+        <plugin name="rotor_1_blade_0" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>0.044450 0.000000 0.000000</cp>
+            <forward>0.000000 1.000000 0.000000</forward>
+            <upward>0 0 1</upward>
+            <link_name>adrienne::rotor_1</link_name>
+        </plugin>
+        <plugin name="rotor_1_blade_1" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>-0.022225 0.038495 0.000000</cp>
+            <forward>-0.866025 -0.500000 0.000000</forward>
+            <upward>0 0 1</upward>
+            <link_name>adrienne::rotor_1</link_name>
+        </plugin>
+        <plugin name="rotor_1_blade_2" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>-0.022225 -0.038495 0.000000</cp>
+            <forward>0.866025 -0.500000 0.000000</forward>
+            <upward>0 0 1</upward>
+            <link_name>adrienne::rotor_1</link_name>
+        </plugin>
+
+        <!-- rotor 2 -->
+        <plugin name="rotor_2_blade_0" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>0.044450 0.000000 0.000000</cp>
+            <forward>0.000000 1.000000 0.000000</forward>
+            <upward>0 0 -1</upward>
+            <link_name>adrienne::rotor_2</link_name>
+        </plugin>
+        <plugin name="rotor_2_blade_1" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>-0.022225 0.038495 0.000000</cp>
+            <forward>-0.866025 -0.500000 0.000000</forward>
+            <upward>0 0 -1</upward>
+            <link_name>adrienne::rotor_2</link_name>
+        </plugin>
+        <plugin name="rotor_2_blade_2" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>-0.022225 -0.038495 0.000000</cp>
+            <forward>0.866025 -0.500000 0.000000</forward>
+            <upward>0 0 -1</upward>
+            <link_name>adrienne::rotor_2</link_name>
+        </plugin>
+
+        <!-- rotor 3 -->
+        <plugin name="rotor_3_blade_0" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>0.044450 0.000000 0.000000</cp>
+            <forward>0.000000 1.000000 0.000000</forward>
+            <upward>0 0 -1</upward>
+            <link_name>adrienne::rotor_3</link_name>
+        </plugin>
+        <plugin name="rotor_3_blade_1" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>-0.022225 0.038495 0.000000</cp>
+            <forward>-0.866025 -0.500000 0.000000</forward>
+            <upward>0 0 -1</upward>
+            <link_name>adrienne::rotor_3</link_name>
+        </plugin>
+        <plugin name="rotor_3_blade_2" filename="libLiftDragPlugin.so">
+            <a0>0.3</a0>
+            <alpha_stall>1.4</alpha_stall>
+            <cla>4.2500</cla>
+            <cda>0.10</cda>
+            <cma>0.00</cma>
+            <cla_stall>-0.025</cla_stall>
+            <cda_stall>0.0</cda_stall>
+            <cma_stall>0.0</cma_stall>
+            <area>0.003</area>
+            <air_density>1.2041</air_density>
+            <cp>-0.022225 -0.038495 0.000000</cp>
+            <forward>0.866025 -0.500000 0.000000</forward>
+            <upward>0 0 -1</upward>
+            <link_name>adrienne::rotor_3</link_name>
+        </plugin>
+
+        <!-- ArduCopter -->
+        <plugin name="arducopter_plugin" filename="libArduPilotPlugin.so">
+            <fdm_addr>127.0.0.1</fdm_addr>
+            <fdm_port_in>9002</fdm_port_in>
+            <fdm_port_out>9003</fdm_port_out>
+            <!--
+                Require by APM :
+                Only change model and gazebo from XYZ to XY-Z coordinates
+            -->
+            <modelXYZToAirplaneXForwardZDown>0 0 0 3.141593 0 0</modelXYZToAirplaneXForwardZDown>
+            <gazeboXYZToNED>0 0 0 3.141593 0 0</gazeboXYZToNED>
+            <imuName>adrienne::adrienne/imu_link::imu_sensor</imuName>
+            <connectionTimeoutMaxCount>5</connectionTimeoutMaxCount>
+            <control channel="0">
+                <type>VELOCITY</type>
+                <offset>0</offset>
+                <p_gain>0.20</p_gain>
+                <i_gain>0</i_gain>
+                <d_gain>0</d_gain>
+                <i_max>0</i_max>
+                <i_min>0</i_min>
+                <cmd_max>2.5</cmd_max>
+                <cmd_min>-2.5</cmd_min>
+                <jointName>adrienne::rotor_0_joint</jointName>
+                <multiplier>838</multiplier>
+                <controlVelocitySlowdownSim>1</controlVelocitySlowdownSim>
+            </control>
+            <control channel="1">
+                <type>VELOCITY</type>
+                <offset>0</offset>
+                <p_gain>0.20</p_gain>
+                <i_gain>0</i_gain>
+                <d_gain>0</d_gain>
+                <i_max>0</i_max>
+                <i_min>0</i_min>
+                <cmd_max>2.5</cmd_max>
+                <cmd_min>-2.5</cmd_min>
+                <jointName>adrienne::rotor_1_joint</jointName>
+                <multiplier>838</multiplier>
+                <controlVelocitySlowdownSim>1</controlVelocitySlowdownSim>
+            </control>
+            <control channel="2">
+                <type>VELOCITY</type>
+                <offset>0</offset>
+                <p_gain>0.20</p_gain>
+                <i_gain>0</i_gain>
+                <d_gain>0</d_gain>
+                <i_max>0</i_max>
+                <i_min>0</i_min>
+                <cmd_max>2.5</cmd_max>
+                <cmd_min>-2.5</cmd_min>
+                <jointName>adrienne::rotor_2_joint</jointName>
+                <multiplier>-838</multiplier>
+                <controlVelocitySlowdownSim>1</controlVelocitySlowdownSim>
+            </control>
+            <control channel="3">
+                <type>VELOCITY</type>
+                <offset>0</offset>
+                <p_gain>0.20</p_gain>
+                <i_gain>0</i_gain>
+                <d_gain>0</d_gain>
+                <i_max>0</i_max>
+                <i_min>0</i_min>
+                <cmd_max>2.5</cmd_max>
+                <cmd_min>-2.5</cmd_min>
+                <jointName>adrienne::rotor_3_joint</jointName>
+                <multiplier>-838</multiplier>
+                <controlVelocitySlowdownSim>1</controlVelocitySlowdownSim>
+            </control>
+        </plugin>
+
+        <!-- rotor status tracker -->
+        <plugin name="rotor_0_joint_state_tracker" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <frameName>base_link</frameName>
+            <bodyName>rotor_0</bodyName>
+            <topicName>trackers/rotor_0/joint_state</topicName>
+            <updateRate>60</updateRate>
+        </plugin>
+        <plugin name="rotor_0_wrench_tracker" filename="libgazebo_ros_ft_sensor.so">
+            <updateRate>60</updateRate>
+            <topicName>trackers/rotor_0/wrench</topicName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <jointName>rotor_0_joint</jointName>
+        </plugin>
+        <plugin name="rotor_1_joint_state_tracker" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <frameName>base_link</frameName>
+            <bodyName>rotor_1</bodyName>
+            <topicName>trackers/rotor_1/joint_state</topicName>
+            <updateRate>60</updateRate>
+        </plugin>
+        <plugin name="rotor_1_wrench_tracker" filename="libgazebo_ros_ft_sensor.so">
+            <updateRate>60</updateRate>
+            <topicName>trackers/rotor_1/wrench</topicName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <jointName>rotor_1_joint</jointName>
+        </plugin>
+        <plugin name="rotor_2_joint_state_tracker" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <frameName>base_link</frameName>
+            <bodyName>rotor_2</bodyName>
+            <topicName>trackers/rotor_2/joint_state</topicName>
+            <updateRate>60</updateRate>
+        </plugin>
+        <plugin name="rotor_2_wrench_tracker" filename="libgazebo_ros_ft_sensor.so">
+            <updateRate>60</updateRate>
+            <topicName>trackers/rotor_2/wrench</topicName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <jointName>rotor_2_joint</jointName>
+        </plugin>
+        <plugin name="rotor_3_joint_state_tracker" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <frameName>base_link</frameName>
+            <bodyName>rotor_3</bodyName>
+            <topicName>trackers/rotor_3/joint_state</topicName>
+            <updateRate>60</updateRate>
+        </plugin>
+        <plugin name="rotor_3_wrench_tracker" filename="libgazebo_ros_ft_sensor.so">
+            <updateRate>60</updateRate>
+            <topicName>trackers/rotor_3/wrench</topicName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <jointName>rotor_3_joint</jointName>
+        </plugin>
+
+        <!-- realsense stereo camera-->
+        <link name="realsense_link">
+            <pose>0.096 0 -0.03 0 0 0</pose>
+            <collision name="realsense_link_collision">
+                <pose>0 0 0 -1.57 0 -1.57</pose>
+                <geometry>
+                    <box>
+                        <size>0.02505 0.090 0.025</size>
+                    </box>
+                </geometry>
+            </collision>
+            <inertial>
+                <pose>0 0 0 0 0 0</pose>
+                <inertia>
+                    <ixx>0.001</ixx>
+                    <ixy>0.000</ixy>
+                    <ixz>0.000</ixz>
+                    <iyy>0.001</iyy>
+                    <iyz>0.000</iyz>
+                    <izz>0.001</izz>
+                </inertia>
+                <mass>0.001</mass>
+            </inertial>
+
+            <sensor name="cameradepth" type="depth">
+                <camera name="camera">
+                    <horizontal_fov>1.57</horizontal_fov>
+                    <image>
+                        <width>1280</width>
+                        <height>720</height>
+                    </image>
+                    <clip>
+                        <near>0.1</near>
+                        <far>100</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.100</stddev>
+                    </noise>
+                </camera>
+                <always_on>1</always_on>
+                <update_rate>30</update_rate>
+                <visualize>0</visualize>
+            </sensor>
+            <sensor name="cameracolor" type="camera">
+                <camera name="camera">
+                    <horizontal_fov>1.57</horizontal_fov>
+                    <image>
+                        <width>1280</width>
+                        <height>720</height>
+                        <format>RGB_INT8</format>
+                    </image>
+                    <clip>
+                        <near>0.1</near>
+                        <far>100</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.007</stddev>
+                    </noise>
+                </camera>
+                <always_on>1</always_on>
+                <update_rate>30</update_rate>
+                <visualize>1</visualize>
+            </sensor>
+            <sensor name="cameraired1" type="camera">
+                <camera name="camera">
+                    <horizontal_fov>1.57</horizontal_fov>
+                    <image>
+                        <width>1280</width>
+                        <height>720</height>
+                        <format>L_INT8</format>
+                    </image>
+                    <clip>
+                        <near>0.1</near>
+                        <far>100</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.05</stddev>
+                    </noise>
+                </camera>
+                <always_on>1</always_on>
+                <update_rate>1</update_rate>
+                <visualize>0</visualize>
+            </sensor>
+            <sensor name="cameraired2" type="camera">
+                <camera name="camera">
+                    <horizontal_fov>1.57</horizontal_fov>
+                    <image>
+                        <width>1280</width>
+                        <height>720</height>
+                        <format>L_INT8</format>
+                    </image>
+                    <clip>
+                        <near>0.1</near>
+                        <far>100</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.05</stddev>
+                    </noise>
+                </camera>
+                <always_on>1</always_on>
+                <update_rate>1</update_rate>
+                <visualize>0</visualize>
+            </sensor>
+        </link>
+
+        <joint name="realsense_joint" type="fixed">
+            <parent>base_link</parent>
+            <child>realsense_link</child>
+            <pose>0 0 0 -1.57 0 -1.57</pose>
+        </joint>
+
+        <plugin name="camera" filename="librealsense_gazebo_plugin.so">
+            <prefix>camera</prefix>
+            <depthUpdateRate>10.0</depthUpdateRate>
+            <colorUpdateRate>10.0</colorUpdateRate>
+            <infraredUpdateRate>1.0</infraredUpdateRate>
+            <depthTopicName>aligned_depth_to_color/image_raw</depthTopicName>
+            <depthCameraInfoTopicName>depth/camera_info</depthCameraInfoTopicName>
+            <colorTopicName>color/image_raw</colorTopicName>
+            <colorCameraInfoTopicName>color/camera_info</colorCameraInfoTopicName>
+            <infrared1TopicName>infra1/image_raw</infrared1TopicName>
+            <infrared1CameraInfoTopicName>infra1/camera_info</infrared1CameraInfoTopicName>
+            <infrared2TopicName>infra2/image_raw</infrared2TopicName>
+            <infrared2CameraInfoTopicName>infra2/camera_info</infrared2CameraInfoTopicName>
+            <colorOpticalframeName>camera_color_optical_frame</colorOpticalframeName>
+            <depthOpticalframeName>camera_depth_optical_frame</depthOpticalframeName>
+            <infrared1OpticalframeName>camera_left_ir_optical_frame</infrared1OpticalframeName>
+            <infrared2OpticalframeName>camera_right_ir_optical_frame</infrared2OpticalframeName>
+            <rangeMinDepth>0.2</rangeMinDepth>
+            <rangeMaxDepth>10.0</rangeMaxDepth>
+            <pointCloud>true</pointCloud>
+            <pointCloudTopicName>depth/color/points</pointCloudTopicName>
+            <pointCloudCutoff>0.25</pointCloudCutoff>
+            <pointCloudCutoffMax>9.0</pointCloudCutoffMax>
+        </plugin>
+
+    </model>
+</sdf>
