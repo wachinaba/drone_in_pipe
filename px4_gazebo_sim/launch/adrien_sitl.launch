@@ -53,4 +53,11 @@
         <arg name="fcu_url" value="$(arg fcu_url)" />
         <arg name="respawn_mavros" value="$(arg respawn_mavros)" />
     </include>
+
+    <!-- state publishers and rviz -->
+    <param name="robot_description" textfile="$(find px4_gazebo_sim)/urdf/adrien.urdf" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find px4_gazebo_sim)/rviz/adrien_sitl.rviz"
+        required="true" />
 </launch>
