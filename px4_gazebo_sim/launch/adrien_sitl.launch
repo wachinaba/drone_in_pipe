@@ -22,6 +22,9 @@
     <arg name="verbose" default="false" />
     <arg name="paused" default="false" />
     <arg name="respawn_gazebo" default="false" />
+    <!-- MAVROS configs -->
+    <arg name="fcu_url" default="udp://:14540@localhost:14557" />
+    <arg name="respawn_mavros" default="false" />
     <!-- PX4 configs -->
     <arg name="interactive" default="true" />
     <!-- PX4 SITL -->
@@ -43,4 +46,11 @@
     <!-- gazebo model -->
     <node name="$(anon vehicle_spawn)" pkg="gazebo_ros" type="spawn_model" output="screen"
         args="-sdf -file $(arg sdf) -model $(arg vehicle) -x $(arg x) -y $(arg y) -z $(arg z) -R $(arg R) -P $(arg P) -Y $(arg Y)" />
+    <!-- MAVROS -->
+    <include file="$(find mavros)/launch/px4.launch">
+        <!-- GCS link is provided by SITL -->
+        <arg name="gcs_url" value="" />
+        <arg name="fcu_url" value="$(arg fcu_url)" />
+        <arg name="respawn_mavros" value="$(arg respawn_mavros)" />
+    </include>
 </launch>
