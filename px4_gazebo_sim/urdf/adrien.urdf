@@ -108,7 +108,7 @@
     <joint name="camera_depth_optical_joint" type="fixed">
         <parent link="camera_depth_frame" />
         <child link="camera_depth_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
     </joint>
     <joint name="camera_color_joint" type="fixed">
         <parent link="camera_depth_frame" />
@@ -118,7 +118,7 @@
     <joint name="camera_color_optical_joint" type="fixed">
         <parent link="camera_color_frame" />
         <child link="camera_color_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
     </joint>
     <joint name="camera_left_ir_joint" type="fixed">
         <parent link="camera_depth_frame" />
@@ -128,7 +128,7 @@
     <joint name="camera_left_ir_optical_joint" type="fixed">
         <parent link="camera_left_ir_frame" />
         <child link="camera_left_ir_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
     </joint>
     <joint name="camera_right_ir_joint" type="fixed">
         <parent link="camera_depth_frame" />
@@ -138,7 +138,7 @@
     <joint name="camera_right_ir_optical_joint" type="fixed">
         <parent link="camera_right_ir_frame" />
         <child link="camera_right_ir_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
     </joint>
 
 
