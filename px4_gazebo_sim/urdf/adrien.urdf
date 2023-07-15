@@ -108,7 +108,7 @@
     <joint name="camera_depth_optical_joint" type="fixed">
         <parent link="camera_depth_frame" />
         <child link="camera_depth_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
     </joint>
     <joint name="camera_color_joint" type="fixed">
         <parent link="camera_depth_frame" />
@@ -118,7 +118,7 @@
     <joint name="camera_color_optical_joint" type="fixed">
         <parent link="camera_color_frame" />
         <child link="camera_color_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
     </joint>
     <joint name="camera_left_ir_joint" type="fixed">
         <parent link="camera_depth_frame" />
@@ -128,7 +128,7 @@
     <joint name="camera_left_ir_optical_joint" type="fixed">
         <parent link="camera_left_ir_frame" />
         <child link="camera_left_ir_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
     </joint>
     <joint name="camera_right_ir_joint" type="fixed">
         <parent link="camera_depth_frame" />
@@ -138,24 +138,24 @@
     <joint name="camera_right_ir_optical_joint" type="fixed">
         <parent link="camera_right_ir_frame" />
         <child link="camera_right_ir_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.57 0 -1.57" />
+        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
     </joint>
 
 
     <joint name="optical_flow_bottom_joint" type="fixed">
         <child link="optical_flow_bottom_link" />
         <parent link="base_link" />
-        <origin xyz="0.10783 -0.00735 -0.047658" rpy="-1.570796 1.570796 0" />
+        <origin xyz="0.10783 -0.00735 -0.047658" rpy="-3.141593 0 0" />
     </joint>
     <joint name="optical_flow_left_joint" type="fixed">
         <child link="optical_flow_left_link" />
         <parent link="base_link" />
-        <origin xyz="-0.0077 0.048 -0.0672" rpy="0 0 1.570796" />
+        <origin xyz="-0.0077 0.048 -0.0672" rpy="-1.570796 0 0" />
     </joint>
     <joint name="optical_flow_right_joint" type="fixed">
         <child link="optical_flow_right_link" />
         <parent link="base_link" />
-        <origin xyz="-0.0077 -0.048 -0.0672" rpy="0 0 -1.570796" />
+        <origin xyz="-0.0077 -0.048 -0.0672" rpy="-1.570796 0 3.141593" />
     </joint>
     <joint name="multi_zone_lidar_left_joint" type="fixed">
         <child link="multi_zone_lidar_left_link" />
