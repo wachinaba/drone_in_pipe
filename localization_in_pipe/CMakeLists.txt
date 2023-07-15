@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   visualization_msgs
+  tf2
   tf2_ros
 )
 
@@ -162,6 +163,11 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+add_executable(single_optical_flow_speed_estimator src/single_optical_flow_speed_estimator.cpp)
+add_dependencies(single_optical_flow_speed_estimator ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(single_optical_flow_speed_estimator ${catkin_LIBRARIES})
+
 
 #############
 ## Install ##
