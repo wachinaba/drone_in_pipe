@@ -145,17 +145,17 @@
     <joint name="optical_flow_bottom_joint" type="fixed">
         <child link="optical_flow_bottom_link" />
         <parent link="base_link" />
-        <origin xyz="0.10783 -0.00735 -0.047658" rpy="-1.570796 1.570796 0" />
+        <origin xyz="0.10783 -0.00735 -0.047658" rpy="-3.141593 0 0" />
     </joint>
     <joint name="optical_flow_left_joint" type="fixed">
         <child link="optical_flow_left_link" />
         <parent link="base_link" />
-        <origin xyz="-0.0077 0.048 -0.0672" rpy="0 0 1.570796" />
+        <origin xyz="-0.0077 0.048 -0.0672" rpy="-1.570796 0 0" />
     </joint>
     <joint name="optical_flow_right_joint" type="fixed">
         <child link="optical_flow_right_link" />
         <parent link="base_link" />
-        <origin xyz="-0.0077 -0.048 -0.0672" rpy="0 0 -1.570796" />
+        <origin xyz="-0.0077 -0.048 -0.0672" rpy="-1.570796 0 3.141593" />
     </joint>
     <joint name="multi_zone_lidar_left_joint" type="fixed">
         <child link="multi_zone_lidar_left_link" />
