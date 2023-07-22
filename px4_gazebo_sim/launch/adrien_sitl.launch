@@ -42,6 +42,7 @@
         <arg name="verbose" value="$(arg verbose)" />
         <arg name="paused" value="$(arg paused)" />
         <arg name="respawn_gazebo" value="$(arg respawn_gazebo)" />
+        <arg name="extra_gazebo_args" value="--lockstep" />
     </include>
     <!-- gazebo model -->
     <node name="$(anon vehicle_spawn)" pkg="gazebo_ros" type="spawn_model" output="screen"
