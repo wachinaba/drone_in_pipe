@@ -1,22 +1,8 @@
 {
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": false,
-  "python.linting.flake8Enabled": true,
-  "python.formatting.provider": "black",
   "[python]": {
     "editor.tabSize": 4,
     "editor.insertSpaces": true
   },
-  "python.formatting.blackArgs": [
-    "--line-length",
-    "119",
-  ],
-  "python.linting.flake8Args": [
-    "--max-line-length",
-    "119",
-    "--extend-ignore",
-    "E203,F722",
-  ],
   "python.defaultInterpreterPath": "/usr/bin/python3",
   "ros.distro": "noetic",
   "python.autoComplete.extraPaths": [
@@ -25,4 +11,9 @@
   "python.analysis.extraPaths": [
     "/opt/ros/noetic/lib/python3/dist-packages"
   ],
+  "C_Cpp.clang_format_style": "file:${env:HOME}/catkin_ws/.clang-format",
+  "editor.indentSize": 2,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "cmake.sourceDirectory": "/home/wachinaba/catkin_ws/src/drone_in_pipe/localization_in_pipe",
 }
