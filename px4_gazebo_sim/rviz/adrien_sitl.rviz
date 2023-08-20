@@ -6,8 +6,10 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /TF1/Tree1
-      Splitter Ratio: 0.46932515501976013
+        - /TF1
+        - /TF1/Frames1
+        - /TwistStamped1
+      Splitter Ratio: 0.5790441036224365
     Tree Height: 749
   - Class: rviz/Selection
     Name: Selection
@@ -54,6 +56,8 @@ Visualization Manager:
       Value: true
     - Class: rviz/TF
       Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: false
@@ -92,13 +96,13 @@ Visualization Manager:
         multi_zone_lidar_front_right_link:
           Value: false
         multi_zone_lidar_left_link:
-          Value: false
+          Value: true
         multi_zone_lidar_rear_left_link:
           Value: false
         multi_zone_lidar_rear_right_link:
           Value: false
         multi_zone_lidar_right_link:
-          Value: false
+          Value: true
         odom:
           Value: false
         odom_ned:
@@ -179,6 +183,12 @@ Visualization Manager:
           single_point_lidar_bottom_link:
             {}
           single_point_lidar_top_link:
+            {}
+        map:
+          map_ned:
+            {}
+        odom:
+          odom_ned:
             {}
       Update Interval: 0
       Value: true
@@ -458,6 +468,88 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Class: rviz/Marker
+      Enabled: false
+      Marker Topic: /single_optical_flow_speed_estimator/angular_velocity_marker
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: false
+    - Class: rviz/Marker
+      Enabled: false
+      Marker Topic: /single_optical_flow_speed_estimator/circumference_velocity_marker
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: false
+    - Class: rviz/Marker
+      Enabled: false
+      Marker Topic: /single_optical_flow_speed_estimator/linear_velocity_marker
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: false
+    - Angular Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Angular Velocity Alpha: 1
+      Angular Velocity Color: 204; 51; 204
+      Angular Velocity Head Radius: 0.10000000149011612
+      Angular Velocity Scale: 1
+      Angular Velocity Shaft Radius: 0.05000000074505806
+      Class: twist_with_covariance_rviz_plugin/TwistWithCovarianceStamped
+      Enabled: true
+      Linear Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Linear Velocity Alpha: 1
+      Linear Velocity Color: 204; 51; 204
+      Linear Velocity Head Radius: 0.10000000149011612
+      Linear Velocity Scale: 1
+      Linear Velocity Shaft Radius: 0.05000000074505806
+      Name: TwistWithCovarianceStamped
+      Queue Size: 10
+      Topic: /single_optical_flow_speed_estimator/linear_velocity
+      Unreliable: false
+      Value: true
+    - Class: jsk_rviz_plugin/TwistStamped
+      Enabled: true
+      Name: TwistStamped
+      Queue Size: 10
+      Topic: /single_optical_flow_speed_estimator/optical_flow_velocity
+      Unreliable: false
+      Value: true
+      angular color: 255; 0; 0
+      angular scale: 1
+      linear color: 0; 255; 0
+      linear scale: 1
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -486,7 +578,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 9.063257217407227
+      Distance: 7.464704513549805
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -494,17 +586,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 4.788101673126221
-        Y: 0.22623497247695923
-        Z: -1.339794397354126
+        X: 2.6751458644866943
+        Y: 1.2268558740615845
+        Z: -1.7897884845733643
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.2947971224784851
+      Pitch: 0.6097972989082336
       Target Frame: <Fixed Frame>
-      Yaw: 3.1253981590270996
+      Yaw: 3.50040340423584
     Saved: ~
 Window Geometry:
   Displays:
