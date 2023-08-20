@@ -1049,7 +1049,7 @@
 
         <!-- multi zone lidar -->
         <link name="multi_zone_lidar_left_link">
-            <pose>0.0075 0.0465 -0.0665 0 0 1.570796</pose>
+            <pose>0.0075 0.0465 -0.0665 -1.570796 0 1.570796</pose>
 
             <inertial>
                 <mass>0.001</mass>
@@ -1112,7 +1112,7 @@
             </axis>
         </joint>
         <link name="multi_zone_lidar_right_link">
-            <pose>0.0075 -0.0465 -0.0665 0 0 -1.570796</pose>
+            <pose>0.0075 -0.0465 -0.0665 1.570796 0 -1.570796</pose>
 
             <inertial>
                 <mass>0.001</mass>

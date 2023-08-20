@@ -160,12 +160,12 @@
     <joint name="multi_zone_lidar_left_joint" type="fixed">
         <child link="multi_zone_lidar_left_link" />
         <parent link="base_link" />
-        <origin xyz="0.0075 0.0465 -0.0665" rpy="0 0 1.570796" />
+        <origin xyz="0.0075 0.0465 -0.0665" rpy="-1.570796 0 1.570796" />
     </joint>
     <joint name="multi_zone_lidar_right_joint" type="fixed">
         <child link="multi_zone_lidar_right_link" />
         <parent link="base_link" />
-        <origin xyz="0.0075 -0.0465 -0.0665" rpy="0 0 -1.570796" />
+        <origin xyz="0.0075 -0.0465 -0.0665" rpy="1.570796 0 -1.570796" />
     </joint>
     <joint name="multi_zone_lidar_front_left_joint" type="fixed">
         <child link="multi_zone_lidar_front_left_link" />
