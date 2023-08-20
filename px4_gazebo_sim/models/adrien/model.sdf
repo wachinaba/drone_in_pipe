@@ -667,6 +667,15 @@
             <jointName>rotor_3_joint</jointName>
         </plugin>
 
+        <!-- body position/velocity tracker -->
+        <plugin name="base_link_state_tracker" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <frameName>world</frameName>
+            <bodyName>base_link</bodyName>
+            <topicName>trackers/base_link/joint_state</topicName>
+            <updateRate>60</updateRate>
+        </plugin>
+
         <!-- realsense stereo camera-->
         <link name="realsense_link">
             <pose>0.096 0 -0.03 0 0 0</pose>
@@ -874,7 +883,7 @@
                     <robotNamespace></robotNamespace>
                     <cameraName>optical_flow_bottom_camera</cameraName>
                     <alwaysOn>true</alwaysOn>
-                    <outputRate>30</outputRate>
+                    <outputRate>0</outputRate>
                 </plugin>
             </sensor>
         </link>
