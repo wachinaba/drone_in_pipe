@@ -11,6 +11,7 @@ geometry_msgs
   sensor_msgs
   std_msgs
   visualization_msgs
+  nav_msgs
   tf2
   tf2_ros
 )
@@ -31,3 +32,6 @@ message("catkin_LIBRARIES: ${catkin_LIBRARIES}")
 
 add_executable(single_optical_flow_speed_estimator src/single_optical_flow_speed_estimator.cpp)
 target_link_libraries(single_optical_flow_speed_estimator ${catkin_LIBRARIES})
+
+add_executable(p3d_odometry_converter src/p3d_odometry_converter.cpp)
+target_link_libraries(p3d_odometry_converter ${catkin_LIBRARIES})
