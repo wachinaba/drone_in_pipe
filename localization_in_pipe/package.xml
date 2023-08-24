@@ -50,6 +50,7 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>gazebo_ros_optical_flow_msgs</build_depend>
+  <build_depend>localization_in_pipe_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>mavros</build_depend>
   <build_depend>mavros_msgs</build_depend>
@@ -62,7 +63,10 @@
   <build_depend>tf2</build_depend>
   <build_depend>tf2_ros</build_depend>
   <build_depend>ukf_ros</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>nodelet</build_depend>
   <build_export_depend>gazebo_ros_optical_flow_msgs</build_export_depend>
+  <build_export_depend>localization_in_pipe_msgs</build_export_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
   <build_export_depend>mavros</build_export_depend>
   <build_export_depend>mavros_msgs</build_export_depend>
@@ -75,6 +79,7 @@
   <build_export_depend>tf2</build_export_depend>
   <build_export_depend>tf2_ros</build_export_depend>
   <exec_depend>gazebo_ros_optical_flow_msgs</exec_depend>
+  <exec_depend>localization_in_pipe_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>mavros</exec_depend>
   <exec_depend>mavros_msgs</exec_depend>
@@ -87,13 +92,12 @@
   <exec_depend>tf2</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>ukf_ros</exec_depend>
-
-  <build_depend>cmake_modules</build_depend>
-  <exec_depend>cmake_modules</exec_depend>
+  <exec_depend>pluginlib</exec_depend>
+  <exec_depend>nodelet</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-
+    <nodelet plugin="${prefix}/nodelet_description.xml" />
   </export>
 </package>
