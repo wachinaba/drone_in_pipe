@@ -144,11 +144,11 @@ include_directories(
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-add_executable(multizone_range_to_pointcloud2 src/multizone_range_to_pointcloud2.cpp)
-target_link_libraries(multizone_range_to_pointcloud2
+add_executable(multizone_range_converter_node src/multizone_range_converter_node.cpp)
+target_link_libraries(multizone_range_converter_node
   ${catkin_LIBRARIES}
 )
-add_dependencies(multizone_range_to_pointcloud2
+add_dependencies(multizone_range_converter_node
   ${catkin_EXPORTED_TARGETS}
 )
 
