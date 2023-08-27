@@ -5,5 +5,5 @@
 https://github.com/TFmini/TFmini-ROS/tree/master/tfmini_ros
 
 # other requirements
-## wachinaba/ukf_ros
-https://github.com/wachinaba/ukf_ros
+## mherb/kalman
+https://github.com/mherb/kalman
