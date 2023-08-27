@@ -16,11 +16,13 @@ namespace localization_in_pipe
 class move_ukf_nodelet : public nodelet::Nodelet
 {
 public:
+  move_ukf_nodelet();
+
+private:
   virtual void onInit();
   void integratedFlowCallback(const localization_in_pipe_msgs::IntegratedFlow::ConstPtr& msg);
   void imuCallback(const sensor_msgs::Imu::ConstPtr& msg);
 
-private:
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
 
@@ -153,3 +155,4 @@ void move_ukf_nodelet::publishVelocity(const localization_in_pipe_msgs::Integrat
 }
 
 }  // namespace localization_in_pipe
+PLUGINLIB_EXPORT_CLASS(localization_in_pipe::move_ukf_nodelet, nodelet::Nodelet)

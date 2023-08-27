@@ -2,7 +2,6 @@
 
 #include <ros/ros.h>
 #include <nodelet/nodelet.h>
-#include <pluginlib/class_list_macros.h>
 
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/buffer.h>
@@ -19,11 +18,13 @@ namespace localization_in_pipe
 class flow_range_integrator_nodelet : public nodelet::Nodelet
 {
 public:
+  flow_range_integrator_nodelet();
+
+private:
   virtual void onInit();
   void rangeCallback(const sensor_msgs::Range::ConstPtr& msg);
   void flowCallback(const mavros_msgs::OpticalFlowRad::ConstPtr& msg);
 
-private:
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
 
@@ -48,7 +49,7 @@ private:
   void getFrameIds();
   void getTransform();
 
-  void calc_integrated_flow();
+  void calcIntegratedFlow();
 };
 
 void flow_range_integrator_nodelet::onInit()
@@ -116,7 +117,7 @@ void flow_range_integrator_nodelet::rangeCallback(const sensor_msgs::Range::Cons
 void flow_range_integrator_nodelet::flowCallback(const mavros_msgs::OpticalFlowRad::ConstPtr& msg)
 {
   latest_flow_ = msg;
-  calc_integrated_flow();
+  calcIntegratedFlow();
 
   // set header
   integrated_flow_msg_.header.stamp = msg->header.stamp;
@@ -125,7 +126,7 @@ void flow_range_integrator_nodelet::flowCallback(const mavros_msgs::OpticalFlowR
   integrated_flow_pub_.publish(integrated_flow_msg_);
 }
 
-void flow_range_integrator_nodelet::calc_integrated_flow()
+void flow_range_integrator_nodelet::calcIntegratedFlow()
 {
   Eigen::Vector2d flow_rad(latest_flow_->integrated_x, latest_flow_->integrated_y);
   double range = latest_range_->range;
@@ -161,3 +162,6 @@ void flow_range_integrator_nodelet::calc_integrated_flow()
 }
 
 }  // namespace localization_in_pipe
+
+#include <pluginlib/class_list_macros.h>
+PLUGINLIB_EXPORT_CLASS(localization_in_pipe::flow_range_integrator_nodelet, nodelet::Nodelet)
