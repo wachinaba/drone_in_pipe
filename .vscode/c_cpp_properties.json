@@ -11,7 +11,7 @@
         "/usr/include/**",
         "/usr/include/eigen3",
         "${workspaceFolder}/localization_in_pipe/include/**",
-        "${env:HOME}/catkin_ws/src/ukf_ros/include/**"
+        "${workspaceFolder}/multizone_lidar/include/**"
       ],
       "name": "ROS",
       "intelliSenseMode": "gcc-x64",
