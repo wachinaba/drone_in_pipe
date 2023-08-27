@@ -22,7 +22,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+
+
 find_package(Eigen3 REQUIRED)
+find_package(Kalman REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
@@ -33,6 +36,7 @@ catkin_package(
 include_directories(
   include
   ${EIGEN3_INCLUDE_DIR}
+  ${KALMAN_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
 
