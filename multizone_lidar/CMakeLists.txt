@@ -159,6 +159,9 @@ add_dependencies(multizone_lidar_converter ${catkin_EXPORTED_TARGETS} ${${PROJEC
 add_executable(pointcloud2_to_range_node src/nodes/pointcloud2_to_range_node.cpp)
 target_link_libraries(pointcloud2_to_range_node multizone_lidar_converter ${catkin_LIBRARIES})
 
+add_executable(pointcloud1_to_range_node src/nodes/pointcloud1_to_range_node.cpp)
+target_link_libraries(pointcloud1_to_range_node multizone_lidar_converter ${catkin_LIBRARIES})
+
 add_executable(multizone_range_converter_node src/nodes/multizone_range_converter_node.cpp)
 target_link_libraries(multizone_range_converter_node multizone_lidar_converter ${catkin_LIBRARIES})
 
