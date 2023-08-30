@@ -10,15 +10,15 @@ public:
   void pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr& msg);
 
 private:
-  ros::NodeHandle pnh;
+  ros::NodeHandle nh;
   ros::Publisher range_pub;
   ros::Subscriber sub;
 };
 
-Pointcloud2ToRangeNode::Pointcloud2ToRangeNode() : pnh("~")
+Pointcloud2ToRangeNode::Pointcloud2ToRangeNode() : nh()
 {
-  range_pub = pnh.advertise<sensor_msgs::Range>("range", 1);
-  sub = pnh.subscribe("pointcloud", 1, &Pointcloud2ToRangeNode::pointCloudCallback, this);
+  range_pub = nh.advertise<sensor_msgs::Range>("range", 1);
+  sub = nh.subscribe("pointcloud", 1, &Pointcloud2ToRangeNode::pointCloudCallback, this);
 }
 
 void Pointcloud2ToRangeNode::pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr& msg)
