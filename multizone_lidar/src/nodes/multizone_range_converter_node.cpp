@@ -12,17 +12,17 @@ public:
   void multizoneRangeCallback(const multizone_lidar_msgs::MultizoneRange::ConstPtr& msg);
 
 private:
-  ros::NodeHandle pnh;
+  ros::NodeHandle nh;
   ros::Publisher pointcloud_pub;
   ros::Publisher range_pub;
   ros::Subscriber sub;
 };
 
-MultizoneRangeConverterNode::MultizoneRangeConverterNode() : pnh("~")
+MultizoneRangeConverterNode::MultizoneRangeConverterNode() : nh()
 {
-  pointcloud_pub = pnh.advertise<sensor_msgs::PointCloud2>("pointcloud", 1);
-  range_pub = pnh.advertise<sensor_msgs::Range>("range", 1);
-  sub = pnh.subscribe("multizone_range", 1, &MultizoneRangeConverterNode::multizoneRangeCallback, this);
+  pointcloud_pub = nh.advertise<sensor_msgs::PointCloud2>("pointcloud", 1);
+  range_pub = nh.advertise<sensor_msgs::Range>("range", 1);
+  sub = nh.subscribe("multizone_range", 1, &MultizoneRangeConverterNode::multizoneRangeCallback, this);
 }
 
 void MultizoneRangeConverterNode::multizoneRangeCallback(const multizone_lidar_msgs::MultizoneRange::ConstPtr& msg)
