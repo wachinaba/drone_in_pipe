@@ -10,4 +10,10 @@
     <description>
     </description>
   </class>
+
+  <class name="localization_in_pipe/body_accel_estimator_nodelet"
+    type="localization_in_pipe::body_accel_estimator_nodelet" base_class_type="nodelet::Nodelet">
+    <description>
+    </description>
+  </class>
 </library>

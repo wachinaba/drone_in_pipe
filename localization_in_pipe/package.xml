@@ -62,7 +62,6 @@
   <build_depend>nav_msgs</build_depend>
   <build_depend>tf2</build_depend>
   <build_depend>tf2_ros</build_depend>
-  <build_depend>ukf_ros</build_depend>
   <build_depend>pluginlib</build_depend>
   <build_depend>nodelet</build_depend>
   <build_export_depend>gazebo_ros_optical_flow_msgs</build_export_depend>
@@ -91,13 +90,12 @@
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>tf2</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
-  <exec_depend>ukf_ros</exec_depend>
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>nodelet</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <nodelet plugin="${prefix}/nodelet_description.xml" />
+    <nodelet plugin="${prefix}/nodelet_plugins.xml" />
   </export>
 </package>
