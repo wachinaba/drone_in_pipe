@@ -14,22 +14,32 @@ FlowRangeIntegrator::FlowRangeIntegrator(const Eigen::Isometry3d& transform, dou
   default_covariance_ = transform_.rotation() * default_covariance_ * transform_.rotation().transpose();
 }
 
+FlowRangeIntegrator::FlowRangeIntegrator()
+  : transform_(Eigen::Isometry3d::Identity()), flow_covariance_constant_(0.0), prev_flow_stamp_(ros::Time(0))
+{
+  default_covariance_ = Eigen::Matrix3d::Zero();
+}
+
 Eigen::Vector3d FlowRangeIntegrator::calcVelocity(const Eigen::Vector2d& flow_rad, double range, ros::Time stamp)
 {
   Eigen::Vector2d displacement_2d = flow_rad * range;
   Eigen::Vector3d displacement_3d(displacement_2d(0), displacement_2d(1), 0.0);
 
   double dt = (stamp - prev_flow_stamp_).toSec();
-  prev_flow_stamp_ = stamp;
-
   if (stamp == ros::Time(0))  // first time
   {
+    prev_flow_stamp_ = stamp;
     return Eigen::Vector3d::Zero();
   }
   else if (dt <= 0.0)  // dt should be positive
   {
     return Eigen::Vector3d::Zero();
   }
+  else if (dt > 1.0)  // dt should be less than 1.0
+  {
+    return Eigen::Vector3d::Zero();
+  }
+  prev_flow_stamp_ = stamp;
 
   Eigen::Vector3d velocity = transform_.rotation() * displacement_3d / dt;
 
