@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="manager_name" default="move_ukf_nodelet_manager" />
+  <arg name="manager_threads" default="20" />
+
+  <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen">
+    <param name="num_worker_threads" value="$(arg manager_threads)" />
+  </node>
+
+
+  <node pkg="nodelet" type="nodelet" name="flow_range_integrator_bottom"
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    <remap from="flow" to="/adrien/optical_flow_bottom_link/optical_flow" />
+    <remap from="range" to="/single_point_lidar_bottom/range" />
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <param name="sensor_frame" value="optical_flow_bottom_link" />
+    <param name="body_frame" value="base_link" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="flow_range_integrator_left"
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    <remap from="flow" to="/adrien/optical_flow_left_link/optical_flow" />
+    <remap from="range" to="/single_point_lidar_left/range" />
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <param name="sensor_frame" value="optical_flow_left_link" />
+    <param name="body_frame" value="base_link" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="flow_range_integrator_right"
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    <remap from="flow" to="/adrien/optical_flow_right_link/optical_flow" />
+    <remap from="range" to="/single_point_lidar_right/range" />
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <param name="sensor_frame" value="optical_flow_right_link" />
+    <param name="body_frame" value="base_link" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="body_accel_estimator"
+    args="load localization_in_pipe/body_accel_estimator_nodelet $(arg manager_name)">
+    <remap from="imu" to="/mavros/imu/data" />
+    <remap from="body_accel_imu" to="/move_ukf/body_accel_imu" />
+    <remap from="calibrate_imu" to="/move_ukf/calibrate_imu" />
+    <remap from="gravity" to="/move_ukf/gravity" />
+    <remap from="raw_imu_accel" to="/move_ukf/raw_imu_accel" />
+    <remap from="body_accel" to="/move_ukf/body_accel" />
+    <param name="sensor_frame" value="imu_link" />
+    <param name="body_frame" value="base_link" />
+  </node>
+
+  <!--
+  <node pkg="nodelet" type="nodelet" name="move_ukf"
+    args="load localization_in_pipe/move_ukf_nodelet $(arg manager_name)">
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <remap from="body_accel" to="/move_ukf/body_accel" />
+  </node>
+  -->
+
+</launch>
