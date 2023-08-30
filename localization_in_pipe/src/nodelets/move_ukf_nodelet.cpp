@@ -16,13 +16,11 @@ namespace localization_in_pipe
 class move_ukf_nodelet : public nodelet::Nodelet
 {
 public:
-  move_ukf_nodelet();
-
-private:
   virtual void onInit();
   void integratedFlowCallback(const localization_in_pipe_msgs::IntegratedFlow::ConstPtr& msg);
   void imuCallback(const sensor_msgs::Imu::ConstPtr& msg);
 
+protected:
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
 
@@ -60,6 +58,8 @@ void move_ukf_nodelet::onInit()
 
   prev_stamp_ = ros::Time(0);
 
+  imu_msg_ = boost::make_shared<sensor_msgs::Imu>();
+
   // initialize filter
   filter_state_ = MoveUKF::State<T>::Zero();
   filter_control_ = MoveUKF::Control<T>::Zero();
@@ -70,24 +70,23 @@ void move_ukf_nodelet::onInit()
   filter_measurement_model_ = MoveUKF::MeasurementModel<T>();
   filter_measurement_model_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * 1e-3);  // measurement covariance
 
-  filter_ = Kalman::UnscentedKalmanFilter<MoveUKF::State<T>>(0.001, 2.0, 0.0);
+  filter_ = Kalman::UnscentedKalmanFilter<MoveUKF::State<T>>(1, 2.0, 0.0);
   filter_.init(filter_state_);
   filter_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * 1.0);
 
   velocity_msg = geometry_msgs::TwistWithCovarianceStamped();
 
-  velocity_pub_ = pnh_.advertise<geometry_msgs::TwistWithCovarianceStamped>("velocity", 1);
-  integrated_flow_sub_ = pnh_.subscribe("integrated_flow", 10, &move_ukf_nodelet::integratedFlowCallback, this);
-  imu_sub_ = pnh_.subscribe("imu", 10, &move_ukf_nodelet::imuCallback, this);
+  velocity_pub_ = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>("velocity", 1);
+  integrated_flow_sub_ = nh_.subscribe("integrated_flow", 10, &move_ukf_nodelet::integratedFlowCallback, this);
+  imu_sub_ = nh_.subscribe("body_accel", 10, &move_ukf_nodelet::imuCallback, this);
 }
 
 void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::IntegratedFlow::ConstPtr& msg)
 {
   double dt = (msg->header.stamp - prev_stamp_).toSec();
-  prev_stamp_ = msg->header.stamp;
-
-  if (msg->header.stamp == ros::Time(0))  // first time
+  if (prev_stamp_ == ros::Time(0))  // first time
   {
+    prev_stamp_ = msg->header.stamp;
     return;
   }
   else if (dt <= 0.0)  // dt should be positive
@@ -98,6 +97,7 @@ void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::I
   {
     return;
   }
+  prev_stamp_ = msg->header.stamp;
 
   filter_control_.acc_x() = imu_msg_->linear_acceleration.x * dt;
   filter_control_.acc_y() = imu_msg_->linear_acceleration.y * dt;
