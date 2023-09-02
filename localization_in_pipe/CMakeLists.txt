@@ -66,9 +66,11 @@ target_link_libraries(${PROJECT_NAME} move_ukf flow_range_integrator flow_range_
 
 add_executable(single_optical_flow_speed_estimator src/single_optical_flow_speed_estimator.cpp)
 target_link_libraries(single_optical_flow_speed_estimator ${catkin_LIBRARIES})
+add_dependencies(single_optical_flow_speed_estimator ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 add_executable(p3d_odometry_converter src/p3d_odometry_converter.cpp)
 target_link_libraries(p3d_odometry_converter ${catkin_LIBRARIES})
+add_dependencies(p3d_odometry_converter ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 
 #
