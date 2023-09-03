@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="default">
+    <gui>
+      <camera name="user_camera">
+        <pose>-5 0 1 0 0.2 0</pose>
+      </camera>
+    </gui>
+    <physics type="ode">
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>100</iters>
+          <sor>1.0</sor>
+        </solver>
+        <constraints>
+          <cfm>0.0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>0.1</contact_max_correcting_vel>
+          <contact_surface_layer>0.0</contact_surface_layer>
+        </constraints>
+      </ode>
+      <real_time_update_rate>-1</real_time_update_rate>
+      <!--<max_step_size>0.0020</max_step_size>-->
+    </physics>
+    <gravity>0 0 -9.8</gravity>
+
+    <scene>
+      <shadows>0</shadows>
+    </scene>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>5000 5000</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="concrete00">
+          <pose>0 0 0.0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>4 4000</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://some_materials/materials/scripts</uri>
+              <uri>model://some_materials/materials/textures</uri>
+              <name>pipe/concrete_long00</name>
+            </script>
+          </material>
+        </visual>
+
+        <visual name="concrete01">
+          <pose>4 0 0.0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>4 4000</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://some_materials/materials/scripts</uri>
+              <uri>model://some_materials/materials/textures</uri>
+              <name>pipe/concrete_long01</name>
+            </script>
+          </material>
+        </visual>
+
+        <visual name="concrete02">
+          <pose>8 0 0.0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>4 4000</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://some_materials/materials/scripts</uri>
+              <uri>model://some_materials/materials/textures</uri>
+              <name>pipe/concrete_long02</name>
+            </script>
+          </material>
+        </visual>
+
+        <visual name="concrete03">
+          <pose>12 0 0.0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>4 4000</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://some_materials/materials/scripts</uri>
+              <uri>model://some_materials/materials/textures</uri>
+              <name>pipe/concrete_long03</name>
+            </script>
+          </material>
+        </visual>
+
+        <visual name="concrete04">
+          <pose>16 0 0.0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>4 4000</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://some_materials/materials/scripts</uri>
+              <uri>model://some_materials/materials/textures</uri>
+              <name>pipe/concrete_long04</name>
+            </script>
+          </material>
+        </visual>
+
+      </link>
+    </model>
+
+  </world>
+</sdf>

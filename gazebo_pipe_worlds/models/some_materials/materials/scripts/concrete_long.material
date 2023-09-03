@@ -1,0 +1,104 @@
+material pipe/concrete_long00
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 1.0
+			diffuse 0.5 0.5 0.5 1.0
+			specular 0.2 0.2 0.2 1.0 12.5
+
+			texture_unit
+			{
+				texture concrete00.jpg
+				filtering anistropic
+				max_anisotropy 16
+				scale 3 0.003
+			}
+		}
+	}
+}
+
+material pipe/concrete_long01
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 1.0
+			diffuse 0.5 0.5 0.5 1.0
+			specular 0.2 0.2 0.2 1.0 12.5
+
+			texture_unit
+			{
+				texture concrete01.jpg
+				filtering anistropic
+				max_anisotropy 16
+				scale 3 0.003
+			}
+		}
+	}
+}
+
+material pipe/concrete_long02
+{
+  technique
+  {
+    pass
+    {
+      ambient 0.5 0.5 0.5 1.0
+      diffuse 0.5 0.5 0.5 1.0
+      specular 0.2 0.2 0.2 1.0 12.5
+
+      texture_unit
+      {
+        texture concrete02.jpg
+        filtering anistropic
+        max_anisotropy 16
+        scale 3 0.003
+      }
+    }
+  }
+}
+
+material pipe/concrete_long03
+{
+  technique
+  {
+    pass
+    {
+      ambient 0.5 0.5 0.5 1.0
+      diffuse 0.5 0.5 0.5 1.0
+      specular 0.2 0.2 0.2 1.0 12.5
+
+      texture_unit
+      {
+        texture concrete03.jpg
+        filtering anistropic
+        max_anisotropy 16
+        scale 3 0.003
+      }
+    }
+  }
+}
+
+material pipe/concrete_long04
+{
+  technique
+  {
+    pass
+    {
+      ambient 0.5 0.5 0.5 1.0
+      diffuse 0.5 0.5 0.5 1.0
+      specular 0.2 0.2 0.2 1.0 12.5
+
+      texture_unit
+      {
+        texture concrete04.jpg
+        filtering anistropic
+        max_anisotropy 16
+        scale 3 0.003
+      }
+    }
+  }
+}
