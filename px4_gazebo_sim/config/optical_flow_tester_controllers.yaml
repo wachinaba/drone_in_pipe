@@ -1,0 +1,5 @@
+optical_flow_tester:
+  linear_joint_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: linear_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
