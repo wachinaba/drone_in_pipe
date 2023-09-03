@@ -884,6 +884,8 @@
           <cameraName>optical_flow_bottom_camera</cameraName>
           <alwaysOn>true</alwaysOn>
           <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
         </plugin>
       </sensor>
     </link>
