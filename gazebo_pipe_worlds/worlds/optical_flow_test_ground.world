@@ -142,6 +142,60 @@
           </material>
         </visual>
 
+        <visual name="concrete05">
+          <pose>20 0 0.0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>4 4000</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://some_materials/materials/scripts</uri>
+              <uri>model://some_materials/materials/textures</uri>
+              <name>pipe/concrete_long05</name>
+            </script>
+          </material>
+        </visual>
+
+        <visual name="concrete06">
+          <pose>24 0 0.0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>4 4000</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://some_materials/materials/scripts</uri>
+              <uri>model://some_materials/materials/textures</uri>
+              <name>pipe/concrete_long06</name>
+            </script>
+          </material>
+        </visual>
+
+        <visual name="concrete07">
+          <pose>28 0 0.0 0 0 0</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>4 4000</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://some_materials/materials/scripts</uri>
+              <uri>model://some_materials/materials/textures</uri>
+              <name>pipe/concrete_long07</name>
+            </script>
+          </material>
+        </visual>
+
       </link>
     </model>
 
