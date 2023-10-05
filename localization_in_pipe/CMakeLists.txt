@@ -28,7 +28,7 @@ find_package(Kalman REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator ${PROJECT_NAME}
+  LIBRARIES move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator body_angular_velocity_estimator ${PROJECT_NAME}
   CATKIN_DEPENDS gazebo_ros_optical_flow_msgs geometry_msgs mavros mavros_msgs roscpp rospy sensor_msgs std_msgs visualization_msgs nav_msgs localization_in_pipe_msgs tf2 tf2_ros nodelet pluginlib
 )
 
@@ -53,6 +53,10 @@ add_library(body_accel_estimator src/body_accel_estimator.cpp)
 target_link_libraries(body_accel_estimator ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES} ${KALMAN_LIBRARIES})
 add_dependencies(body_accel_estimator ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
+add_library(body_angular_velocity_estimator src/body_angular_velocity_estimator.cpp)
+target_link_libraries(body_angular_velocity_estimator ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES} ${KALMAN_LIBRARIES})
+add_dependencies(body_angular_velocity_estimator ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+
 add_library(flow_range_integrator_node src/nodes/flow_range_integrator_node.cpp)
 target_link_libraries(flow_range_integrator_node flow_range_integrator ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES} ${KALMAN_LIBRARIES})
 add_dependencies(flow_range_integrator_node ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
@@ -61,8 +65,9 @@ add_library(${PROJECT_NAME}
   src/nodelets/flow_range_integrator_nodelet.cpp
   src/nodelets/move_ukf_nodelet.cpp
   src/nodelets/body_accel_estimator_nodelet.cpp
+  src/nodelets/body_angular_velocity_estimator_nodelet.cpp
 )
-target_link_libraries(${PROJECT_NAME} move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator)
+target_link_libraries(${PROJECT_NAME} move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator body_angular_velocity_estimator)
 
 add_executable(single_optical_flow_speed_estimator src/single_optical_flow_speed_estimator.cpp)
 target_link_libraries(single_optical_flow_speed_estimator ${catkin_LIBRARIES})
@@ -77,7 +82,7 @@ add_dependencies(p3d_odometry_converter ${catkin_EXPORTED_TARGETS} ${${PROJECT_N
 # Install
 #
 
-install(TARGETS move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator ${PROJECT_NAME}
+install(TARGETS move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator body_angular_velocity_estimator ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
