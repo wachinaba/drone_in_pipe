@@ -886,6 +886,8 @@
           <outputRate>0</outputRate>
           <flowFeatureThreshold>30</flowFeatureThreshold>
           <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow_bottom</topicName>
+          <deltaTopicName>optical_flow_delta_bottom</deltaTopicName>
         </plugin>
       </sensor>
     </link>
@@ -935,7 +937,7 @@
 
       <sensor name="optical_flow_left_camera" type="camera">
         <always_on>true</always_on>
-        <update_rate>30</update_rate>
+        <update_rate>120</update_rate>
         <visualize>true</visualize>
         <topic>/optical_flow_left_camera</topic>
         <camera>
@@ -963,7 +965,11 @@
           <robotNamespace></robotNamespace>
           <cameraName>optical_flow_left_camera</cameraName>
           <alwaysOn>true</alwaysOn>
-          <updateRate>30</updateRate>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow_left</topicName>
+          <deltaTopicName>optical_flow_delta_left</deltaTopicName>
         </plugin>
       </sensor>
     </link>
@@ -1013,7 +1019,7 @@
 
       <sensor name="optical_flow_right_camera" type="camera">
         <always_on>true</always_on>
-        <update_rate>30</update_rate>
+        <update_rate>120</update_rate>
         <visualize>true</visualize>
         <topic>/optical_flow_right_camera</topic>
         <camera>
@@ -1041,7 +1047,11 @@
           <robotNamespace></robotNamespace>
           <cameraName>optical_flow_right_camera</cameraName>
           <alwaysOn>true</alwaysOn>
-          <updateRate>30</updateRate>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow_right</topicName>
+          <deltaTopicName>optical_flow_delta_right</deltaTopicName>
         </plugin>
       </sensor>
     </link>
