@@ -888,6 +888,7 @@
           <flowValueThreshold>3000</flowValueThreshold>
           <topicName>optical_flow_bottom</topicName>
           <deltaTopicName>optical_flow_delta_bottom</deltaTopicName>
+          <frameId>optical_flow_bottom_link</frameId>
         </plugin>
       </sensor>
     </link>
@@ -970,6 +971,7 @@
           <flowValueThreshold>3000</flowValueThreshold>
           <topicName>optical_flow_left</topicName>
           <deltaTopicName>optical_flow_delta_left</deltaTopicName>
+          <frameId>optical_flow_left_link</frameId>
         </plugin>
       </sensor>
     </link>
@@ -1052,6 +1054,7 @@
           <flowValueThreshold>3000</flowValueThreshold>
           <topicName>optical_flow_right</topicName>
           <deltaTopicName>optical_flow_delta_right</deltaTopicName>
+          <frameId>optical_flow_right_link</frameId>
         </plugin>
       </sensor>
     </link>
