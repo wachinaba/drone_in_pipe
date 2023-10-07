@@ -11,7 +11,7 @@
 
 #include <geometry_msgs/TransformStamped.h>
 #include <sensor_msgs/Range.h>
-#include <mavros_msgs/OpticalFlowRad.h>
+#include <optical_flow_msgs/OpticalFlowDelta.h>
 #include <localization_in_pipe_msgs/IntegratedFlow.h>
 
 #include "localization_in_pipe/flow_range_integrator.h"
@@ -21,7 +21,7 @@ class FlowRangeIntegratorNode
 public:
   explicit FlowRangeIntegratorNode(ros::NodeHandle& nh, ros::NodeHandle& pnh);
   void rangeCallback(const sensor_msgs::Range::ConstPtr& msg);
-  void flowCallback(const mavros_msgs::OpticalFlowRad::ConstPtr& msg);
+  void flowCallback(const optical_flow_msgs::OpticalFlowDelta::ConstPtr& msg);
 
 private:
   ros::NodeHandle nh_;
@@ -31,6 +31,7 @@ private:
   tf2_ros::TransformListener tf_listener_;
 
   ros::Publisher integrated_flow_pub_;
+  ros::Publisher integrated_flow_pub_passthrough_;
   ros::Subscriber range_sub_;
   ros::Subscriber flow_sub_;
 
@@ -38,7 +39,7 @@ private:
 
   geometry_msgs::TransformStamped latest_transform_;
   sensor_msgs::Range::ConstPtr latest_range_;
-  mavros_msgs::OpticalFlowRad::ConstPtr latest_flow_;
+  optical_flow_msgs::OpticalFlowDelta::ConstPtr latest_flow_;
 
   localization_in_pipe_msgs::IntegratedFlow integrated_flow_msg_;
 

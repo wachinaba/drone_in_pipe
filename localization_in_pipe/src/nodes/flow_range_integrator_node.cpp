@@ -7,7 +7,7 @@
 
 #include <geometry_msgs/TransformStamped.h>
 #include <sensor_msgs/Range.h>
-#include <mavros_msgs/OpticalFlowRad.h>
+#include <optical_flow_msgs/OpticalFlowDelta.h>
 #include <localization_in_pipe_msgs/IntegratedFlow.h>
 
 #include "localization_in_pipe/flow_range_integrator.h"
@@ -82,7 +82,7 @@ void FlowRangeIntegratorNode::rangeCallback(const sensor_msgs::Range::ConstPtr& 
   latest_range_ = msg;
 }
 
-void FlowRangeIntegratorNode::flowCallback(const mavros_msgs::OpticalFlowRad::ConstPtr& msg)
+void FlowRangeIntegratorNode::flowCallback(const optical_flow_msgs::OpticalFlowDelta::ConstPtr& msg)
 {
   latest_flow_ = msg;
   calcIntegratedFlow();
@@ -96,13 +96,13 @@ void FlowRangeIntegratorNode::flowCallback(const mavros_msgs::OpticalFlowRad::Co
 
 void FlowRangeIntegratorNode::calcIntegratedFlow()
 {
-  Eigen::Vector2d flow_rad(latest_flow_->integrated_x, latest_flow_->integrated_y);
+  Eigen::Vector2d flow_delta(latest_flow_->delta_px, latest_flow_->delta_py);
   double range = latest_range_->range;
   // convert quality to double
-  double quality = (static_cast<double>(latest_flow_->quality)) / 255.0;
+  double quality = (static_cast<double>(latest_flow_->surface_quality)) / 255.0;
 
-  Eigen::Vector3d velocity = flow_range_integrator_.calcVelocity(flow_rad, range, latest_flow_->header.stamp);
-  Eigen::Matrix3d covariance = flow_range_integrator_.calcCovariance(flow_rad, range, quality);
+  Eigen::Vector3d velocity = flow_range_integrator_.calcVelocity(flow_delta, range, latest_flow_->header.stamp);
+  Eigen::Matrix3d covariance = flow_range_integrator_.calcCovariance(flow_delta, range, quality);
   Eigen::Vector3d range_vector = flow_range_integrator_.calcRangeVector(range);
   Eigen::Vector3d camera_z_axis = flow_range_integrator_.getCameraZAxis();
 
