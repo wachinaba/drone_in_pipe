@@ -32,7 +32,20 @@ FlowRangeIntegratorNode::FlowRangeIntegratorNode(ros::NodeHandle& nh, ros::NodeH
       Eigen::Quaterniond(latest_transform_.transform.rotation.w, latest_transform_.transform.rotation.x,
                          latest_transform_.transform.rotation.y, latest_transform_.transform.rotation.z)
           .toRotationMatrix();
-  flow_range_integrator_ = FlowRangeIntegrator(transform, 0.1);
+
+  double flow_covariance = 0.1;
+  if (!pnh_.getParam("flow_covariance", flow_covariance))
+  {
+    ROS_WARN("Failed to get param 'flow_covariance'. Using default value: 0.1");
+  }
+
+  double px_to_m_constant = 0.01;
+  if (!pnh_.getParam("px_to_m_constant", px_to_m_constant))
+  {
+    ROS_WARN("Failed to get param 'px_to_m_constant'. Using default value: 0.01");
+  }
+
+  flow_range_integrator_ = FlowRangeIntegrator(transform, flow_covariance, px_to_m_constant);
 
   integrated_flow_pub_ = nh_.advertise<localization_in_pipe_msgs::IntegratedFlow>("integrated_flow", 1);
 
