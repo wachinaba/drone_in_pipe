@@ -119,9 +119,9 @@ void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::I
   // set covariance
   for (int i = 0; i < 3; i++)
   {
-    for (int j = 0; j < 3 - i; j++)
+    for (int j = 0; j < 3; j++)
     {
-      filter_covariance_matrix_(i, j) = filter_covariance_matrix_(j, i) = filter_covariance_matrix_(i, j);
+      filter_covariance_matrix_(i, j) = msg->covariance[3 * i + j];
     }
   }
 
