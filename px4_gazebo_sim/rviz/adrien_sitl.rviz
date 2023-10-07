@@ -7,6 +7,9 @@ Panels:
         - /Global Options1
         - /Status1
         - /TF1/Frames1
+        - /TwistWithCovarianceStamped1
+        - /Marker4
+        - /Marker4/Namespaces1
       Splitter Ratio: 0.5790441036224365
     Tree Height: 749
   - Class: rviz/Selection
@@ -534,16 +537,16 @@ Visualization Manager:
       Linear Velocity Shaft Radius: 0.05000000074505806
       Name: TwistWithCovarianceStamped
       Queue Size: 10
-      Topic: /single_optical_flow_speed_estimator/linear_velocity
+      Topic: /velocity
       Unreliable: false
       Value: true
     - Class: jsk_rviz_plugin/TwistStamped
-      Enabled: true
+      Enabled: false
       Name: TwistStamped
       Queue Size: 10
       Topic: /single_optical_flow_speed_estimator/optical_flow_velocity
       Unreliable: false
-      Value: true
+      Value: false
       angular color: 255; 0; 0
       angular scale: 1
       linear color: 0; 255; 0
@@ -613,6 +616,22 @@ Visualization Manager:
       Topic: /move_ukf/body_accel
       Unreliable: false
       Value: true
+    - Class: rviz/Marker
+      Enabled: false
+      Marker Topic: /marker
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /integrated_flow_marker
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -641,7 +660,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.108720779418945
+      Distance: 1.8494887351989746
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -649,17 +668,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.8369693756103516
-        Y: -0.26241227984428406
-        Z: -0.2734448313713074
+        X: 0.41475337743759155
+        Y: 0.004039648920297623
+        Z: -0.25935494899749756
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5547974109649658
+      Pitch: 0.3747970163822174
       Target Frame: <Fixed Frame>
-      Yaw: 3.1153788566589355
+      Yaw: 2.9503743648529053
     Saved: ~
 Window Geometry:
   Displays:
@@ -678,4 +697,4 @@ Window Geometry:
     collapsed: false
   Width: 1920
   X: 0
-  Y: 591
+  Y: 537
