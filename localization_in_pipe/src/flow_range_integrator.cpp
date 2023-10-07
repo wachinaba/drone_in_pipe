@@ -20,7 +20,7 @@ FlowRangeIntegrator::FlowRangeIntegrator()
   default_covariance_ = Eigen::Matrix3d::Zero();
 }
 
-Eigen::Vector3d FlowRangeIntegrator::calcVelocity(const Eigen::Vector2d& flow_rad, double range, ros::Time stamp)
+Eigen::Vector3d FlowRangeIntegrator::calcVelocity(const Eigen::Vector2d& delta_flow, double range, ros::Time stamp)
 {
   Eigen::Vector2d displacement_2d = flow_rad * range;
   Eigen::Vector3d displacement_3d(displacement_2d(0), displacement_2d(1), 0.0);
@@ -46,7 +46,7 @@ Eigen::Vector3d FlowRangeIntegrator::calcVelocity(const Eigen::Vector2d& flow_ra
   return transform_.rotation() * velocity;
 }
 
-Eigen::Matrix3d FlowRangeIntegrator::calcCovariance(const Eigen::Vector2d& flow_rad, double range,
+Eigen::Matrix3d FlowRangeIntegrator::calcCovariance(const Eigen::Vector2d& delta_flow, double range,
                                                     double surface_quality)
 {
   // TODO: consider surface quality, range, and flow covariance
