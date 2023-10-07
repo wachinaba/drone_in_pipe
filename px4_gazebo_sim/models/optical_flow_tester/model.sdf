@@ -1,0 +1,496 @@
+<sdf version="1.6">
+  <model name="my_robot">
+    <link name="base_link">
+      <pose> 0 0 0 0 0 0 </pose>
+      <!-- Small box for base_link -->
+      <visual name="base_visual">
+        <geometry>
+          <box>
+            <size>0.2 0.2 0.2</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+
+    <link name="moving_link">
+      <pose> 0 0 0 0 0 0 </pose>
+      <!-- Long box for moving_link -->
+      <visual name="moving_visual">
+        <geometry>
+          <box>
+            <size>5.0 0.1 0.1</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+
+    <link name="sensor_link_00">
+      <pose> 0 0 0 0 1.57079632679 0 </pose>
+      <sensor name="single_point_lidar" type="ray">
+        <always_on>true</always_on>
+        <update_rate>240</update_rate>
+        <visualize>true
+        </visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>3</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.0314159</min_angle>
+              <max_angle>0.0314159</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>3</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.0314159</min_angle>
+              <max_angle>0.0314159</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.09</min>
+            <max>3.0</max>
+            <resolution>0.001</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.0015</stddev>
+          </noise>
+        </ray>
+        <plugin filename="libgazebo_ros_range.so" name="single_point_lidar_plugin">
+          <robotNamespace></robotNamespace>
+          <frameName>range_link</frameName>
+          <topicName>range</topicName>
+          <radiation>ultrasound</radiation>
+          <fov>0.0628319</fov>
+          <gaussianNoise>0.0</gaussianNoise>
+          <updateRate>240</updateRate>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="sensor_link_01">
+      <pose> 0 0 0 0 1.57079632679 0 </pose>
+      <sensor name="optical_flow_01_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_01_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <!--
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+        -->
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_01_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_01_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow</topicName>
+          <deltaTopicName>optical_flow_delta</deltaTopicName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="sensor_link_02">
+      <pose>4.0 0.0 0.0 0.0 1.57079632679 0.0</pose>
+      <sensor name="optical_flow_02_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_02_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <!--
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+        -->
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_02_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_02_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow</topicName>
+          <deltaTopicName>optical_flow_delta</deltaTopicName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="sensor_link_03">
+      <pose>8.0 0.0 0.0 0.0 1.57079632679 0.0</pose>
+      <sensor name="optical_flow_03_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_03_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <!--
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+        -->
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_03_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_03_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow</topicName>
+          <deltaTopicName>optical_flow_delta</deltaTopicName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="sensor_link_04">
+      <pose>12.0 0.0 0.0 0.0 1.57079632679 0.0</pose>
+      <sensor name="optical_flow_04_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_04_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <!--
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+        -->
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_04_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_04_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow</topicName>
+          <deltaTopicName>optical_flow_delta</deltaTopicName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="sensor_link_05">
+      <pose>16.0 0.0 0.0 0.0 1.57079632679 0.0</pose>
+      <sensor name="optical_flow_05_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_05_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <!--
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+        -->
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_05_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_05_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow</topicName>
+          <deltaTopicName>optical_flow_delta</deltaTopicName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="sensor_link_06">
+      <pose>20.0 0.0 0.0 0.0 1.57079632679 0.0</pose>
+      <sensor name="optical_flow_06_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_06_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <!--
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+        -->
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_06_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_06_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow</topicName>
+          <deltaTopicName>optical_flow_delta</deltaTopicName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="sensor_link_07">
+      <pose>24.0 0.0 0.0 0.0 1.57079632679 0.0</pose>
+      <sensor name="optical_flow_07_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_07_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <!--
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+        -->
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_07_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_07_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow</topicName>
+          <deltaTopicName>optical_flow_delta</deltaTopicName>
+        </plugin>
+      </sensor>
+    </link>
+
+    <link name="sensor_link_08">
+      <pose>28.0 0.0 0.0 0.0 1.57079632679 0.0</pose>
+      <sensor name="optical_flow_08_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_08_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <!--
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+        -->
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_08_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_08_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow</topicName>
+          <deltaTopicName>optical_flow_delta</deltaTopicName>
+        </plugin>
+      </sensor>
+    </link>
+
+
+    <!-- Static Joint to hold base_link in the air -->
+    <joint name="static_joint" type="fixed">
+      <parent>world</parent>
+      <child>base_link</child>
+    </joint>
+
+    <joint name="linear_joint" type="prismatic">
+      <parent>base_link</parent>
+      <child>moving_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1e6</lower>
+          <upper>1e6</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <joint name="sensor_joint00" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_00</child>
+    </joint>
+
+    <joint name="sensor_joint01" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_01</child>
+    </joint>
+
+    <joint name="sensor_joint02" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_02</child>
+    </joint>
+
+    <joint name="sensor_joint03" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_03</child>
+    </joint>
+
+    <joint name="sensor_joint04" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_04</child>
+    </joint>
+
+    <joint name="sensor_joint05" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_05</child>
+    </joint>
+
+    <joint name="sensor_joint06" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_06</child>
+    </joint>
+
+    <joint name="sensor_joint07" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_07</child>
+    </joint>
+
+    <joint name="sensor_joint08" type="fixed">
+      <parent>moving_link</parent>
+      <child>sensor_link_08</child>
+    </joint>
+
+
+    <!-- body position/velocity tracker -->
+    <plugin name="moving_link_state_tracker" filename="libgazebo_ros_p3d.so">
+      <alwaysOn>true</alwaysOn>
+      <frameName>base_link</frameName>
+      <bodyName>moving_link</bodyName>
+      <topicName>odom</topicName>
+      <updateRate>240</updateRate>
+    </plugin>
+
+    <!-- ros_control plugin -->
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/optical_flow_tester</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </model>
+</sdf>

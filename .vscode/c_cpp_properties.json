@@ -7,8 +7,11 @@
       },
       "includePath": [
         "/opt/ros/noetic/include/**",
-        "/home/wachinaba/catkin_ws/src/TFmini-ROS/tfmini_ros/include/**",
-        "/usr/include/**"
+        "${HOME}/catkin_ws/devel/include/**",
+        "/usr/include/**",
+        "/usr/include/eigen3",
+        "${workspaceFolder}/localization_in_pipe/include/**",
+        "${workspaceFolder}/multizone_lidar/include/**"
       ],
       "name": "ROS",
       "intelliSenseMode": "gcc-x64",

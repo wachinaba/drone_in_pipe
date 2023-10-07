@@ -1,0 +1,5 @@
+Header header
+geometry_msgs/Vector3 measured_velocity
+float64[9] covariance
+geometry_msgs/Vector3 range
+geometry_msgs/Vector3 camera_z_axis

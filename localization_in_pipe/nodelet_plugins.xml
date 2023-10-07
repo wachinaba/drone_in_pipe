@@ -1,0 +1,26 @@
+<library path="lib/liblocalization_in_pipe">
+  <class name="localization_in_pipe/flow_range_integrator_nodelet"
+    type="localization_in_pipe::flow_range_integrator_nodelet" base_class_type="nodelet::Nodelet">
+    <description>
+    </description>
+  </class>
+
+  <class name="localization_in_pipe/move_ukf_nodelet" type="localization_in_pipe::move_ukf_nodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+    </description>
+  </class>
+
+  <class name="localization_in_pipe/body_accel_estimator_nodelet"
+    type="localization_in_pipe::body_accel_estimator_nodelet" base_class_type="nodelet::Nodelet">
+    <description>
+    </description>
+  </class>
+
+  <class name="localization_in_pipe/body_angular_velocity_estimator_nodelet"
+    type="localization_in_pipe::body_angular_velocity_estimator_nodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+    </description>
+  </class>
+</library>

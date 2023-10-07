@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="manager_name" default="move_ukf_nodelet_manager" />
+  <arg name="manager_threads" default="20" />
+
+  <!-- visualization -->
+  <node pkg="drone_sensor_analyzer" type="flow_delta_visualizer.py"
+    name="flow_delta_visualizer_bottom" output="screen">
+    <remap from="flow_delta" to="/optical_flow_delta_bottom" />
+    <param name="namespace" value="bottom_delta" />
+    <rosparam>color: [1, 0, 0, 1]</rosparam>
+    <param name="delta_scale" value="1.0" />
+  </node>
+  <node pkg="drone_sensor_analyzer" type="flow_delta_visualizer.py"
+    name="flow_delta_visualizer_left" output="screen">
+    <remap from="flow_delta" to="/optical_flow_delta_left" />
+    <param name="namespace" value="left_delta" />
+    <rosparam>color: [0, 1, 0, 1]</rosparam>
+    <param name="delta_scale" value="1.0" />
+  </node>
+  <node pkg="drone_sensor_analyzer" type="flow_delta_visualizer.py"
+    name="flow_delta_visualizer_right" output="screen">
+    <remap from="flow_delta" to="/optical_flow_delta_right" />
+    <param name="namespace" value="right_delta" />
+    <rosparam>color: [0, 0, 1, 1]</rosparam>
+    <param name="delta_scale" value="1.0" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen">
+    <param name="num_worker_threads" value="$(arg manager_threads)" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="flow_range_integrator_bottom"
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    <rosparam file="$(find localization_in_pipe)/config/PMW3901.yaml" command="load" />
+    <remap from="flow" to="/optical_flow_delta_bottom" />
+    <remap from="range" to="/single_point_lidar_bottom/range" />
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <remap from="integrated_flow_passthrough" to="/move_ukf/integrated_flow_bottom" />
+    <param name="sensor_frame" value="optical_flow_bottom_link" />
+    <param name="body_frame" value="base_link" />
+    <param name="marker_ns" value="bottom_vel" />
+  </node>
+
+
+  <node pkg="nodelet" type="nodelet" name="flow_range_integrator_left"
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    <rosparam file="$(find localization_in_pipe)/config/PMW3901.yaml" command="load" />
+    <remap from="flow" to="/optical_flow_delta_left" />
+    <remap from="range" to="/multi_zone_lidar_left/range" />
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <remap from="integrated_flow_passthrough" to="/move_ukf/integrated_flow_left" />
+    <param name="sensor_frame" value="optical_flow_left_link" />
+    <param name="body_frame" value="base_link" />
+    <param name="marker_ns" value="left_vel" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="flow_range_integrator_right"
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    <rosparam file="$(find localization_in_pipe)/config/PMW3901.yaml" command="load" />
+    <remap from="flow" to="/optical_flow_delta_right" />
+    <remap from="range" to="/multi_zone_lidar_right/range" />
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <remap from="integrated_flow_passthrough" to="/move_ukf/integrated_flow_right" />
+    <param name="sensor_frame" value="optical_flow_right_link" />
+    <param name="body_frame" value="base_link" />
+    <param name="marker_ns" value="right_vel" />
+  </node>
+
+
+  <node pkg="nodelet" type="nodelet" name="body_accel_estimator"
+    args="load localization_in_pipe/body_accel_estimator_nodelet $(arg manager_name)">
+    <remap from="imu" to="/mavros/imu/data" />
+    <remap from="body_accel_imu" to="/move_ukf/body_accel_imu" />
+    <remap from="calibrate_imu" to="/move_ukf/calibrate_imu" />
+    <remap from="gravity" to="/move_ukf/gravity" />
+    <remap from="raw_imu_accel" to="/move_ukf/raw_imu_accel" />
+    <remap from="body_accel" to="/move_ukf/body_accel" />
+    <param name="sensor_frame" value="imu_link" />
+    <param name="body_frame" value="base_link" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="body_angular_velocity_estimator"
+    args="load localization_in_pipe/body_angular_velocity_estimator_nodelet $(arg manager_name)">
+    <remap from="imu" to="/mavros/imu/data" />
+    <remap from="calibrate" to="/move_ukf/calibrate_gyro" />
+    <remap from="body_angular_velocity" to="/move_ukf/body_angular_velocity" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="move_ukf"
+    args="load localization_in_pipe/move_ukf_nodelet $(arg manager_name)">
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <remap from="body_accel" to="/move_ukf/body_accel" />
+    <remap from="body_angular_velocity" to="/move_ukf/body_angular_velocity" />
+    <param name="process_noise_variance" value="0.001" />
+    <param name="ukf_alpha" value="0.03" />
+    <param name="ukf_beta" value="2.0" />
+    <param name="ukf_kappa" value="0.0" />
+  </node>
+
+  <node pkg="drone_sensor_analyzer" type="integrated_flow_visualizer.py"
+    name="integrated_flow_visualizer_bottom" output="screen">
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow_bottom" />
+    <remap from="marker" to="integrated_flow_marker" />
+    <param name="namespace_prefix" value="bottom" />
+    <rosparam>color_velocity: [1, 0, 0, 1]</rosparam>
+    <rosparam>color_range: [1, 1, 1, 0.3]</rosparam>
+    <rosparam>color_camera: [0, 0, 0, 0.3]</rosparam>
+  </node>
+
+  <node pkg="drone_sensor_analyzer" type="integrated_flow_visualizer.py"
+    name="integrated_flow_visualizer_left" output="screen">
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow_left" />
+    <remap from="marker" to="integrated_flow_marker" />
+    <param name="namespace_prefix" value="left" />
+    <rosparam>color_velocity: [0, 1, 0, 1]</rosparam>
+    <rosparam>color_range: [1, 1, 1, 0.3]</rosparam>
+    <rosparam>color_camera: [0, 0, 0, 0.3]</rosparam>
+  </node>
+
+  <node pkg="drone_sensor_analyzer" type="integrated_flow_visualizer.py"
+    name="integrated_flow_visualizer_right" output="screen">
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow_right" />
+    <remap from="marker" to="integrated_flow_marker" />
+    <param name="namespace_prefix" value="right" />
+    <rosparam>color_velocity: [0, 0, 1, 1]</rosparam>
+    <rosparam>color_range: [1, 1, 1, 0.3]</rosparam>
+    <rosparam>color_camera: [0, 0, 0, 0.3]</rosparam>
+  </node>
+
+  <node pkg="rosservice" type="rosservice" name="calibrate_imu"
+    args="call --wait /move_ukf/calibrate_imu 'enable_calibration: true'" />
+
+  <node pkg="rosservice" type="rosservice" name="calibrate_gyro"
+    args="call --wait /move_ukf/calibrate_gyro 'enable_calibration: true'" />
+
+
+</launch>

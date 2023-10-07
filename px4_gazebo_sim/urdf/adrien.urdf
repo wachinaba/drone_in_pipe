@@ -1,200 +1,200 @@
 <robot name="adrien">
-    <link name="base_link">
-        <geometry>
-            <mesh
-                filename="package://px4_gazebo_sim/models/adrien/meshes/drone_assembly_wo_props.dae" />
-        </geometry>
-    </link>
-    <link name="imu_link">
-    </link>
+  <link name="base_link">
+    <geometry>
+      <mesh
+        filename="package://px4_gazebo_sim/models/adrien/meshes/drone_assembly_wo_props.dae" />
+    </geometry>
+  </link>
+  <link name="imu_link">
+  </link>
 
-    <link name="rotor_0">
-    </link>
-    <link name="rotor_1">
-    </link>
-    <link name="rotor_2">
-    </link>
-    <link name="rotor_3">
-    </link>
+  <link name="rotor_0">
+  </link>
+  <link name="rotor_1">
+  </link>
+  <link name="rotor_2">
+  </link>
+  <link name="rotor_3">
+  </link>
 
-    <link name="realsense_link">
-    </link>
-    <link name="camera_bottom_screw_frame"></link>
-    <link name="camera_link">
-    </link>
-    <link name="camera_depth_frame"></link>
-    <link name="camera_depth_optical_frame"></link>
-    <link name="camera_color_frame"></link>
-    <link name="camera_color_optical_frame"></link>
-    <link name="camera_left_ir_frame"></link>
-    <link name="camera_left_ir_optical_frame"></link>
-    <link name="camera_right_ir_frame"></link>
-    <link name="camera_right_ir_optical_frame"></link>
+  <link name="realsense_link">
+  </link>
+  <link name="camera_bottom_screw_frame"></link>
+  <link name="camera_link">
+  </link>
+  <link name="camera_depth_frame"></link>
+  <link name="camera_depth_optical_frame"></link>
+  <link name="camera_color_frame"></link>
+  <link name="camera_color_optical_frame"></link>
+  <link name="camera_left_ir_frame"></link>
+  <link name="camera_left_ir_optical_frame"></link>
+  <link name="camera_right_ir_frame"></link>
+  <link name="camera_right_ir_optical_frame"></link>
 
-    <link name="optical_flow_bottom_link">
-    </link>
-    <link name="optical_flow_left_link">
-    </link>
-    <link name="optical_flow_right_link">
-    </link>
-    <link name="multi_zone_lidar_left_link">
-    </link>
-    <link name="multi_zone_lidar_right_link">
-    </link>
-    <link name="multi_zone_lidar_front_left_link">
-    </link>
-    <link name="multi_zone_lidar_front_right_link">
-    </link>
-    <link name="multi_zone_lidar_rear_left_link">
-    </link>
-    <link name="multi_zone_lidar_rear_right_link">
-    </link>
-    <link name="single_point_lidar_bottom_link">
-    </link>
-    <link name="single_point_lidar_top_link">
-    </link>
+  <link name="optical_flow_bottom_link">
+  </link>
+  <link name="optical_flow_left_link">
+  </link>
+  <link name="optical_flow_right_link">
+  </link>
+  <link name="multi_zone_lidar_left_link">
+  </link>
+  <link name="multi_zone_lidar_right_link">
+  </link>
+  <link name="multi_zone_lidar_front_left_link">
+  </link>
+  <link name="multi_zone_lidar_front_right_link">
+  </link>
+  <link name="multi_zone_lidar_rear_left_link">
+  </link>
+  <link name="multi_zone_lidar_rear_right_link">
+  </link>
+  <link name="single_point_lidar_bottom_link">
+  </link>
+  <link name="single_point_lidar_top_link">
+  </link>
 
-    <joint name="imu_joint" type="fixed">
-        <child link="imu_link" />
-        <parent link="base_link" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-    </joint>
+  <joint name="imu_joint" type="fixed">
+    <child link="imu_link" />
+    <parent link="base_link" />
+    <origin xyz="0 0 0.025" rpy="3.141593 0 0" />
+  </joint>
 
-    <joint name="rotor_0_joint" type="revolute">
-        <child link="rotor_0" />
-        <parent link="base_link" />
-        <origin xyz="0.0989 -0.1209 0.02" rpy="0 0 0" />
-        <limit lower="-1e+16" upper="1e+16" effort="0" velocity="0" />
-    </joint>
-    <joint name="rotor_1_joint" type="revolute">
-        <child link="rotor_1" />
-        <parent link="base_link" />
-        <origin xyz="-0.0989 0.1209 0.02" rpy="0 0 0" />
-        <limit lower="-1e+16" upper="1e+16" effort="0" velocity="0" />
-    </joint>
-    <joint name="rotor_2_joint" type="revolute">
-        <child link="rotor_2" />
-        <parent link="base_link" />
-        <origin xyz="0.0989 0.1209 0.02" rpy="0 0 0" />
-        <limit lower="-1e+16" upper="1e+16" effort="0" velocity="0" />
-    </joint>
-    <joint name="rotor_3_joint" type="revolute">
-        <child link="rotor_3" />
-        <parent link="base_link" />
-        <origin xyz="-0.0989 -0.1209 0.02" rpy="0 0 0" />
-        <limit lower="-1e+16" upper="1e+16" effort="0" velocity="0" />
-    </joint>
+  <joint name="rotor_0_joint" type="revolute">
+    <child link="rotor_0" />
+    <parent link="base_link" />
+    <origin xyz="0.0989 -0.1209 0.02" rpy="0 0 0" />
+    <limit lower="-1e+16" upper="1e+16" effort="0" velocity="0" />
+  </joint>
+  <joint name="rotor_1_joint" type="revolute">
+    <child link="rotor_1" />
+    <parent link="base_link" />
+    <origin xyz="-0.0989 0.1209 0.02" rpy="0 0 0" />
+    <limit lower="-1e+16" upper="1e+16" effort="0" velocity="0" />
+  </joint>
+  <joint name="rotor_2_joint" type="revolute">
+    <child link="rotor_2" />
+    <parent link="base_link" />
+    <origin xyz="0.0989 0.1209 0.02" rpy="0 0 0" />
+    <limit lower="-1e+16" upper="1e+16" effort="0" velocity="0" />
+  </joint>
+  <joint name="rotor_3_joint" type="revolute">
+    <child link="rotor_3" />
+    <parent link="base_link" />
+    <origin xyz="-0.0989 -0.1209 0.02" rpy="0 0 0" />
+    <limit lower="-1e+16" upper="1e+16" effort="0" velocity="0" />
+  </joint>
 
-    <joint name="realsense_joint" type="fixed">
-        <child link="realsense_link" />
-        <parent link="base_link" />
-        <origin xyz="0.096 0 -0.03" rpy="0 0 0" />
-    </joint>
-    <joint name="camera_joint" type="fixed">
-        <parent link="realsense_link" />
-        <child link="camera_bottom_screw_frame" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-    </joint>
-    <joint name="camera_link_joint" type="fixed">
-        <parent link="camera_bottom_screw_frame" />
-        <child link="camera_link" />
-        <origin xyz="0 0.0175 0.0125 " rpy="0 0 0" />
-    </joint>
-    <joint name="camera_depth_joint" type="fixed">
-        <parent link="camera_link" />
-        <child link="camera_depth_frame" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-    </joint>
-    <joint name="camera_depth_optical_joint" type="fixed">
-        <parent link="camera_depth_frame" />
-        <child link="camera_depth_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
-    </joint>
-    <joint name="camera_color_joint" type="fixed">
-        <parent link="camera_depth_frame" />
-        <child link="camera_color_frame" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-    </joint>
-    <joint name="camera_color_optical_joint" type="fixed">
-        <parent link="camera_color_frame" />
-        <child link="camera_color_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
-    </joint>
-    <joint name="camera_left_ir_joint" type="fixed">
-        <parent link="camera_depth_frame" />
-        <child link="camera_left_ir_frame" />
-        <origin xyz="0 0 0 " rpy="0 0 0 " />
-    </joint>
-    <joint name="camera_left_ir_optical_joint" type="fixed">
-        <parent link="camera_left_ir_frame" />
-        <child link="camera_left_ir_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
-    </joint>
-    <joint name="camera_right_ir_joint" type="fixed">
-        <parent link="camera_depth_frame" />
-        <child link="camera_right_ir_frame" />
-        <origin xyz="0 -0.050 0 " rpy="0 0 0" />
-    </joint>
-    <joint name="camera_right_ir_optical_joint" type="fixed">
-        <parent link="camera_right_ir_frame" />
-        <child link="camera_right_ir_optical_frame" />
-        <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
-    </joint>
+  <joint name="realsense_joint" type="fixed">
+    <child link="realsense_link" />
+    <parent link="base_link" />
+    <origin xyz="0.096 0 -0.03" rpy="0 0 0" />
+  </joint>
+  <joint name="camera_joint" type="fixed">
+    <parent link="realsense_link" />
+    <child link="camera_bottom_screw_frame" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+  <joint name="camera_link_joint" type="fixed">
+    <parent link="camera_bottom_screw_frame" />
+    <child link="camera_link" />
+    <origin xyz="0 0.0175 0.0125 " rpy="0 0 0" />
+  </joint>
+  <joint name="camera_depth_joint" type="fixed">
+    <parent link="camera_link" />
+    <child link="camera_depth_frame" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+  <joint name="camera_depth_optical_joint" type="fixed">
+    <parent link="camera_depth_frame" />
+    <child link="camera_depth_optical_frame" />
+    <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
+  </joint>
+  <joint name="camera_color_joint" type="fixed">
+    <parent link="camera_depth_frame" />
+    <child link="camera_color_frame" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+  <joint name="camera_color_optical_joint" type="fixed">
+    <parent link="camera_color_frame" />
+    <child link="camera_color_optical_frame" />
+    <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
+  </joint>
+  <joint name="camera_left_ir_joint" type="fixed">
+    <parent link="camera_depth_frame" />
+    <child link="camera_left_ir_frame" />
+    <origin xyz="0 0 0 " rpy="0 0 0 " />
+  </joint>
+  <joint name="camera_left_ir_optical_joint" type="fixed">
+    <parent link="camera_left_ir_frame" />
+    <child link="camera_left_ir_optical_frame" />
+    <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
+  </joint>
+  <joint name="camera_right_ir_joint" type="fixed">
+    <parent link="camera_depth_frame" />
+    <child link="camera_right_ir_frame" />
+    <origin xyz="0 -0.050 0 " rpy="0 0 0" />
+  </joint>
+  <joint name="camera_right_ir_optical_joint" type="fixed">
+    <parent link="camera_right_ir_frame" />
+    <child link="camera_right_ir_optical_frame" />
+    <origin xyz="0 0 0 " rpy="-1.570796 0 -1.570796" />
+  </joint>
 
 
-    <joint name="optical_flow_bottom_joint" type="fixed">
-        <child link="optical_flow_bottom_link" />
-        <parent link="base_link" />
-        <origin xyz="0.10783 -0.00735 -0.047658" rpy="-3.141593 0 0" />
-    </joint>
-    <joint name="optical_flow_left_joint" type="fixed">
-        <child link="optical_flow_left_link" />
-        <parent link="base_link" />
-        <origin xyz="-0.0077 0.048 -0.0672" rpy="-1.570796 0 0" />
-    </joint>
-    <joint name="optical_flow_right_joint" type="fixed">
-        <child link="optical_flow_right_link" />
-        <parent link="base_link" />
-        <origin xyz="-0.0077 -0.048 -0.0672" rpy="-1.570796 0 3.141593" />
-    </joint>
-    <joint name="multi_zone_lidar_left_joint" type="fixed">
-        <child link="multi_zone_lidar_left_link" />
-        <parent link="base_link" />
-        <origin xyz="0.0075 0.0465 -0.0665" rpy="-1.570796 0 1.570796" />
-    </joint>
-    <joint name="multi_zone_lidar_right_joint" type="fixed">
-        <child link="multi_zone_lidar_right_link" />
-        <parent link="base_link" />
-        <origin xyz="0.0075 -0.0465 -0.0665" rpy="1.570796 0 -1.570796" />
-    </joint>
-    <joint name="multi_zone_lidar_front_left_joint" type="fixed">
-        <child link="multi_zone_lidar_front_left_link" />
-        <parent link="base_link" />
-        <origin xyz="0.112103 0.152774 -0.024" rpy="0 0 1.17809725" />
-    </joint>
-    <joint name="multi_zone_lidar_front_right_joint" type="fixed">
-        <child link="multi_zone_lidar_front_right_link" />
-        <parent link="base_link" />
-        <origin xyz="0.112103 -0.152774 -0.024" rpy="0 0 -1.17809725" />
-    </joint>
-    <joint name="multi_zone_lidar_rear_left_joint" type="fixed">
-        <child link="multi_zone_lidar_rear_left_link" />
-        <parent link="base_link" />
-        <origin xyz="-0.112103 0.152774 -0.024" rpy="0 0 1.9634954" />
-    </joint>
-    <joint name="multi_zone_lidar_rear_right_joint" type="fixed">
-        <child link="multi_zone_lidar_rear_right_link" />
-        <parent link="base_link" />
-        <origin xyz="-0.112103 -0.152774 -0.024" rpy="0 0 -1.9634954" />
-    </joint>
-    <joint name="single_point_lidar_bottom_joint" type="fixed">
-        <child link="single_point_lidar_bottom_link" />
-        <parent link="base_link" />
-        <origin xyz="0.0875 0 -0.0555" rpy="0 1.570796 0" />
-    </joint>
-    <joint name="single_point_lidar_top_joint" type="fixed">
-        <child link="single_point_lidar_top_link" />
-        <parent link="base_link" />
-        <origin xyz="0.0875 0 0.026" rpy="0 -1.570796 0" />
-    </joint>
+  <joint name="optical_flow_bottom_joint" type="fixed">
+    <child link="optical_flow_bottom_link" />
+    <parent link="base_link" />
+    <origin xyz="0.10783 -0.00735 -0.047658" rpy="-3.141593 0 0" />
+  </joint>
+  <joint name="optical_flow_left_joint" type="fixed">
+    <child link="optical_flow_left_link" />
+    <parent link="base_link" />
+    <origin xyz="-0.0077 0.048 -0.0672" rpy="-1.570796 0 0" />
+  </joint>
+  <joint name="optical_flow_right_joint" type="fixed">
+    <child link="optical_flow_right_link" />
+    <parent link="base_link" />
+    <origin xyz="-0.0077 -0.048 -0.0672" rpy="-1.570796 0 3.141593" />
+  </joint>
+  <joint name="multi_zone_lidar_left_joint" type="fixed">
+    <child link="multi_zone_lidar_left_link" />
+    <parent link="base_link" />
+    <origin xyz="0.0075 0.0465 -0.0665" rpy="-1.570796 0 1.570796" />
+  </joint>
+  <joint name="multi_zone_lidar_right_joint" type="fixed">
+    <child link="multi_zone_lidar_right_link" />
+    <parent link="base_link" />
+    <origin xyz="0.0075 -0.0465 -0.0665" rpy="1.570796 0 -1.570796" />
+  </joint>
+  <joint name="multi_zone_lidar_front_left_joint" type="fixed">
+    <child link="multi_zone_lidar_front_left_link" />
+    <parent link="base_link" />
+    <origin xyz="0.112103 0.152774 -0.024" rpy="0 0 1.17809725" />
+  </joint>
+  <joint name="multi_zone_lidar_front_right_joint" type="fixed">
+    <child link="multi_zone_lidar_front_right_link" />
+    <parent link="base_link" />
+    <origin xyz="0.112103 -0.152774 -0.024" rpy="0 0 -1.17809725" />
+  </joint>
+  <joint name="multi_zone_lidar_rear_left_joint" type="fixed">
+    <child link="multi_zone_lidar_rear_left_link" />
+    <parent link="base_link" />
+    <origin xyz="-0.112103 0.152774 -0.024" rpy="0 0 1.9634954" />
+  </joint>
+  <joint name="multi_zone_lidar_rear_right_joint" type="fixed">
+    <child link="multi_zone_lidar_rear_right_link" />
+    <parent link="base_link" />
+    <origin xyz="-0.112103 -0.152774 -0.024" rpy="0 0 -1.9634954" />
+  </joint>
+  <joint name="single_point_lidar_bottom_joint" type="fixed">
+    <child link="single_point_lidar_bottom_link" />
+    <parent link="base_link" />
+    <origin xyz="0.0875 0 -0.0555" rpy="0 1.570796 0" />
+  </joint>
+  <joint name="single_point_lidar_top_joint" type="fixed">
+    <child link="single_point_lidar_top_link" />
+    <parent link="base_link" />
+    <origin xyz="0.0875 0 0.026" rpy="0 -1.570796 0" />
+  </joint>
 </robot>
