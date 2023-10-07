@@ -3,8 +3,12 @@
 
 #include "localization_in_pipe/flow_range_integrator.h"
 
-FlowRangeIntegrator::FlowRangeIntegrator(const Eigen::Isometry3d& transform, double flow_covariance)
-  : transform_(transform), flow_covariance_constant_(flow_covariance), prev_flow_stamp_(ros::Time(0))
+FlowRangeIntegrator::FlowRangeIntegrator(const Eigen::Isometry3d& transform, double flow_covariance,
+                                         double px_to_m_constant)
+  : transform_(transform)
+  , flow_covariance_constant_(flow_covariance)
+  , px_to_m_constant_(px_to_m_constant)
+  , prev_flow_stamp_(ros::Time(0))
 {
   default_covariance_ = Eigen::Matrix3d::Zero();
   default_covariance_(0, 0) = flow_covariance_constant_;  // optical flow x covariance
@@ -15,23 +19,29 @@ FlowRangeIntegrator::FlowRangeIntegrator(const Eigen::Isometry3d& transform, dou
 }
 
 FlowRangeIntegrator::FlowRangeIntegrator()
-  : transform_(Eigen::Isometry3d::Identity()), flow_covariance_constant_(0.0), prev_flow_stamp_(ros::Time(0))
+  : transform_(Eigen::Isometry3d::Identity())
+  , flow_covariance_constant_(0.0)
+  , prev_flow_stamp_(ros::Time(0))
+  , px_to_m_constant_(1.0)
 {
   default_covariance_ = Eigen::Matrix3d::Zero();
 }
 
 Eigen::Vector3d FlowRangeIntegrator::calcVelocity(const Eigen::Vector2d& delta_flow, double range, ros::Time stamp)
 {
-  Eigen::Vector2d displacement_2d = flow_rad * range;
+  Eigen::Vector2d displacement_2d = delta_flow * range * px_to_m_constant_;
   Eigen::Vector3d displacement_3d(displacement_2d(0), displacement_2d(1), 0.0);
 
   double dt = (stamp - prev_flow_stamp_).toSec();
-  if (stamp == ros::Time(0))  // first time
+  if (prev_flow_stamp_ == ros::Time(0))  // first time
   {
     prev_flow_stamp_ = stamp;
     return Eigen::Vector3d::Zero();
   }
-  else if (dt <= 0.0)  // dt should be positive
+
+  prev_flow_stamp_ = stamp;
+
+  if (dt <= 0.0)  // dt should be positive
   {
     return Eigen::Vector3d::Zero();
   }
@@ -39,11 +49,11 @@ Eigen::Vector3d FlowRangeIntegrator::calcVelocity(const Eigen::Vector2d& delta_f
   {
     return Eigen::Vector3d::Zero();
   }
-  prev_flow_stamp_ = stamp;
 
-  Eigen::Vector3d velocity = transform_.rotation() * displacement_3d / dt;
+  Eigen::Vector3d velocity =
+      transform_.rotation() * displacement_3d / dt * -1.0;  // velocity is negative to the direction of motion
 
-  return transform_.rotation() * velocity;
+  return velocity;
 }
 
 Eigen::Matrix3d FlowRangeIntegrator::calcCovariance(const Eigen::Vector2d& delta_flow, double range,
