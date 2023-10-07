@@ -48,6 +48,8 @@ FlowRangeIntegratorNode::FlowRangeIntegratorNode(ros::NodeHandle& nh, ros::NodeH
   flow_range_integrator_ = FlowRangeIntegrator(transform, flow_covariance, px_to_m_constant);
 
   integrated_flow_pub_ = nh_.advertise<localization_in_pipe_msgs::IntegratedFlow>("integrated_flow", 1);
+  integrated_flow_pub_passthrough_ =
+      nh_.advertise<localization_in_pipe_msgs::IntegratedFlow>("integrated_flow_passthrough", 1);
 
   range_sub_ = nh_.subscribe("range", 1, &FlowRangeIntegratorNode::rangeCallback, this);
   flow_sub_ = nh_.subscribe("flow", 1, &FlowRangeIntegratorNode::flowCallback, this);
@@ -105,6 +107,7 @@ void FlowRangeIntegratorNode::flowCallback(const optical_flow_msgs::OpticalFlowD
   integrated_flow_msg_.header.frame_id = body_frame_;
 
   integrated_flow_pub_.publish(integrated_flow_msg_);
+  integrated_flow_pub_passthrough_.publish(integrated_flow_msg_);
 }
 
 void FlowRangeIntegratorNode::calcIntegratedFlow()
