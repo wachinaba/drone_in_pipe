@@ -5,7 +5,8 @@
 #include <pluginlib/class_list_macros.h>
 
 #include <geometry_msgs/TwistWithCovarianceStamped.h>
-#include <sensor_msgs/Imu.h>
+#include <geometry_msgs/AccelStamped.h>
+#include <geometry_msgs/Vector3Stamped.h>
 #include "localization_in_pipe_msgs/IntegratedFlow.h"
 
 #include <kalman/UnscentedKalmanFilter.hpp>
@@ -18,7 +19,8 @@ class move_ukf_nodelet : public nodelet::Nodelet
 public:
   virtual void onInit();
   void integratedFlowCallback(const localization_in_pipe_msgs::IntegratedFlow::ConstPtr& msg);
-  void imuCallback(const sensor_msgs::Imu::ConstPtr& msg);
+  void bodyAccelCallback(const geometry_msgs::AccelStamped::ConstPtr& msg);
+  void bodyAngularVelocityCallback(const geometry_msgs::Vector3Stamped::ConstPtr& msg);
 
 protected:
   ros::NodeHandle nh_;
@@ -26,7 +28,8 @@ protected:
 
   ros::Publisher velocity_pub_;
   ros::Subscriber integrated_flow_sub_;
-  ros::Subscriber imu_sub_;
+  ros::Subscriber body_accel_sub_;
+  ros::Subscriber body_angular_velocity_sub_;
 
   typedef float T;
   MoveUKF::State<T> filter_state_;
@@ -44,7 +47,8 @@ protected:
 
   ros::Time prev_stamp_;
   geometry_msgs::TwistWithCovarianceStamped velocity_msg;
-  sensor_msgs::Imu::ConstPtr imu_msg_;
+  geometry_msgs::AccelStamped::ConstPtr body_accel_msg_;
+  geometry_msgs::Vector3Stamped::ConstPtr body_angular_velocity_msg_;
 
   void publishVelocity(const localization_in_pipe_msgs::IntegratedFlow::ConstPtr& msg);
 };
@@ -58,7 +62,7 @@ void move_ukf_nodelet::onInit()
 
   prev_stamp_ = ros::Time(0);
 
-  imu_msg_ = boost::make_shared<sensor_msgs::Imu>();
+  body_accel_msg_ = boost::make_shared<geometry_msgs::AccelStamped>();
 
   // initialize filter
   filter_state_ = MoveUKF::State<T>::Zero();
@@ -75,10 +79,14 @@ void move_ukf_nodelet::onInit()
   filter_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * 1.0);
 
   velocity_msg = geometry_msgs::TwistWithCovarianceStamped();
+  body_accel_msg_ = boost::make_shared<geometry_msgs::AccelStamped>();
+  body_angular_velocity_msg_ = boost::make_shared<geometry_msgs::Vector3Stamped>();
 
   velocity_pub_ = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>("velocity", 1);
   integrated_flow_sub_ = nh_.subscribe("integrated_flow", 10, &move_ukf_nodelet::integratedFlowCallback, this);
-  imu_sub_ = nh_.subscribe("body_accel", 10, &move_ukf_nodelet::imuCallback, this);
+  body_accel_sub_ = nh_.subscribe("body_accel", 10, &move_ukf_nodelet::bodyAccelCallback, this);
+  body_angular_velocity_sub_ =
+      nh_.subscribe("body_angular_velocity", 10, &move_ukf_nodelet::bodyAngularVelocityCallback, this);
 }
 
 void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::IntegratedFlow::ConstPtr& msg)
@@ -97,11 +105,11 @@ void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::I
   {
     return;
   }
-  prev_stamp_ = msg->header.stamp;
 
-  filter_control_.acc_x() = imu_msg_->linear_acceleration.x * dt;
-  filter_control_.acc_y() = imu_msg_->linear_acceleration.y * dt;
-  filter_control_.acc_z() = imu_msg_->linear_acceleration.z * dt;
+  // set control
+  filter_control_.acc_x() = body_accel_msg_->accel.linear.x * dt;
+  filter_control_.acc_y() = body_accel_msg_->accel.linear.y * dt;
+  filter_control_.acc_z() = body_accel_msg_->accel.linear.z * dt;
 
   filter_state_ = filter_.predict(filter_system_model_, filter_control_);
 
@@ -116,7 +124,9 @@ void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::I
 
   // set measurement
   filter_measurement_model_.setCovariance(filter_covariance_matrix_);
-  filter_angular_velocity_ << imu_msg_->angular_velocity.x, imu_msg_->angular_velocity.y, imu_msg_->angular_velocity.z;
+
+  filter_angular_velocity_ << body_angular_velocity_msg_->vector.x, body_angular_velocity_msg_->vector.y,
+      body_angular_velocity_msg_->vector.z;
   filter_range_vector_ << msg->range.x, msg->range.y, msg->range.z;
   filter_camera_z_axis_ << msg->camera_z_axis.x, msg->camera_z_axis.y, msg->camera_z_axis.z;
 
@@ -130,9 +140,14 @@ void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::I
   publishVelocity(msg);
 }
 
-void move_ukf_nodelet::imuCallback(const sensor_msgs::Imu::ConstPtr& msg)
+void move_ukf_nodelet::bodyAccelCallback(const geometry_msgs::AccelStamped::ConstPtr& msg)
 {
-  imu_msg_ = msg;
+  body_accel_msg_ = msg;
+}
+
+void move_ukf_nodelet::bodyAngularVelocityCallback(const geometry_msgs::Vector3Stamped::ConstPtr& msg)
+{
+  body_angular_velocity_msg_ = msg;
 }
 
 void move_ukf_nodelet::publishVelocity(const localization_in_pipe_msgs::IntegratedFlow::ConstPtr& msg)
