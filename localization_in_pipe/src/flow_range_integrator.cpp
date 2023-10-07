@@ -13,6 +13,7 @@ FlowRangeIntegrator::FlowRangeIntegrator(const Eigen::Isometry3d& transform, dou
   default_covariance_ = Eigen::Matrix3d::Zero();
   default_covariance_(0, 0) = flow_covariance_constant_;  // optical flow x covariance
   default_covariance_(1, 1) = flow_covariance_constant_;  // optical flow y covariance
+  default_covariance_(2, 2) = 0.001;                      // optical flow z covariance
 
   // transform covariance to body frame
   default_covariance_ = transform_.rotation() * default_covariance_ * transform_.rotation().transpose();
