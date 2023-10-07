@@ -74,7 +74,7 @@ void move_ukf_nodelet::onInit()
   filter_measurement_model_ = MoveUKF::MeasurementModel<T>();
   filter_measurement_model_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * 1e-3);  // measurement covariance
 
-  filter_ = Kalman::UnscentedKalmanFilter<MoveUKF::State<T>>(1, 2.0, 0.0);
+  filter_ = Kalman::UnscentedKalmanFilter<MoveUKF::State<T>>(0.03, 2.0, 0.0);
   filter_.init(filter_state_);
   filter_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * 1.0);
 
