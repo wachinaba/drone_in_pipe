@@ -834,6 +834,7 @@
         </inertia>
       </inertial>
 
+      <!-- 
       <light type="spot" name="point_light">
         <pose>0 0 0 0 0 0</pose>
         <diffuse>1 1 1 1</diffuse>
@@ -852,6 +853,7 @@
         </spot>
         <cast_shadows>true</cast_shadows>
       </light>
+      -->
 
       <sensor name="optical_flow_bottom_camera" type="camera">
         <always_on>true</always_on>
@@ -917,6 +919,7 @@
         </inertia>
       </inertial>
 
+      <!-- 
       <light type="spot" name="point_light">
         <pose>0 0 0 0 0 0</pose>
         <diffuse>1 1 1 1</diffuse>
@@ -935,6 +938,7 @@
         </spot>
         <cast_shadows>true</cast_shadows>
       </light>
+      -->
 
       <sensor name="optical_flow_left_camera" type="camera">
         <always_on>true</always_on>
@@ -1000,6 +1004,7 @@
         </inertia>
       </inertial>
 
+      <!-- 
       <light type="spot" name="point_light">
         <pose>0 0 0 0 0 0</pose>
         <diffuse>1 1 1 1</diffuse>
@@ -1018,6 +1023,7 @@
         </spot>
         <cast_shadows>true</cast_shadows>
       </light>
+      -->
 
       <sensor name="optical_flow_right_camera" type="camera">
         <always_on>true</always_on>
