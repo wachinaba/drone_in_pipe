@@ -140,6 +140,9 @@ void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::I
   // update
   filter_state_ = filter_.update(filter_measurement_model_, filter_measurement_);
 
+  // fix state covariance into symmetric matrix
+  filter_.setCovariance((filter_.getCovariance() + filter_.getCovariance().transpose()) / 2.0);
+
   publishVelocity(msg);
 }
 
