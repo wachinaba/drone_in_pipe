@@ -97,7 +97,10 @@ void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::I
     prev_stamp_ = msg->header.stamp;
     return;
   }
-  else if (dt <= 0.0)  // dt should be positive
+
+  prev_stamp_ = msg->header.stamp;
+
+  if (dt <= 0.0)  // dt should be positive
   {
     return;
   }
