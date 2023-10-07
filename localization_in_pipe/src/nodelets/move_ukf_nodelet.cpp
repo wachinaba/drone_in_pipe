@@ -69,14 +69,33 @@ void move_ukf_nodelet::onInit()
   filter_control_ = MoveUKF::Control<T>::Zero();
 
   filter_system_model_ = MoveUKF::SystemModel<T>();
-  filter_system_model_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * 1e-5);  // process noise covariance
+
+  float process_noise_variance;
+  if (!pnh_.getParam("process_noise_variance", process_noise_variance))
+  {
+    ROS_WARN("Failed to get param 'process_noise_variance'. Using default value: 1e-3");
+  }
+
+  filter_system_model_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * process_noise_variance);  // process noise,
 
   filter_measurement_model_ = MoveUKF::MeasurementModel<T>();
-  filter_measurement_model_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * 1e-3);  // measurement covariance
 
-  filter_ = Kalman::UnscentedKalmanFilter<MoveUKF::State<T>>(0.03, 2.0, 0.0);
+  float alpha, beta, kappa;
+  if (!pnh_.getParam("ukf_alpha", alpha))
+  {
+    ROS_WARN("Failed to get param 'ukf_alpha'. Using default value: 0.03");
+  }
+  if (!pnh_.getParam("ukf_beta", beta))
+  {
+    ROS_WARN("Failed to get param 'ukf_beta'. Using default value: 2.0");
+  }
+  if (!pnh_.getParam("ukf_kappa", kappa))
+  {
+    ROS_WARN("Failed to get param 'ukf_kappa'. Using default value: 0.0");
+  }
+
+  filter_ = Kalman::UnscentedKalmanFilter<MoveUKF::State<T>>(alpha, beta, kappa);
   filter_.init(filter_state_);
-  filter_.setCovariance(Eigen::Matrix<T, 3, 3>::Identity() * 1.0);
 
   velocity_msg = geometry_msgs::TwistWithCovarianceStamped();
   body_accel_msg_ = boost::make_shared<geometry_msgs::AccelStamped>();
