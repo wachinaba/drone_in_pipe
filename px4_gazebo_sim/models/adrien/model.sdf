@@ -834,6 +834,7 @@
         </inertia>
       </inertial>
 
+      <!-- 
       <light type="spot" name="point_light">
         <pose>0 0 0 0 0 0</pose>
         <diffuse>1 1 1 1</diffuse>
@@ -852,11 +853,12 @@
         </spot>
         <cast_shadows>true</cast_shadows>
       </light>
+      -->
 
       <sensor name="optical_flow_bottom_camera" type="camera">
         <always_on>true</always_on>
         <update_rate>120</update_rate>
-        <visualize>false</visualize>
+        <visualize>true</visualize>
         <topic>/optical_flow_bottom_camera</topic>
         <camera>
           <horizontal_fov>0.53</horizontal_fov>
@@ -905,8 +907,8 @@
       </axis>
     </joint>
 
-    <link name="optical_flow_left_link">
-      <pose>-0.0077 0.048 -0.0672 0 0 1.570796</pose>
+    <link name="optical_flow_top_link">
+      <pose>0.0693 -0.00055 0.017 1.570796 -1.570796 0</pose>
 
       <inertial>
         <mass>0.001</mass>
@@ -917,6 +919,7 @@
         </inertia>
       </inertial>
 
+      <!-- 
       <light type="spot" name="point_light">
         <pose>0 0 0 0 0 0</pose>
         <diffuse>1 1 1 1</diffuse>
@@ -935,6 +938,92 @@
         </spot>
         <cast_shadows>true</cast_shadows>
       </light>
+      -->
+
+      <sensor name="optical_flow_top_camera" type="camera">
+        <always_on>true</always_on>
+        <update_rate>120</update_rate>
+        <visualize>true</visualize>
+        <topic>/optical_flow_top_camera</topic>
+        <camera>
+          <horizontal_fov>0.53</horizontal_fov>
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>false</scale_to_hfov>
+          </lens>
+          <image>
+            <width>64</width>
+            <height>64</height>
+            <format>L8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>40</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </camera>
+        <plugin name="opticalflow_top_plugin" filename="libgazebo_ros_optical_flow.so">
+          <robotNamespace></robotNamespace>
+          <cameraName>optical_flow_top_camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <outputRate>0</outputRate>
+          <flowFeatureThreshold>30</flowFeatureThreshold>
+          <flowValueThreshold>3000</flowValueThreshold>
+          <topicName>optical_flow_top</topicName>
+          <deltaTopicName>optical_flow_delta_top</deltaTopicName>
+          <frameId>optical_flow_top_link</frameId>
+        </plugin>
+      </sensor>
+    </link>
+
+    <joint name="optical_flow_top_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>optical_flow_top_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <upper>0</upper>
+          <lower>0</lower>
+        </limit>
+      </axis>
+    </joint>
+
+    <link name="optical_flow_left_link">
+      <pose>-0.0077 0.048 -0.0672 0 0 1.570796</pose>
+
+      <inertial>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>1e-6</ixx>
+          <iyy>1e-6</iyy>
+          <izz>1e-6</izz>
+        </inertia>
+      </inertial>
+
+      <!-- 
+      <light type="spot" name="point_light">
+        <pose>0 0 0 0 0 0</pose>
+        <diffuse>1 1 1 1</diffuse>
+        <specular>.1 .1 .1 1</specular>
+        <attenuation>
+          <range>6</range>
+          <linear>0.2</linear>
+          <constant>0.8</constant>
+          <quadratic>0.01</quadratic>
+        </attenuation>
+        <direction>1 0 0</direction>
+        <spot>
+          <inner_angle>1.0</inner_angle>
+          <outer_angle>1.3</outer_angle>
+          <falloff>1.0</falloff>
+        </spot>
+        <cast_shadows>true</cast_shadows>
+      </light>
+      -->
 
       <sensor name="optical_flow_left_camera" type="camera">
         <always_on>true</always_on>
@@ -1000,6 +1089,7 @@
         </inertia>
       </inertial>
 
+      <!-- 
       <light type="spot" name="point_light">
         <pose>0 0 0 0 0 0</pose>
         <diffuse>1 1 1 1</diffuse>
@@ -1018,6 +1108,7 @@
         </spot>
         <cast_shadows>true</cast_shadows>
       </light>
+      -->
 
       <sensor name="optical_flow_right_camera" type="camera">
         <always_on>true</always_on>
