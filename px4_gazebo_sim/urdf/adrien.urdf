@@ -33,6 +33,8 @@
 
   <link name="optical_flow_bottom_link">
   </link>
+  <link name="optical_flow_top_link">
+  </link>
   <link name="optical_flow_left_link">
   </link>
   <link name="optical_flow_right_link">
@@ -146,6 +148,11 @@
     <child link="optical_flow_bottom_link" />
     <parent link="base_link" />
     <origin xyz="0.10783 -0.00735 -0.047658" rpy="-3.141593 0 0" />
+  </joint>
+  <joint name="optical_flow_top_joint" type="fixed">
+    <child link="optical_flow_top_link" />
+    <parent link="base_link" />
+    <origin xyz="0.0693 -0.00055 0.017" rpy="0 0 0" />
   </joint>
   <joint name="optical_flow_left_joint" type="fixed">
     <child link="optical_flow_left_link" />
