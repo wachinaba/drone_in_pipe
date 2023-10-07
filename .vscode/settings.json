@@ -1,7 +1,8 @@
 {
   "[python]": {
     "editor.tabSize": 4,
-    "editor.insertSpaces": true
+    "editor.insertSpaces": true,
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "python.defaultInterpreterPath": "/usr/bin/python3",
   "ros.distro": "noetic",
@@ -16,4 +17,12 @@
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
   "cmake.sourceDirectory": "/home/wachinaba/catkin_ws/src/drone_in_pipe/localization_in_pipe",
+  "python.formatting.provider": "none",
+  "files.associations": {
+    "*.world": "xml",
+    "*.sdf": "xml",
+    "*.tcc": "cpp",
+    "exception": "cpp",
+    "core": "cpp"
+  },
 }
