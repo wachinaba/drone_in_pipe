@@ -30,9 +30,7 @@ def main(args):
         delta_r = r2 * r1.inv()
 
         # calc angular velocity
-        angle = delta_r.magnitude()
-        axis = delta_r.as_rotvec() / angle
-        angular_velocity = axis * angle / delta_time
+        angular_velocity = delta_r.as_rotvec() / delta_time
 
         return angular_velocity
 
