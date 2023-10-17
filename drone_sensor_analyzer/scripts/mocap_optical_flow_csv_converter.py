@@ -75,7 +75,7 @@ def main(args):
         [
             compute_actual_measured_velocity(
                 df.iloc[i][["mocap_wx", "mocap_wy", "mocap_wz"]].values,
-                df.iloc[i]["mocap_v"],
+                df.iloc[i]["range"],
                 df.iloc[i][["mocap_vx", "mocap_vy", "mocap_vz"]].values,
                 Rotation.from_quat(
                     df.iloc[i][["mocap_qx", "mocap_qy", "mocap_qz", "mocap_qw"]].values
