@@ -58,12 +58,14 @@ def main(args):
         distance_vector = r * camera_axis
 
         # calc circumferential velocity
-        circumferential_velocity = np.cross(w, distance_vector) + v
+        circumferential_velocity = np.cross(w, distance_vector)
+
+        # calc actual velocity
+        actual_velocity = v + circumferential_velocity
 
         # calc measured velocity by removing camera axis component
         measured_velocity = (
-            circumferential_velocity
-            - np.dot(circumferential_velocity, camera_axis) * camera_axis
+            actual_velocity - np.dot(actual_velocity, camera_axis) * camera_axis
         )
 
         return measured_velocity
