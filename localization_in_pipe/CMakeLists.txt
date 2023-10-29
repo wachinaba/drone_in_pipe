@@ -78,6 +78,9 @@ add_executable(p3d_odometry_converter src/p3d_odometry_converter.cpp)
 target_link_libraries(p3d_odometry_converter ${catkin_LIBRARIES})
 add_dependencies(p3d_odometry_converter ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
+add_executable(level_plane_tf_broadcaster src/level_plane_tf_broadcaster.cpp)
+target_link_libraries(level_plane_tf_broadcaster ${catkin_LIBRARIES})
+add_dependencies(level_plane_tf_broadcaster ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 #
 # Install
@@ -89,7 +92,7 @@ install(TARGETS move_ukf flow_range_integrator flow_range_integrator_node body_a
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
   )
 
-install(TARGETS single_optical_flow_speed_estimator p3d_odometry_converter
+install(TARGETS single_optical_flow_speed_estimator p3d_odometry_converter level_plane_tf_broadcaster
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
