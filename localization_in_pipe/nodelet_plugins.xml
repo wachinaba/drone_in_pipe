@@ -23,4 +23,11 @@
     <description>
     </description>
   </class>
+
+  <class name="localization_in_pipe/pointcloud1_to_2_converter_nodelet"
+    type="localization_in_pipe::pointcloud1_to_2_converter_nodelet"
+    base_class_type="nodelet::Nodelet">
+    <description>
+    </description>
+  </class>
 </library>

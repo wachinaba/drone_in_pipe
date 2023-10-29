@@ -66,6 +66,7 @@ add_library(${PROJECT_NAME}
   src/nodelets/move_ukf_nodelet.cpp
   src/nodelets/body_accel_estimator_nodelet.cpp
   src/nodelets/body_angular_velocity_estimator_nodelet.cpp
+  src/nodelets/pointcloud1_to_2_converter_nodelet.cpp
 )
 target_link_libraries(${PROJECT_NAME} move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator body_angular_velocity_estimator)
 
