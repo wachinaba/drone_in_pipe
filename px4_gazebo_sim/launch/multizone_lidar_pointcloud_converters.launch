@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="manager_name" default="multizone_lidar_pointcloud_converters" />
+  <arg name="manager_threads" default="20" />
+
+  <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen">
+    <param name="num_worker_threads" value="$(arg manager_threads)" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_converter_left"
+    args="load localization_in_pipe/pointcloud1_to_2_converter_nodelet $(arg manager_name)">
+    <remap from="input_point_cloud" to="/multi_zone_lidar_left/scan_pc1" />
+    <remap from="output_point_cloud" to="/multi_zone_lidar_left/scan" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_converter_right"
+    args="load localization_in_pipe/pointcloud1_to_2_converter_nodelet $(arg manager_name)">
+    <remap from="input_point_cloud" to="/multi_zone_lidar_right/scan_pc1" />
+    <remap from="output_point_cloud" to="/multi_zone_lidar_right/scan" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_converter_front_left"
+    args="load localization_in_pipe/pointcloud1_to_2_converter_nodelet $(arg manager_name)">
+    <remap from="input_point_cloud" to="/multi_zone_lidar_front_left/scan_pc1" />
+    <remap from="output_point_cloud" to="/multi_zone_lidar_front_left/scan" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_converter_front_right"
+    args="load localization_in_pipe/pointcloud1_to_2_converter_nodelet $(arg manager_name)">
+    <remap from="input_point_cloud" to="/multi_zone_lidar_front_right/scan_pc1" />
+    <remap from="output_point_cloud" to="/multi_zone_lidar_front_right/scan" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_converter_rear_left"
+    args="load localization_in_pipe/pointcloud1_to_2_converter_nodelet $(arg manager_name)">
+    <remap from="input_point_cloud" to="/multi_zone_lidar_rear_left/scan_pc1" />
+    <remap from="output_point_cloud" to="/multi_zone_lidar_rear_left/scan" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_converter_rear_right"
+    args="load localization_in_pipe/pointcloud1_to_2_converter_nodelet $(arg manager_name)">
+    <remap from="input_point_cloud" to="/multi_zone_lidar_rear_right/scan_pc1" />
+    <remap from="output_point_cloud" to="/multi_zone_lidar_rear_right/scan" />
+  </node>
+
+</launch>

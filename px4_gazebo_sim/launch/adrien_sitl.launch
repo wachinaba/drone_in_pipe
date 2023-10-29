@@ -57,6 +57,7 @@
 
   <!-- Converters -->
   <include file="$(find px4_gazebo_sim)/launch/pointcloud1_to_range_nodes.launch" />
+  <include file="$(find px4_gazebo_sim)/launch/multizone_lidar_pointcloud_converters.launch" />
   <node name="gazebo_twist_converter_node" pkg="localization_in_pipe" type="p3d_odometry_converter"
     output="screen">
     <remap from="~twist" to="~actual_body_velocity" />
