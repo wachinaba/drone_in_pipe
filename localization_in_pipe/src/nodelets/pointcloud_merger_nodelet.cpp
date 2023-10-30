@@ -8,8 +8,8 @@ namespace localization_in_pipe
 class pointcloud_merger_nodelet : public nodelet::Nodelet
 {
 public:
-  pointcloud_merger_nodelet() = default;
-  ~pointcloud_merger_nodelet() override = default;
+  pointcloud_merger_nodelet(){};
+  virtual ~pointcloud_merger_nodelet(){};
 
 private:
   void onInit() override
