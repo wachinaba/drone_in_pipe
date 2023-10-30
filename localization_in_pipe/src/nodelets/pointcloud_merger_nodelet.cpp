@@ -91,15 +91,17 @@ private:
       merged_pointcloud.width += pointcloud->width;
       merged_pointcloud.data.insert(merged_pointcloud.data.end(), pointcloud->data.begin(), pointcloud->data.end());
     }
-    merged_pointcloud.header = sensor_pointclouds_[0]->header;
+    merged_pointcloud.header = (*minmax_timestamp.first)->header;
     merged_pointcloud.height = 1;
     merged_pointcloud.row_step = merged_pointcloud.width * merged_pointcloud.point_step;
 
+    merged_pointcloud.fields = (*minmax_timestamp.first)->fields;
+    merged_pointcloud.is_bigendian = (*minmax_timestamp.first)->is_bigendian;
+    merged_pointcloud.point_step = (*minmax_timestamp.first)->point_step;
+    merged_pointcloud.is_dense = (*minmax_timestamp.first)->is_dense;
+
     // Publish merged pointcloud
     pub_merged_.publish(merged_pointcloud);
-
-    // Clear stored pointclouds
-    std::fill(sensor_pointclouds_.begin(), sensor_pointclouds_.end(), nullptr);
   }
 
   std::vector<ros::Subscriber> sub_sensors_;
