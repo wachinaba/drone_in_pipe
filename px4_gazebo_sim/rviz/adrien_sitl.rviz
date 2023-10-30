@@ -4,10 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
-        - /Status1
         - /TF1/Frames1
-        - /Marker4
         - /Marker4/Namespaces1
       Splitter Ratio: 0.5790441036224365
     Tree Height: 749
@@ -87,6 +84,8 @@ Visualization Manager:
           Value: false
         imu_link:
           Value: true
+        level_plane:
+          Value: true
         map:
           Value: false
         map_ned:
@@ -140,6 +139,8 @@ Visualization Manager:
           base_link_frd:
             {}
           imu_link:
+            {}
+          level_plane:
             {}
           multi_zone_lidar_front_left_link:
             {}
@@ -203,7 +204,7 @@ Visualization Manager:
       Enabled: true
       Name: single_point_lidar_bottom
       Queue Size: 10
-      Topic: /single_point_lidar_bottom_link/range
+      Topic: /single_point_lidar_bottom/range
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -213,7 +214,7 @@ Visualization Manager:
       Enabled: true
       Name: single_point_lidar_top
       Queue Size: 10
-      Topic: /single_point_lidar_top_link/range
+      Topic: /single_point_lidar_top/range
       Unreliable: false
       Value: true
     - Alpha: 0.30000001192092896
@@ -490,7 +491,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -505,7 +506,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -518,7 +519,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -533,7 +534,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -546,7 +547,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -561,7 +562,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -574,7 +575,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -589,7 +590,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -602,7 +603,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -617,7 +618,35 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: multi_zone_lidar_rear_right
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic: /multi_zone_lidar_rear_right/scan
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -634,14 +663,14 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: multi_zone_lidar_rear_right
+      Name: PointCloud2
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
       Size (m): 0.009999999776482582
       Style: Flat Squares
-      Topic: /multi_zone_lidar_rear_right/scan
+      Topic: /multi_zone_lidar/scan_level_plane_merged
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -674,7 +703,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.997931480407715
+      Distance: 3.100062370300293
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -682,17 +711,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.6102391481399536
-        Y: -0.11956621706485748
-        Z: 0.22713498771190643
+        X: -0.3190310001373291
+        Y: 0.16963669657707214
+        Z: 0.24494192004203796
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.24979662895202637
+      Pitch: 0.2697962522506714
       Target Frame: <Fixed Frame>
-      Yaw: 2.620368003845215
+      Yaw: 3.310389518737793
     Saved: ~
 Window Geometry:
   Displays:
