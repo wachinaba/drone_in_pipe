@@ -15,16 +15,17 @@ private:
   void onInit() override
   {
     ros::NodeHandle& nh = getNodeHandle();
+    ros::NodeHandle& pnh = getPrivateNodeHandle();
     int num_sensors;
 
-    nh.param("num_sensors", num_sensors, 0);
+    pnh.param("num_sensors", num_sensors, 0);
     if (num_sensors <= 0)
     {
       ROS_FATAL_STREAM("Invalid number of sensors: " << num_sensors);
       return;
     }
 
-    nh.param<float>("delay_threshold", delay_threshold_, 0.1);
+    pnh.param<float>("delay_threshold", delay_threshold_, 0.1);
 
     // Subscribe to sensor topics
     for (int i = 0; i < num_sensors; i++)
@@ -39,7 +40,7 @@ private:
 
     // Set up timer for merging pointclouds
     double publish_rate;
-    nh.param("publish_rate", publish_rate, 15.0);
+    pnh.param("publish_rate", publish_rate, 15.0);
     timer_ = nh.createTimer(ros::Duration(1.0 / publish_rate), &pointcloud_merger_nodelet::mergePointClouds, this);
 
     // Resize sensor_pointclouds_ to num_sensors
