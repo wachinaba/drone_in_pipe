@@ -30,7 +30,7 @@ private:
     // Subscribe to sensor topics
     for (int i = 0; i < num_sensors; i++)
     {
-      std::string topic_name = "/sensor_" + std::to_string(i) + "/pointcloud";
+      std::string topic_name = "/input_" + std::to_string(i);
       sub_sensors_.push_back(nh.subscribe<sensor_msgs::PointCloud2>(
           topic_name, 1, boost::bind(&pointcloud_merger_nodelet::sensorCallback, this, i, _1)));
     }
