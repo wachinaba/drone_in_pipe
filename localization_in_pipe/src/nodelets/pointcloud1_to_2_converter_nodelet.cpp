@@ -34,6 +34,11 @@ private:
     // Convert PointCloud to PointCloud2
     sensor_msgs::PointCloud2 cloud2_msg;
     sensor_msgs::convertPointCloudToPointCloud2(*cloud1_msg, cloud2_msg);
+    cloud2_msg.header = cloud1_msg->header;
+    if (cloud1_msg->header.stamp == ros::Time(0))
+    {
+      cloud2_msg.header.stamp = ros::Time::now();
+    }
 
     // Publish PointCloud2
     pub_.publish(cloud2_msg);
