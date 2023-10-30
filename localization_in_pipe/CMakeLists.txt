@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   localization_in_pipe_msgs
   tf2
   tf2_ros
+  tf2_sensor_msgs
   pluginlib
   nodelet
 )
@@ -68,8 +69,9 @@ add_library(${PROJECT_NAME}
   src/nodelets/body_angular_velocity_estimator_nodelet.cpp
   src/nodelets/pointcloud1_to_2_converter_nodelet.cpp
   src/nodelets/pointcloud_merger_nodelet.cpp
+  src/nodelets/pointcloud_transform_nodelet.cpp
 )
-target_link_libraries(${PROJECT_NAME} move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator body_angular_velocity_estimator)
+target_link_libraries(${PROJECT_NAME} move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator body_angular_velocity_estimator ${catkin_LIBRARIES})
 
 add_executable(single_optical_flow_speed_estimator src/single_optical_flow_speed_estimator.cpp)
 target_link_libraries(single_optical_flow_speed_estimator ${catkin_LIBRARIES})

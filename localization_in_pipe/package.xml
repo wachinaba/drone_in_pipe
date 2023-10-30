@@ -62,6 +62,7 @@
   <build_depend>nav_msgs</build_depend>
   <build_depend>tf2</build_depend>
   <build_depend>tf2_ros</build_depend>
+  <build_depend>tf2_sensor_msgs</build_depend>
   <build_depend>pluginlib</build_depend>
   <build_depend>nodelet</build_depend>
   <build_export_depend>gazebo_ros_optical_flow_msgs</build_export_depend>
@@ -77,6 +78,7 @@
   <build_export_depend>nav_msgs</build_export_depend>
   <build_export_depend>tf2</build_export_depend>
   <build_export_depend>tf2_ros</build_export_depend>
+  <build_export_depend>tf2_sensor_msgs</build_export_depend>
   <exec_depend>gazebo_ros_optical_flow_msgs</exec_depend>
   <exec_depend>localization_in_pipe_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
@@ -90,6 +92,7 @@
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>tf2</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>tf2_sensor_msgs</exec_depend>
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>nodelet</exec_depend>
 

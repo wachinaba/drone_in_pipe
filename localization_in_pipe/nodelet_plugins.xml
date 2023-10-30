@@ -37,4 +37,10 @@
     <description>
     </description>
   </class>
+
+  <class name="localization_in_pipe/pointcloud_transform_nodelet"
+    type="localization_in_pipe::pointcloud_transform_nodelet" base_class_type="nodelet::Nodelet">
+    <description>
+    </description>
+  </class>
 </library>
