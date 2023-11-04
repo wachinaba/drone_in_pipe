@@ -43,6 +43,18 @@
     <remap from="output_point_cloud" to="/multi_zone_lidar_rear_right/scan" />
   </node>
 
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_converter_bottom"
+    args="load localization_in_pipe/pointcloud1_to_2_converter_nodelet $(arg manager_name)">
+    <remap from="input_point_cloud" to="/multi_zone_lidar_bottom/scan_pc1" />
+    <remap from="output_point_cloud" to="/multi_zone_lidar_bottom/scan" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_converter_top"
+    args="load localization_in_pipe/pointcloud1_to_2_converter_nodelet $(arg manager_name)">
+    <remap from="input_point_cloud" to="/multi_zone_lidar_top/scan_pc1" />
+    <remap from="output_point_cloud" to="/multi_zone_lidar_top/scan" />
+  </node>
+
   <!-- transform -->
   <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_transformer_left"
     args="load localization_in_pipe/pointcloud_transform_nodelet $(arg manager_name)">
@@ -86,15 +98,31 @@
     <param name="target_frame" value="level_plane" />
   </node>
 
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_transformer_bottom"
+    args="load localization_in_pipe/pointcloud_transform_nodelet $(arg manager_name)">
+    <remap from="input" to="/multi_zone_lidar_bottom/scan" />
+    <remap from="output" to="/multi_zone_lidar_bottom/scan_level_plane" />
+    <param name="target_frame" value="level_plane" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_transformer_top"
+    args="load localization_in_pipe/pointcloud_transform_nodelet $(arg manager_name)">
+    <remap from="input" to="/multi_zone_lidar_top/scan" />
+    <remap from="output" to="/multi_zone_lidar_top/scan_level_plane" />
+    <param name="target_frame" value="level_plane" />
+  </node>
+
   <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_merger"
     args="load localization_in_pipe/pointcloud_merger_nodelet $(arg manager_name)">
-    <param name="num_sensors" value="6" />
+    <param name="num_sensors" value="8" />
     <remap from="input_0" to="/multi_zone_lidar_left/scan_level_plane" />
     <remap from="input_1" to="/multi_zone_lidar_right/scan_level_plane" />
     <remap from="input_2" to="/multi_zone_lidar_front_left/scan_level_plane" />
     <remap from="input_3" to="/multi_zone_lidar_front_right/scan_level_plane" />
     <remap from="input_4" to="/multi_zone_lidar_rear_left/scan_level_plane" />
     <remap from="input_5" to="/multi_zone_lidar_rear_right/scan_level_plane" />
+    <remap from="input_6" to="/multi_zone_lidar_bottom/scan_level_plane" />
+    <remap from="input_7" to="/multi_zone_lidar_top/scan_level_plane" />
     <remap from="merged_pointcloud" to="/multi_zone_lidar/scan_level_plane_merged" />
   </node>
 
