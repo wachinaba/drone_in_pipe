@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="localization_in_pipe" type="ransac_cylinder_estimator" name="ransac_cylinder_estimator">
+    <remap from="input" to="/multi_zone_lidar/scan_level_plane_merged" />
+  </node>
+</launch>

@@ -68,6 +68,7 @@
   <node name="level_plane_tf_broadcaster" pkg="localization_in_pipe"
     type="level_plane_tf_broadcaster"
     output="screen" />
+  <include file="$(find px4_gazebo_sim)/launch/localizers.launch" />
 
 
   <!-- state publishers and rviz -->
