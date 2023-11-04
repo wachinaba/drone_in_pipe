@@ -16,6 +16,8 @@ find_package(catkin REQUIRED COMPONENTS
   tf2
   tf2_ros
   tf2_sensor_msgs
+  pcl_conversions
+  pcl_ros
   pluginlib
   nodelet
 )
@@ -30,7 +32,7 @@ find_package(Kalman REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator body_angular_velocity_estimator ${PROJECT_NAME}
-  CATKIN_DEPENDS gazebo_ros_optical_flow_msgs geometry_msgs mavros mavros_msgs roscpp rospy sensor_msgs std_msgs visualization_msgs nav_msgs localization_in_pipe_msgs tf2 tf2_ros nodelet pluginlib
+  CATKIN_DEPENDS gazebo_ros_optical_flow_msgs geometry_msgs mavros mavros_msgs roscpp rospy sensor_msgs std_msgs visualization_msgs nav_msgs localization_in_pipe_msgs tf2 tf2_ros pcl_conversions pcl_ros nodelet pluginlib
 )
 
 include_directories(
@@ -84,6 +86,10 @@ add_dependencies(p3d_odometry_converter ${catkin_EXPORTED_TARGETS} ${${PROJECT_N
 add_executable(level_plane_tf_broadcaster src/level_plane_tf_broadcaster.cpp)
 target_link_libraries(level_plane_tf_broadcaster ${catkin_LIBRARIES})
 add_dependencies(level_plane_tf_broadcaster ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+
+add_executable(ransac_cylinder_estimator src/ransac_cylinder_estimator.cpp)
+target_link_libraries(ransac_cylinder_estimator ${catkin_LIBRARIES})
+add_dependencies(ransac_cylinder_estimator ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 #
 # Install
