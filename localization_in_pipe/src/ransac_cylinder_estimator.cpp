@@ -9,6 +9,8 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/extract_indices.h>
 #include <Eigen/Dense>
+#include <tf2_ros/transform_broadcaster.h>
+#include <geometry_msgs/TransformStamped.h>
 
 class CylinderFitting
 {
@@ -117,6 +119,30 @@ public:
       marker.color.b = 1.0;
 
       marker_pub.publish(marker);
+
+      // Publish the cylinder origin as a transform
+      geometry_msgs::TransformStamped transformStamped;
+      transformStamped.header.stamp = ros::Time::now();
+      transformStamped.header.frame_id = cloud_msg->header.frame_id;
+      transformStamped.child_frame_id = "pipe_frame";
+      transformStamped.transform.translation.x = cylinder_origin[0];
+      transformStamped.transform.translation.y = cylinder_origin[1];
+      transformStamped.transform.translation.z = cylinder_origin[2];
+
+      // calculate the cylinder orientation, cylinder X = cylinder direction
+      Eigen::Vector3f cylinder_x_axis = coefficients_cylinder_direction;
+      Eigen::Vector3f cylinder_y_axis = Eigen::Vector3f::UnitZ().cross(cylinder_x_axis);
+      Eigen::Vector3f cylinder_z_axis = cylinder_x_axis.cross(cylinder_y_axis);
+      Eigen::Matrix3f cylinder_rotation;
+      cylinder_rotation << cylinder_x_axis[0], cylinder_y_axis[0], cylinder_z_axis[0], cylinder_x_axis[1],
+          cylinder_y_axis[1], cylinder_z_axis[1], cylinder_x_axis[2], cylinder_y_axis[2], cylinder_z_axis[2];
+      Eigen::Quaternionf cylinder_quaternion(cylinder_rotation);
+
+      transformStamped.transform.rotation.x = cylinder_quaternion.x();
+      transformStamped.transform.rotation.y = cylinder_quaternion.y();
+      transformStamped.transform.rotation.z = cylinder_quaternion.z();
+      transformStamped.transform.rotation.w = cylinder_quaternion.w();
+      broadcaster.sendTransform(transformStamped);
     }
   }
 
@@ -124,6 +150,7 @@ private:
   ros::NodeHandle nh;
   ros::Subscriber sub;
   ros::Publisher marker_pub;
+  tf2_ros::TransformBroadcaster broadcaster;
 
   // RANSAC parameters
   double normal_distance_weight;
