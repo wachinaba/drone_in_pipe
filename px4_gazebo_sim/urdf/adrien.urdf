@@ -51,6 +51,10 @@
   </link>
   <link name="multi_zone_lidar_rear_right_link">
   </link>
+  <link name="multi_zone_lidar_bottom_link">
+  </link>
+  <link name="multi_zone_lidar_top_link">
+  </link>
   <link name="single_point_lidar_bottom_link">
   </link>
   <link name="single_point_lidar_top_link">
@@ -193,6 +197,16 @@
     <child link="multi_zone_lidar_rear_right_link" />
     <parent link="base_link" />
     <origin xyz="-0.112103 -0.152774 -0.024" rpy="0 0 -1.9634954" />
+  </joint>
+  <joint name="multi_zone_lidar_bottom_joint" type="fixed">
+    <child link="multi_zone_lidar_bottom_link" />
+    <parent link="base_link" />
+    <origin xyz="0.0875 0 -0.0555" rpy="0 1.570796 0" />
+  </joint>
+  <joint name="multi_zone_lidar_top_joint" type="fixed">
+    <child link="multi_zone_lidar_top_link" />
+    <parent link="base_link" />
+    <origin xyz="0.0875 0 0.026" rpy="0 -1.570796 0" />
   </joint>
   <joint name="single_point_lidar_bottom_joint" type="fixed">
     <child link="single_point_lidar_bottom_link" />

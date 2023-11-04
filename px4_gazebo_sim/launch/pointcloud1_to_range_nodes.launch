@@ -2,12 +2,12 @@
 <launch>
   <node name="multizone_lidar_left_converter" pkg="multizone_lidar"
     type="pointcloud1_to_range_node" output="screen">
-    <remap from="pointcloud" to="multi_zone_lidar_left/scan" />
+    <remap from="pointcloud" to="multi_zone_lidar_left/scan_pc1" />
     <remap from="range" to="multi_zone_lidar_left/range" />
   </node>
   <node name="multizone_lidar_right_converter" pkg="multizone_lidar"
     type="pointcloud1_to_range_node" output="screen">
-    <remap from="pointcloud" to="multi_zone_lidar_right/scan" />
+    <remap from="pointcloud" to="multi_zone_lidar_right/scan_pc1" />
     <remap from="range" to="multi_zone_lidar_right/range" />
   </node>
 
