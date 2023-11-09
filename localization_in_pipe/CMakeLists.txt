@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(localization_in_pipe)
 
 find_package(catkin REQUIRED COMPONENTS
-  gazebo_ros_optical_flow_msgs  
+  optical_flow_msgs  
   geometry_msgs
   mavros
   mavros_msgs
@@ -32,7 +32,7 @@ find_package(Kalman REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES move_ukf flow_range_integrator flow_range_integrator_node body_accel_estimator body_angular_velocity_estimator ${PROJECT_NAME}
-  CATKIN_DEPENDS gazebo_ros_optical_flow_msgs geometry_msgs mavros mavros_msgs roscpp rospy sensor_msgs std_msgs visualization_msgs nav_msgs localization_in_pipe_msgs tf2 tf2_ros pcl_conversions pcl_ros nodelet pluginlib
+  CATKIN_DEPENDS optical_flow_msgs geometry_msgs mavros mavros_msgs roscpp rospy sensor_msgs std_msgs visualization_msgs nav_msgs localization_in_pipe_msgs tf2 tf2_ros pcl_conversions pcl_ros nodelet pluginlib
 )
 
 include_directories(
