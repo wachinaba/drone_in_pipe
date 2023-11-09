@@ -108,6 +108,18 @@
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>nodelet</exec_depend>
 
+  <build_depend>ct_core</build_depend>
+  <build_depend>ct_rbd</build_depend>
+  <build_depend>ct_optcon</build_depend>
+  <build_depend>ct_models</build_depend>
+  <build_export_depend>ct_core</build_export_depend>
+  <build_export_depend>ct_rbd</build_export_depend>
+  <build_export_depend>ct_optcon</build_export_depend>
+  <build_export_depend>ct_models</build_export_depend>
+  <exec_depend>ct_core</exec_depend>
+  <exec_depend>ct_rbd</exec_depend>
+  <exec_depend>ct_optcon</exec_depend>
+  <exec_depend>ct_models</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
