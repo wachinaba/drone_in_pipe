@@ -1,0 +1,22 @@
+<launch>
+  <!-- First rosserial serial node -->
+  <node pkg="rosserial_python" type="serial_node.py" name="sensor_serial_node_1">
+    <param name="port" value="/dev/ttyAMA0"/>
+    <param name="baud" value="230400"/>
+    <remap from="/multizone_range/0" to="/multizone_range/front_left"/>
+    <remap from="/multizone_range/1" to="/multizone_range/front_right"/>
+    <remap from="/multizone_range/2" to="/multizone_range/top"/>
+    <remap from="/multizone_range/3" to="/multizone_range/bottom"/>
+  </node>
+
+  <!-- Second rosserial serial node -->
+  <node pkg="rosserial_python" type="serial_node.py" name="sensor_serial_node_2">
+    <param name="port" value="/dev/ttyAMA2"/>
+    <param name="baud" value="230400"/>
+    <remap from="/multizone_range/4" to="/multizone_range/left"/>
+    <remap from="/multizone_range/5" to="/multizone_range/right"/>
+    <remap from="/multizone_range/6" to="/multizone_range/rear_left"/>
+    <remap from="/multizone_range/7" to="/multizone_range/rear_right"/>
+  </node>
+
+</launch>
