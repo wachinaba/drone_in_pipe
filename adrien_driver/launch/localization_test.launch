@@ -25,6 +25,10 @@
   </node>
 
   <!-- transform -->
+  <node name="level_plane_tf_broadcaster" pkg="localization_in_pipe"
+    type="level_plane_tf_broadcaster"
+    output="screen" />
+
   <node pkg="nodelet" type="nodelet" name="multizone_lidar_pointcloud_transformer_left"
     args="load localization_in_pipe/pointcloud_transform_nodelet $(arg manager_name)">
     <remap from="input" to="/multi_zone_lidar_left/scan" />
