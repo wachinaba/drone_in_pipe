@@ -15,10 +15,10 @@
   <node pkg="rosserial_python" type="serial_node.py" name="sensor_serial_node_2">
     <param name="port" value="/dev/ttyAMA2"/>
     <param name="baud" value="230400"/>
-    <remap from="/multizone_range/4" to="/rear_lidars/0"/>
-    <remap from="/multizone_range/5" to="/rear_lidars/1"/>
-    <remap from="/multizone_range/6" to="/rear_lidars/2"/>
-    <remap from="/multizone_range/7" to="/rear_lidars/3"/>
+    <remap from="/multizone_range/0" to="/rear_lidars/0"/>
+    <remap from="/multizone_range/1" to="/rear_lidars/1"/>
+    <remap from="/multizone_range/2" to="/rear_lidars/2"/>
+    <remap from="/multizone_range/3" to="/rear_lidars/3"/>
     <remap from="/optical_flow_delta/2" to="/optical_flow_delta/left"/>
     <remap from="/optical_flow_delta/3" to="/optical_flow_delta/right"/>
   </node>
