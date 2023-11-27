@@ -104,15 +104,15 @@
   </node>
 
   <!-- move ukf -->
-  <arg name="manager_name" default="move_ukf_nodelet_manager" />
-  <arg name="manager_threads" default="20" />
+  <arg name="move_ukf_manager_name" default="move_ukf_nodelet_manager" />
+  <arg name="move_ukf_manager_threads" default="20" />
 
-  <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen">
-    <param name="num_worker_threads" value="$(arg manager_threads)" />
+  <node pkg="nodelet" type="nodelet" name="$(arg move_ukf_manager_name)" args="manager" output="screen">
+    <param name="num_worker_threads" value="$(arg move_ukf_manager_threads)" />
   </node>
 
   <node pkg="nodelet" type="nodelet" name="flow_range_integrator_bottom"
-    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg move_ukf_manager_name)">
     <rosparam file="$(find localization_in_pipe)/config/PMW3901.yaml" command="load" />
     <remap from="flow" to="/optical_flow_delta/bottom" />
     <remap from="range" to="/multi_zone_lidar_bottom/range" />
@@ -124,7 +124,7 @@
   </node>
 
   <node pkg="nodelet" type="nodelet" name="flow_range_integrator_top"
-    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg move_ukf_manager_name)">
     <rosparam file="$(find localization_in_pipe)/config/PMW3901.yaml" command="load" />
     <remap from="flow" to="/optical_flow_delta/top" />
     <remap from="range" to="/multi_zone_lidar_top/range" />
@@ -136,7 +136,7 @@
   </node>
 
   <node pkg="nodelet" type="nodelet" name="flow_range_integrator_left"
-    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg move_ukf_manager_name)">
     <rosparam file="$(find localization_in_pipe)/config/PMW3901.yaml" command="load" />
     <remap from="flow" to="/optical_flow_delta/left" />
     <remap from="range" to="/multi_zone_lidar_left/range" />
@@ -148,7 +148,7 @@
   </node>
 
   <node pkg="nodelet" type="nodelet" name="flow_range_integrator_right"
-    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg manager_name)">
+    args="load localization_in_pipe/flow_range_integrator_nodelet $(arg move_ukf_manager_name)">
     <rosparam file="$(find localization_in_pipe)/config/PMW3901.yaml" command="load" />
     <remap from="flow" to="/optical_flow_delta/right" />
     <remap from="range" to="/multi_zone_lidar_right/range" />
