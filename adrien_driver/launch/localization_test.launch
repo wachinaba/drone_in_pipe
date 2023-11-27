@@ -162,23 +162,30 @@
   <!-- visualization -->
   <node pkg="drone_sensor_analyzer" type="flow_delta_visualizer.py"
     name="flow_delta_visualizer_bottom" output="screen">
-    <remap from="flow_delta" to="/optical_flow_delta_bottom" />
+    <remap from="flow_delta" to="/optical_flow_delta/bottom" />
     <param name="namespace" value="bottom_delta" />
     <rosparam>color: [1, 0, 0, 1]</rosparam>
     <param name="delta_scale" value="1.0" />
   </node>
   <node pkg="drone_sensor_analyzer" type="flow_delta_visualizer.py"
     name="flow_delta_visualizer_left" output="screen">
-    <remap from="flow_delta" to="/optical_flow_delta_left" />
+    <remap from="flow_delta" to="/optical_flow_delta/left" />
     <param name="namespace" value="left_delta" />
     <rosparam>color: [0, 1, 0, 1]</rosparam>
     <param name="delta_scale" value="1.0" />
   </node>
   <node pkg="drone_sensor_analyzer" type="flow_delta_visualizer.py"
     name="flow_delta_visualizer_right" output="screen">
-    <remap from="flow_delta" to="/optical_flow_delta_right" />
+    <remap from="flow_delta" to="/optical_flow_delta/right" />
     <param name="namespace" value="right_delta" />
     <rosparam>color: [0, 0, 1, 1]</rosparam>
+    <param name="delta_scale" value="1.0" />
+  </node>
+  <node pkg="drone_sensor_analyzer" type="flow_delta_visualizer.py"
+    name="flow_delta_visualizer_top" output="screen">
+    <remap from="flow_delta" to="/optical_flow_delta/top" />
+    <param name="namespace" value="top_delta" />
+    <rosparam>color: [1, 1, 0, 1]</rosparam>
     <param name="delta_scale" value="1.0" />
   </node>
 
