@@ -1,0 +1,11 @@
+<launch>
+  <!-- state publishers -->
+  <param name="robot_description" textfile="$(find adrien_driver)/urdf/adrien.urdf" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Include sensor_drivers.launch -->
+  <include file="$(find adrien_driver)/launch/sensor_drivers.launch" />
+  
+  
+</launch>
