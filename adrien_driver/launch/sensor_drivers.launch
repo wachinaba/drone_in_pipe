@@ -7,8 +7,8 @@
     <remap from="/multizone_range/1" to="/multizone_range/bottom"/>
     <remap from="/multizone_range/2" to="/multizone_range/front_left"/>
     <remap from="/multizone_range/3" to="/multizone_range/top"/>
-    <remap from="/optical_flow_delta/0" to="/optical_flow_delta/bottom"/>
-    <remap from="/optical_flow_delta/1" to="/optical_flow_delta/top"/>
+    <remap from="/optical_flow_delta/0" to="/optical_flow_delta/top"/>
+    <remap from="/optical_flow_delta/1" to="/optical_flow_delta/bottom"/>
   </node>
 
   <!-- Second rosserial serial node -->
