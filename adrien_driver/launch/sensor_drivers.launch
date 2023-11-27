@@ -19,8 +19,8 @@
     <remap from="/multizone_range/1" to="/multizone_range/rear_right"/>
     <remap from="/multizone_range/2" to="/multizone_range/left"/>
     <remap from="/multizone_range/3" to="/multizone_range/rear_left"/>
-    <remap from="/optical_flow_delta/2" to="/optical_flow_delta/left"/>
-    <remap from="/optical_flow_delta/3" to="/optical_flow_delta/right"/>
+    <remap from="/optical_flow_delta/0" to="/optical_flow_delta/left"/>
+    <remap from="/optical_flow_delta/1" to="/optical_flow_delta/right"/>
   </node>
 
   <!-- multizone converter -->
