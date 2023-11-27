@@ -42,6 +42,7 @@ void MultizoneRangeConverterNode::multizoneRangeCallback(const multizone_lidar_m
   range.header = msg->header;
   if (!frame_id.empty())
   {
+    pointcloud.header.frame_id = frame_id;
     range.header.frame_id = frame_id;
   }
 
