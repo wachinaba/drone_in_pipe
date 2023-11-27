@@ -10,8 +10,8 @@ namespace MultizoneLidarConverter
 void convertToPointCloud2(const multizone_lidar_msgs::MultizoneRange::ConstPtr& msg,
                           sensor_msgs::PointCloud2& pointcloud)
 {
-  pointcloud.height = msg->vertical_samples;
-  pointcloud.width = msg->horizontal_samples;
+  pointcloud.height = 1;
+  pointcloud.width = msg->horizontal_samples * msg->vertical_samples;
   pointcloud.is_bigendian = false;
   pointcloud.is_dense = false;
   pointcloud.point_step = 12;
