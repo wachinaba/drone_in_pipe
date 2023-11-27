@@ -27,8 +27,8 @@ public:
     pnh.param<double>("normal_distance_weight", normal_distance_weight, 0.1);
     pnh.param<int>("max_iterations", max_iterations, 1000);
     pnh.param<double>("distance_threshold", distance_threshold, 0.2);
-    pnh.param<double>("min_radius", min_radius, 0.5);
-    pnh.param<double>("max_radius", max_radius, 3.0);
+    pnh.param<double>("min_radius", min_radius, 0.25);
+    pnh.param<double>("max_radius", max_radius, 1.5);
     pnh.param<double>("normal_search_radius", normal_search_radius, 0.1);
   }
 
