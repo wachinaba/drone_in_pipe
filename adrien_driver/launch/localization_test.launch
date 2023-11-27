@@ -9,6 +9,15 @@
     <arg name="respawn_mavros" value="$(arg respawn_mavros)" />
   </include>
 
+  <!-- state publishers -->
+  <param name="robot_description" textfile="$(find adrien_driver)/urdf/adrien.urdf" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Include sensor_drivers.launch -->
+  <include file="$(find adrien_driver)/launch/sensor_drivers.launch" />
+  
+
   <arg name="manager_name" default="multizone_lidar_pointcloud_converters" />
   <arg name="manager_threads" default="20" />
   <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen">
