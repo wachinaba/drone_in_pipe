@@ -1,7 +1,0 @@
-<!-- FILEPATH: /home/wachinaba/catkin_ws/src/drone_in_pipe/adrien_driver/launch/recorder.launch -->
-
-<launch>
-  <!-- Start the node that records topics containing "/move_ukf" -->
-  <node name="move_ukf_recorder" pkg="rosbag" type="record" output="screen" args="-e '/move_ukf.*' -o move_ukf_bagfile" />
-  <node name="sensor_recorder" pkg="rosbag" type="record" output="screen" args="-e '/multi_zone_lidar_.*|/optical_flow_delta/.*' -o sensor_bagfile" />
-</launch>
