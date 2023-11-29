@@ -235,4 +235,7 @@
   <node pkg="rosservice" type="rosservice" name="calibrate_gyro"
     args="call --wait /move_ukf/calibrate_gyro 'enable_calibration: true'" />
 
+  <!-- D415 launch -->
+  <include file="$(find adrien_driver)/launch/d415.launch" />
+
 </launch>
