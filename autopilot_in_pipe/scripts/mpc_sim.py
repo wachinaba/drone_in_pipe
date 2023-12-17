@@ -1,4 +1,3 @@
-from cProfile import label
 import numpy as np
 import do_mpc
 from casadi import *
@@ -7,7 +6,6 @@ import matplotlib as mpl
 
 mpl.rcParams["lines.linewidth"] = 3
 mpl.rcParams["axes.grid"] = True
-
 
 class QuadcopterMPC:
     def __init__(self) -> None:
@@ -74,6 +72,19 @@ class QuadcopterMPC:
             var_type="_x", var_name="ang_vel_z", shape=(1, 1)  # z
         )
 
+        self.target_pos_x = self.model.set_variable(
+            var_type="_tvp", var_name="target_pos_x", shape=(1, 1)  # x
+        )
+        self.target_pos_y = self.model.set_variable(
+            var_type="_tvp", var_name="target_pos_y", shape=(1, 1)  # y
+        )
+        self.target_pos_z = self.model.set_variable(
+            var_type="_tvp", var_name="target_pos_z", shape=(1, 1)  # z
+        )
+        self.target_yaw = self.model.set_variable(
+            var_type="_tvp", var_name="target_yaw", shape=(1, 1)  # yaw
+        )
+
         self.thrust_0 = self.model.set_variable(
             var_type="_u", var_name="thrust_0", shape=(1, 1)  # 4 rotors thrust
         )
@@ -112,28 +123,30 @@ class QuadcopterMPC:
             self.motor_position[0]
             * (-self.thrust_0 + self.thrust_1 + self.thrust_2 - self.thrust_3),
             self.motor_torque_constant
-            * (self.thrust_0 - self.thrust_1 + self.thrust_2 - self.thrust_3),
+            * (-self.thrust_0 + self.thrust_1 - self.thrust_2 + self.thrust_3),
         )
         ### rotation matrix, ZYX euler angles
-        self.R = vertcat(
+        self.R = inv(vertcat(
             horzcat(
-                cos(self.yaw) * cos(self.pitch),
-                cos(self.yaw) * sin(self.pitch) * sin(self.roll)
-                - sin(self.yaw) * cos(self.roll),
-                cos(self.yaw) * sin(self.pitch) * cos(self.roll)
-                + sin(self.yaw) * sin(self.roll),
+                cos(self.pitch) * cos(self.yaw),
+                cos(self.pitch) * sin(self.yaw),
+                -sin(self.pitch),
             ),
             horzcat(
-                sin(self.yaw) * cos(self.pitch),
-                sin(self.yaw) * sin(self.pitch) * sin(self.roll)
-                + cos(self.yaw) * cos(self.roll),
-                sin(self.yaw) * sin(self.pitch) * cos(self.roll)
-                - cos(self.yaw) * sin(self.roll),
+                sin(self.roll) * sin(self.pitch) * cos(self.yaw)
+                - cos(self.roll) * sin(self.yaw),
+                sin(self.roll) * sin(self.pitch) * sin(self.yaw)
+                + cos(self.roll) * cos(self.yaw),
+                sin(self.roll) * cos(self.pitch),
             ),
             horzcat(
-                -sin(self.pitch), cos(self.pitch) * sin(self.roll), cos(self.pitch)
+                cos(self.roll) * sin(self.pitch) * cos(self.yaw)
+                + sin(self.roll) * sin(self.yaw),
+                cos(self.roll) * sin(self.pitch) * sin(self.yaw)
+                - sin(self.roll) * cos(self.yaw),
+                cos(self.roll) * cos(self.pitch),
             ),
-        )
+        ))
 
         ## define equations
         d_pos = vel
@@ -151,14 +164,14 @@ class QuadcopterMPC:
                 vertcat(
                     horzcat(
                         1,
-                        sin(self.roll) * tan(self.pitch),
-                        cos(self.roll) * tan(self.pitch),
+                        0,
+                        -sin(self.pitch),
                     ),
-                    horzcat(0, cos(self.roll), -sin(self.roll)),
+                    horzcat(0, cos(self.yaw), cos(self.pitch) * sin(self.yaw)),
                     horzcat(
                         0,
-                        sin(self.roll) / cos(self.pitch),
-                        cos(self.roll) / cos(self.pitch),
+                        -sin(self.yaw),
+                        cos(self.pitch) * cos(self.yaw),
                     ),
                 )
             ),
@@ -180,8 +193,8 @@ class QuadcopterMPC:
         self.mpc = do_mpc.controller.MPC(self.model)
 
         setup_mpc = {
-            "n_horizon": 15,
-            "t_step": 0.05,
+            "n_horizon": 20,
+            "t_step": 0.04,
             "n_robust": 0,
             "store_full_solution": True,
             "suppress_ipopt_output": True,
@@ -190,18 +203,36 @@ class QuadcopterMPC:
 
         self.mpc.settings.supress_ipopt_output()
 
+        self.tvp_template = self.mpc.get_tvp_template()
+        self.tvp_template["_tvp", :] = np.array([0, 0, 0, 0])
+
+        def tvp_fun(t_now):
+            for k in range(self.mpc.settings.n_horizon + 1):
+                self.tvp_template["_tvp", k, "target_pos_x"] = 0
+                self.tvp_template["_tvp", k, "target_pos_y"] = 0
+                self.tvp_template["_tvp", k, "target_pos_z"] = 0
+                self.tvp_template["_tvp", k, "target_yaw"] = 0
+            return self.tvp_template
+
+        self.mpc.set_tvp_fun(tvp_fun)
+
         # Define the objective function
         lterm = (
-            4 * (self.pos_x**2 + self.pos_y**2 + self.pos_z**2)
-            + 0.2 * (self.vel_x**2 + self.vel_y**2 + self.vel_z**2)
-            + self.yaw**2
-            + 0.1 * (self.ang_vel_x**2 + self.ang_vel_y**2 + self.ang_vel_z**2)
+            4
+            * (
+                (self.model.x["pos_x"] - self.model.tvp["target_pos_x"]) ** 2
+                + (self.model.x["pos_y"] - self.model.tvp["target_pos_y"]) ** 2
+                + (self.model.x["pos_z"] - self.model.tvp["target_pos_z"]) ** 2
+            )
+            + 1 * (self.vel_x**2 + self.vel_y**2 + self.vel_z**2)
+            + 2 * (self.model.x["yaw"] - self.model.tvp["target_yaw"]) ** 2
+            + 0.2 * (self.ang_vel_x**2 + self.ang_vel_y**2 + self.ang_vel_z**2)
         )
 
         self.mpc.set_objective(lterm=lterm, mterm=lterm)
 
         self.mpc.set_rterm(
-            thrust_0=0.001, thrust_1=0.001, thrust_2=0.001, thrust_3=0.001
+            thrust_0=0.01, thrust_1=0.01, thrust_2=0.01, thrust_3=0.01
         )
 
         # Define constraints
@@ -210,10 +241,17 @@ class QuadcopterMPC:
         self.mpc.bounds["lower", "_u", "thrust_2"] = 0
         self.mpc.bounds["lower", "_u", "thrust_3"] = 0
 
-        self.mpc.bounds["upper", "_u", "thrust_0"] = 10
-        self.mpc.bounds["upper", "_u", "thrust_1"] = 10
-        self.mpc.bounds["upper", "_u", "thrust_2"] = 10
-        self.mpc.bounds["upper", "_u", "thrust_3"] = 10
+        self.mpc.bounds["upper", "_u", "thrust_0"] = 12
+        self.mpc.bounds["upper", "_u", "thrust_1"] = 12
+        self.mpc.bounds["upper", "_u", "thrust_2"] = 12
+        self.mpc.bounds["upper", "_u", "thrust_3"] = 12
+
+        self.mpc.bounds["lower", "_x", "roll"] = -pi / 5
+        self.mpc.bounds["upper", "_x", "roll"] = pi / 5
+        self.mpc.bounds["lower", "_x", "pitch"] = -pi / 5
+        self.mpc.bounds["upper", "_x", "pitch"] = pi / 5
+        self.mpc.bounds["lower", "_x", "yaw"] = -pi / 3
+        self.mpc.bounds["upper", "_x", "yaw"] = pi / 3
 
         # Define the optimizer
         self.mpc.setup()
@@ -227,11 +265,18 @@ class QuadcopterMPC:
             self.simulator = do_mpc.simulator.Simulator(self.model)
 
             self.x0 = np.zeros((12, 1))
-            self.x0[0] = 1
+            self.x0[0] = -1
             self.x0[2] = -1
             self.u0 = np.zeros((4, 1))
 
-            self.simulator.set_param(t_step=0.05)
+            tvpt = self.simulator.get_tvp_template()
+            tvpt["target_pos_x"] = 0
+            tvpt["target_pos_y"] = 0
+            tvpt["target_pos_z"] = 1
+            tvpt["target_yaw"] = 0
+            self.simulator.set_tvp_fun(lambda t: tvpt)
+
+            self.simulator.set_param(t_step=0.01)
             self.simulator.setup()
 
             self.simulator.x0 = self.x0
@@ -295,7 +340,7 @@ class QuadcopterMPC:
             self.simulator.x0 = self.x0
             self.mpc.reset_history()
 
-            for i in range(100):
+            for i in range(1):
                 self.u0 = self.mpc.make_step(self.x0)
                 self.x0 = self.simulator.make_step(self.u0)
 
