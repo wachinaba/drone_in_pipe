@@ -70,6 +70,9 @@
     output="screen" />
   <include file="$(find px4_gazebo_sim)/launch/localizers.launch" />
 
+  <!-- Controllers -->
+  <include file="$(find px4_gazebo_sim)/launch/controllers.launch" />
+
 
   <!-- state publishers and rviz -->
   <param name="robot_description" textfile="$(find px4_gazebo_sim)/urdf/adrien.urdf" />
