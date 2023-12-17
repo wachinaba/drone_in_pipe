@@ -217,7 +217,7 @@ class QuadcopterMPC:
 
         def tvp_fun(t_now):
             for k in range(self.mpc.settings.n_horizon + 1):
-                self.tvp_template["_tvp", k, "target_pos_x"] = 0
+                self.tvp_template["_tvp", k, "target_pos_x"] = 0.1
                 self.tvp_template["_tvp", k, "target_pos_y"] = 0
                 self.tvp_template["_tvp", k, "target_pos_z"] = 0
                 self.tvp_template["_tvp", k, "target_yaw"] = 0
@@ -370,8 +370,6 @@ class MPCNode:
             + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_2", 0))[0, time_horizon, 0]
             + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_3", 0))[0, time_horizon, 0]
         ) / self.max_thrust)
-
-        #self.target_attitude.thrust = sqrt(self.u0.sum() / self.max_thrust)
 
         self.target_attitude.type_mask = AttitudeTarget.IGNORE_ATTITUDE
 
