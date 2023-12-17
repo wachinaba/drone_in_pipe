@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="autopilot_in_pipe" type="mpc_node.py" name="mpc_node">
+    
+    <remap from="/global_pose" to="/localizer/pose" />
+    <remap from="/global_velocity" to="/localizer/velocity" />
+    <!--
+    <remap from="/global_pose" to="/trackers/base_link/pose" />
+    <remap from="/global_velocity" to="/trackers/base_link/twist" />
+    -->
+    <remap from="/imu" to="/mavros/imu/data" />
+    <remap from="/target_attitude" to="/mavros/setpoint_raw/attitude" />
+  </node>
+</launch>
