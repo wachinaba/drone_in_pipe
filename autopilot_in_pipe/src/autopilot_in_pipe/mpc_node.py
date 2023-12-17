@@ -351,7 +351,7 @@ class MPCNode:
         self.target_attitude = AttitudeTarget()
         self.target_attitude.header.stamp = rospy.Time.now()
 
-        time_horizon = 1
+        time_horizon = 2
 
         self.target_attitude.body_rate.x = self.quadcopter_mpc.mpc.data.prediction(
             ("_x", "ang_vel_x", 0)
