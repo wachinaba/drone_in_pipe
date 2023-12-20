@@ -1,0 +1,83 @@
+<launch>
+  <!-- First rosserial serial node -->
+  <node pkg="rosserial_python" type="serial_node.py" name="sensor_serial_node_1">
+    <param name="port" value="/dev/ttyAMA0"/>
+    <param name="baud" value="230400"/>
+    <remap from="/multizone_range/0" to="/multizone_range/front_right"/>
+    <remap from="/multizone_range/1" to="/multizone_range/bottom"/>
+    <remap from="/multizone_range/2" to="/multizone_range/front_left"/>
+    <remap from="/multizone_range/3" to="/multizone_range/top"/>
+    <remap from="/optical_flow_delta/0" to="/optical_flow_delta/top"/>
+    <remap from="/optical_flow_delta/1" to="/optical_flow_delta/bottom"/>
+  </node>
+
+  <!-- Second rosserial serial node -->
+  <node pkg="rosserial_python" type="serial_node.py" name="sensor_serial_node_2">
+    <param name="port" value="/dev/ttyAMA2"/>
+    <param name="baud" value="230400"/>
+    <remap from="/multizone_range/0" to="/multizone_range/right"/>
+    <remap from="/multizone_range/1" to="/multizone_range/rear_right"/>
+    <remap from="/multizone_range/2" to="/multizone_range/left"/>
+    <remap from="/multizone_range/3" to="/multizone_range/rear_left"/>
+    <remap from="/optical_flow_delta/0" to="/optical_flow_delta/left"/>
+    <remap from="/optical_flow_delta/1" to="/optical_flow_delta/right"/>
+  </node>
+
+  <!-- multizone converter -->
+  <node pkg="multizone_lidar" type="multizone_range_converter_node" name="multizone_range_converter_node_top">
+    <remap from="/multizone_range" to="/multizone_range/top"/>
+    <remap from="/pointcloud" to="/multi_zone_lidar_top/scan"/>
+    <remap from="/range" to="/multi_zone_lidar_top/range"/>
+    <param name="frame_id" value="multi_zone_lidar_top_link"/>
+  </node>
+
+  <node pkg="multizone_lidar" type="multizone_range_converter_node" name="multizone_range_converter_node_bottom">
+    <remap from="/multizone_range" to="/multizone_range/bottom"/>
+    <remap from="/pointcloud" to="/multi_zone_lidar_bottom/scan"/>
+    <remap from="/range" to="/multi_zone_lidar_bottom/range"/>
+    <param name="frame_id" value="multi_zone_lidar_bottom_link"/>
+  </node>
+
+  <node pkg="multizone_lidar" type="multizone_range_converter_node" name="multizone_range_converter_node_front_left">
+    <remap from="/multizone_range" to="/multizone_range/front_left"/>
+    <remap from="/pointcloud" to="/multi_zone_lidar_front_left/scan"/>
+    <remap from="/range" to="/multi_zone_lidar_front_left/range"/>
+    <param name="frame_id" value="multi_zone_lidar_front_left_link"/>
+  </node>
+
+  <node pkg="multizone_lidar" type="multizone_range_converter_node" name="multizone_range_converter_node_front_right">
+    <remap from="/multizone_range" to="/multizone_range/front_right"/>
+    <remap from="/pointcloud" to="/multi_zone_lidar_front_right/scan"/>
+    <remap from="/range" to="/multi_zone_lidar_front_right/range"/>
+    <param name="frame_id" value="multi_zone_lidar_front_right_link"/>
+  </node>
+
+  <node pkg="multizone_lidar" type="multizone_range_converter_node" name="multizone_range_converter_node_left">
+    <remap from="/multizone_range" to="/multizone_range/left"/>
+    <remap from="/pointcloud" to="/multi_zone_lidar_left/scan"/>
+    <remap from="/range" to="/multi_zone_lidar_left/range"/>
+    <param name="frame_id" value="multi_zone_lidar_left_link"/>
+  </node>
+
+  <node pkg="multizone_lidar" type="multizone_range_converter_node" name="multizone_range_converter_node_right">
+    <remap from="/multizone_range" to="/multizone_range/right"/>
+    <remap from="/pointcloud" to="/multi_zone_lidar_right/scan"/>
+    <remap from="/range" to="/multi_zone_lidar_right/range"/>
+    <param name="frame_id" value="multi_zone_lidar_right_link"/>
+  </node>
+
+  <node pkg="multizone_lidar" type="multizone_range_converter_node" name="multizone_range_converter_node_rear_left">
+    <remap from="/multizone_range" to="/multizone_range/rear_left"/>
+    <remap from="/pointcloud" to="/multi_zone_lidar_rear_left/scan"/>
+    <remap from="/range" to="/multi_zone_lidar_rear_left/range"/>
+    <param name="frame_id" value="multi_zone_lidar_rear_left_link"/>
+  </node>
+
+  <node pkg="multizone_lidar" type="multizone_range_converter_node" name="multizone_range_converter_node_rear_right">
+    <remap from="/multizone_range" to="/multizone_range/rear_right"/>
+    <remap from="/pointcloud" to="/multi_zone_lidar_rear_right/scan"/>
+    <remap from="/range" to="/multi_zone_lidar_rear_right/range"/>
+    <param name="frame_id" value="multi_zone_lidar_rear_right_link"/>
+  </node>
+
+</launch>

@@ -13,16 +13,23 @@ public:
 
 private:
   ros::NodeHandle nh;
+  ros::NodeHandle pnh;
   ros::Publisher pointcloud_pub;
   ros::Publisher range_pub;
   ros::Subscriber sub;
+  std::string frame_id;
 };
 
-MultizoneRangeConverterNode::MultizoneRangeConverterNode() : nh()
+MultizoneRangeConverterNode::MultizoneRangeConverterNode() : nh(), pnh("~")
 {
   pointcloud_pub = nh.advertise<sensor_msgs::PointCloud2>("pointcloud", 1);
   range_pub = nh.advertise<sensor_msgs::Range>("range", 1);
   sub = nh.subscribe("multizone_range", 1, &MultizoneRangeConverterNode::multizoneRangeCallback, this);
+  if (!pnh.getParam("frame_id", frame_id))
+  {
+    ROS_WARN("Failed to get param 'frame_id'. fallback to empty string.");
+    frame_id = "";
+  }
 }
 
 void MultizoneRangeConverterNode::multizoneRangeCallback(const multizone_lidar_msgs::MultizoneRange::ConstPtr& msg)
@@ -33,6 +40,12 @@ void MultizoneRangeConverterNode::multizoneRangeCallback(const multizone_lidar_m
 
   sensor_msgs::Range range;
   range.header = msg->header;
+  if (!frame_id.empty())
+  {
+    pointcloud.header.frame_id = frame_id;
+    range.header.frame_id = frame_id;
+  }
+
   range.radiation_type = sensor_msgs::Range::INFRARED;
   range.field_of_view = msg->horizontal_fov;
   range.min_range = msg->min_range;

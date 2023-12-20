@@ -10,8 +10,8 @@ namespace MultizoneLidarConverter
 void convertToPointCloud2(const multizone_lidar_msgs::MultizoneRange::ConstPtr& msg,
                           sensor_msgs::PointCloud2& pointcloud)
 {
-  pointcloud.height = msg->vertical_samples;
-  pointcloud.width = msg->horizontal_samples;
+  pointcloud.height = 1;
+  pointcloud.width = msg->horizontal_samples * msg->vertical_samples;
   pointcloud.is_bigendian = false;
   pointcloud.is_dense = false;
   pointcloud.point_step = 12;
@@ -47,9 +47,9 @@ void convertToPointCloud2(const multizone_lidar_msgs::MultizoneRange::ConstPtr& 
       float y = range * -tan(horizontal_angle);
       float z = range * -tan(vertical_angle);
 
-      memcpy(&pointcloud.data[(i_v * pointcloud.width + i_h) * pointcloud.point_step], &x, 4);
-      memcpy(&pointcloud.data[(i_v * pointcloud.width + i_h) * pointcloud.point_step + 4], &y, 4);
-      memcpy(&pointcloud.data[(i_v * pointcloud.width + i_h) * pointcloud.point_step + 8], &z, 4);
+      memcpy(&pointcloud.data[(i_v * msg->horizontal_samples + i_h) * pointcloud.point_step], &x, 4);
+      memcpy(&pointcloud.data[(i_v * msg->horizontal_samples + i_h) * pointcloud.point_step + 4], &y, 4);
+      memcpy(&pointcloud.data[(i_v * msg->horizontal_samples + i_h) * pointcloud.point_step + 8], &z, 4);
       horizontal_angle += horizontal_increment;
     }
     vertical_angle += vertical_increment;

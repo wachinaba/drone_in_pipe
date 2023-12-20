@@ -1,0 +1,6 @@
+<!-- FILEPATH: /home/wachinaba/catkin_ws/src/drone_in_pipe/adrien_driver/launch/recorder.launch -->
+
+<launch>
+  <node name="sensor_recorder" pkg="rosbag" type="record" output="screen" args="-e '/multi_zone_lidar_.*|/multizone_range/.*|/optical_flow_delta/.*|/mavros/imu/data' -o sensor_bagfile" />
+  <node name="localizer_recorder" pkg="rosbag" type="record" output="screen" args="-e '/move_ukf.*|/visualization_marker|/marker|/tf|/tf_static' -o localizer_bagfile" />
+</launch>
