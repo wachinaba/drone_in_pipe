@@ -1,0 +1,29 @@
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find adrien_driver)/rviz/localization.rviz" />
+
+  <arg name="bag"/>
+
+  <node name="bag_view" pkg="rosbag" type="play" args="$(arg bag)" />
+
+  <arg name="manager_name" default="move_ukf_nodelet_manager" />
+  <arg name="manager_threads" default="20" />
+
+  <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen">
+    <param name="num_worker_threads" value="$(arg manager_threads)" />
+  </node>
+
+  <!--rqt plot-->
+  <node pkg="rqt_plot" type="rqt_plot" name="rqt_plot" output="screen"/>
+
+  <node pkg="nodelet" type="nodelet" name="move_ukf"
+    args="load localization_in_pipe/move_ukf_nodelet $(arg manager_name)">
+    <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
+    <remap from="body_accel" to="/move_ukf/body_accel" />
+    <remap from="body_angular_velocity" to="/move_ukf/body_angular_velocity" />
+    <param name="process_noise_variance" value="0.001" />
+    <param name="ukf_alpha" value="0.03" />
+    <param name="ukf_beta" value="2.0" />
+    <param name="ukf_kappa" value="0.0" />
+  </node>
+
+</launch>
