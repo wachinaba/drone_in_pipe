@@ -1,11 +1,20 @@
+#! /usr/bin/python3
+
 import numpy as np
 import do_mpc
 from casadi import *
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import rospy
+from rospy import Rate, Subscriber, Publisher
+from geometry_msgs.msg import PoseStamped, TwistStamped
+from sensor_msgs.msg import Imu
+from mavros_msgs.msg import AttitudeTarget
+from scipy.spatial.transform import Rotation
 
 mpl.rcParams["lines.linewidth"] = 3
 mpl.rcParams["axes.grid"] = True
+
 
 class QuadcopterMPC:
     def __init__(self) -> None:
@@ -208,7 +217,7 @@ class QuadcopterMPC:
 
         def tvp_fun(t_now):
             for k in range(self.mpc.settings.n_horizon + 1):
-                self.tvp_template["_tvp", k, "target_pos_x"] = 0
+                self.tvp_template["_tvp", k, "target_pos_x"] = 0.1
                 self.tvp_template["_tvp", k, "target_pos_y"] = 0
                 self.tvp_template["_tvp", k, "target_pos_z"] = 0
                 self.tvp_template["_tvp", k, "target_yaw"] = 0
@@ -256,101 +265,123 @@ class QuadcopterMPC:
         # Define the optimizer
         self.mpc.setup()
 
-    class Simulator:
-        def __init__(
-            self, mpc: do_mpc.controller.MPC, model: do_mpc.model.Model
-        ) -> None:
-            self.mpc = mpc
-            self.model = model
-            self.simulator = do_mpc.simulator.Simulator(self.model)
 
-            self.x0 = np.zeros((12, 1))
-            self.x0[0] = -1
-            self.x0[2] = -1
-            self.u0 = np.zeros((4, 1))
+class MPCNode:
+    def __init__(self) -> None:
+        self.pose = PoseStamped()
+        self.velocity = TwistStamped()
+        self.imu = Imu()
+        self.orientation = np.zeros(3)  # yaw, pitch, roll
+        self.u0 = np.zeros(4)
+        self.x0 = np.zeros(12)
 
-            tvpt = self.simulator.get_tvp_template()
-            tvpt["target_pos_x"] = 0
-            tvpt["target_pos_y"] = 0
-            tvpt["target_pos_z"] = 1
-            tvpt["target_yaw"] = 0
-            self.simulator.set_tvp_fun(lambda t: tvpt)
+        self.max_thrust = rospy.get_param("~max_thrust", 92.6)
 
-            self.simulator.set_param(t_step=0.01)
-            self.simulator.setup()
+        self.quadcopter_mpc = QuadcopterMPC()
+        self.initialized = False
 
-            self.simulator.x0 = self.x0
-            self.mpc.x0 = self.x0
+        self.pose_sub = Subscriber("/global_pose", PoseStamped, self.pose_callback)
+        self.vel_sub = Subscriber(
+            "/global_velocity",
+            TwistStamped,
+            self.velocity_callback,
+        )
+        self.imu_sub = Subscriber("/imu", Imu, self.imu_callback)
+        self.target_attitude_pub = Publisher(
+            "/target_attitude", AttitudeTarget, queue_size=1
+        )
 
-            self.mpc.set_initial_guess()
+    def pose_callback(self, msg: PoseStamped) -> None:
+        self.pose = msg
+        pipe_orientation = Rotation.from_quat(
+            [
+                self.pose.pose.orientation.x,
+                self.pose.pose.orientation.y,
+                self.pose.pose.orientation.z,
+                self.pose.pose.orientation.w,
+            ]
+        ).as_euler("ZYX")
+        rospy.logerr(f"orientation: {self.orientation}")
+        self.orientation[0] = pipe_orientation[0]
 
-        def run(self):
-            mpc_graphics = do_mpc.graphics.Graphics(self.mpc.data)
-            sim_graphics = do_mpc.graphics.Graphics(self.simulator.data)
+    def velocity_callback(self, msg: TwistStamped) -> None:
+        self.velocity = msg
 
-            fig, ax = plt.subplots(5, sharex=True, figsize=(16, 9))
-            fig.align_ylabels()
+    def imu_callback(self, msg: Imu) -> None:
+        self.imu = msg
+        body_orientation = Rotation.from_quat(
+            [
+                self.imu.orientation.x,
+                self.imu.orientation.y,
+                self.imu.orientation.z,
+                self.imu.orientation.w,
+            ]
+        ).as_euler("ZYX")
+        self.orientation[1] = body_orientation[1]
+        self.orientation[2] = body_orientation[2]
 
-            for g in [mpc_graphics, sim_graphics]:
-                g.add_line(var_type="_x", var_name="pos_x", axis=ax[0], label="x")
-                g.add_line(var_type="_x", var_name="pos_y", axis=ax[0], label="y")
-                g.add_line(var_type="_x", var_name="pos_z", axis=ax[0], label="z")
-                g.add_line(var_type="_x", var_name="vel_x", axis=ax[1], label="x")
-                g.add_line(var_type="_x", var_name="vel_y", axis=ax[1], label="y")
-                g.add_line(var_type="_x", var_name="vel_z", axis=ax[1], label="z")
-                g.add_line(var_type="_x", var_name="roll", axis=ax[2], label="roll")
-                g.add_line(var_type="_x", var_name="pitch", axis=ax[2], label="pitch")
-                g.add_line(var_type="_x", var_name="yaw", axis=ax[2], label="yaw")
-                g.add_line(
-                    var_type="_x", var_name="ang_vel_x", axis=ax[3], label="ang_vel_x"
-                )
-                g.add_line(
-                    var_type="_x", var_name="ang_vel_y", axis=ax[3], label="ang_vel_y"
-                )
-                g.add_line(
-                    var_type="_x", var_name="ang_vel_z", axis=ax[3], label="ang_vel_z"
-                )
+    def step(self) -> None:
+        # Set initial state
+        self.x0 = np.array(
+            [
+                self.pose.pose.position.x,
+                self.pose.pose.position.y,
+                self.pose.pose.position.z,
+                self.velocity.twist.linear.x,
+                self.velocity.twist.linear.y,
+                self.velocity.twist.linear.z,
+                self.orientation[2],
+                self.orientation[1],
+                self.orientation[0],
+                self.imu.angular_velocity.x,
+                self.imu.angular_velocity.y,
+                self.imu.angular_velocity.z,
+            ]
+        )
 
-                g.add_line(
-                    var_type="_u", var_name="thrust_0", axis=ax[4], label="thrust_0"
-                )
-                g.add_line(
-                    var_type="_u", var_name="thrust_1", axis=ax[4], label="thrust_1"
-                )
-                g.add_line(
-                    var_type="_u", var_name="thrust_2", axis=ax[4], label="thrust_2"
-                )
-                g.add_line(
-                    var_type="_u", var_name="thrust_3", axis=ax[4], label="thrust_3"
-                )
+        if not self.initialized:
+            self.quadcopter_mpc.mpc.x0 = self.x0
+            self.quadcopter_mpc.mpc.set_initial_guess()
+            self.initialized = True
 
-            ax[0].set_ylabel("Position [m]")
-            ax[1].set_ylabel("Velocity [m/s]")
-            ax[2].set_ylabel("Orientation [rad]")
-            ax[3].set_ylabel("Angular velocity [rad/s]")
-            ax[4].set_ylabel("Thrust [N]")
+        # Solve MPC
+        self.u0 = self.quadcopter_mpc.mpc.make_step(self.x0)
 
-            ax[0].legend()
-            ax[1].legend()
-            ax[2].legend()
-            ax[3].legend()
-            ax[4].legend()
+        # get optimal angular velocity
+        self.target_attitude = AttitudeTarget()
+        self.target_attitude.header.stamp = rospy.Time.now()
 
-            self.simulator.reset_history()
-            self.simulator.x0 = self.x0
-            self.mpc.reset_history()
+        time_horizon = 2
 
-            for i in range(1):
-                self.u0 = self.mpc.make_step(self.x0)
-                self.x0 = self.simulator.make_step(self.u0)
+        self.target_attitude.body_rate.x = self.quadcopter_mpc.mpc.data.prediction(
+            ("_x", "ang_vel_x", 0)
+        )[0, time_horizon, 0]
+        self.target_attitude.body_rate.y = self.quadcopter_mpc.mpc.data.prediction(
+            ("_x", "ang_vel_y", 0)
+        )[0, time_horizon, 0]
+        self.target_attitude.body_rate.z = self.quadcopter_mpc.mpc.data.prediction(
+            ("_x", "ang_vel_z", 0)
+        )[0, time_horizon, 0]
 
-            mpc_graphics.plot_predictions()
-            sim_graphics.plot_results()
-            sim_graphics.reset_axes()
-            plt.show()
+        # get optimal thrust
+        self.target_attitude.thrust = sqrt((
+            self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_0", 0))[0, time_horizon, 0]
+            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_1", 0))[0, time_horizon, 0]
+            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_2", 0))[0, time_horizon, 0]
+            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_3", 0))[0, time_horizon, 0]
+        ) / self.max_thrust)
+
+        self.target_attitude.type_mask = AttitudeTarget.IGNORE_ATTITUDE
+
+        self.target_attitude_pub.publish(self.target_attitude)
 
 
 if __name__ == "__main__":
-    quadcopter_mpc = QuadcopterMPC()
-    simulator = quadcopter_mpc.Simulator(quadcopter_mpc.mpc, quadcopter_mpc.model)
-    simulator.run()
+    rospy.init_node("mpc_node", anonymous=True)
+
+    rate = Rate(20)  # mpc rate
+    mpc_node = MPCNode()
+
+    while not rospy.is_shutdown():
+        mpc_node.step()
+        rate.sleep()

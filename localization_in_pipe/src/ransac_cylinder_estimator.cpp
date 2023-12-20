@@ -11,6 +11,8 @@
 #include <Eigen/Dense>
 #include <tf2_ros/transform_broadcaster.h>
 #include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TwistStamped.h>
 
 class CylinderFitting
 {
@@ -19,6 +21,10 @@ public:
   {
     // ROS subscriber to get the point cloud data
     sub = nh.subscribe("input", 1, &CylinderFitting::cloudCallback, this);
+    // ROS publisher for the drone pose
+    pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose", 1);
+    // ROS publisher for the drone velocity
+    velocity_pub = nh.advertise<geometry_msgs::TwistStamped>("velocity", 1);
     // ROS publisher for the Marker
     marker_pub = nh.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
@@ -143,12 +149,47 @@ public:
       transformStamped.transform.rotation.z = cylinder_quaternion.z();
       transformStamped.transform.rotation.w = cylinder_quaternion.w();
       broadcaster.sendTransform(transformStamped);
+
+      // Publish the drone pose
+      geometry_msgs::PoseStamped pose;
+      pose.header.stamp = ros::Time::now();
+      pose.header.frame_id = "pipe_frame";
+
+      // calculate the drone pose
+      pose.pose.position.x = -transformStamped.transform.translation.x;
+      pose.pose.position.y = -transformStamped.transform.translation.y;
+      pose.pose.position.z = -transformStamped.transform.translation.z;
+
+      pose.pose.orientation.x = -transformStamped.transform.rotation.x;
+      pose.pose.orientation.y = -transformStamped.transform.rotation.y;
+      pose.pose.orientation.z = -transformStamped.transform.rotation.z;
+      pose.pose.orientation.w = transformStamped.transform.rotation.w;
+
+      pose_pub.publish(pose);
+
+      // Publish the drone velocity
+      geometry_msgs::TwistStamped velocity;
+      velocity.header.stamp = ros::Time::now();
+      velocity.header.frame_id = "pipe_frame";
+
+      // calculate the drone velocity
+      float dt = (pose.header.stamp - last_pose.header.stamp).toSec();
+      velocity.twist.linear.x = (pose.pose.position.x - last_pose.pose.position.x) / dt;
+      velocity.twist.linear.y = (pose.pose.position.y - last_pose.pose.position.y) / dt;
+      velocity.twist.linear.z = (pose.pose.position.z - last_pose.pose.position.z) / dt;
+
+      velocity_pub.publish(velocity);
+
+      // update the last pose
+      last_pose = pose;
     }
   }
 
 private:
   ros::NodeHandle nh;
   ros::Subscriber sub;
+  ros::Publisher pose_pub;
+  ros::Publisher velocity_pub;
   ros::Publisher marker_pub;
   tf2_ros::TransformBroadcaster broadcaster;
 
@@ -159,6 +200,9 @@ private:
   double min_radius;
   double max_radius;
   double normal_search_radius;
+
+  // pose
+  geometry_msgs::PoseStamped last_pose;
 };
 
 int main(int argc, char** argv)
