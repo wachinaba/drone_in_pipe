@@ -135,7 +135,7 @@ class QuadcopterMPC:
             * (-self.thrust_0 + self.thrust_1 - self.thrust_2 + self.thrust_3),
         )
         ### rotation matrix, ZYX euler angles
-        self.R = inv(vertcat(
+        R_ori = inv(vertcat(
             horzcat(
                 cos(self.pitch) * cos(self.yaw),
                 cos(self.pitch) * sin(self.yaw),
@@ -163,29 +163,32 @@ class QuadcopterMPC:
         self.model.set_rhs("pos_y", d_pos[1])
         self.model.set_rhs("pos_z", d_pos[2])
 
-        d_vel = self.g + (1 / self.m) * mtimes(self.R, thrust)
+        d_vel = self.g + (1 / self.m) * mtimes(R_ori, thrust)
         self.model.set_rhs("vel_x", d_vel[0])
         self.model.set_rhs("vel_y", d_vel[1])
         self.model.set_rhs("vel_z", d_vel[2])
 
+        R_angvel = inv(
+                       vertcat(
+                          horzcat(
+                              1,
+                              0,
+                              -sin(self.pitch),
+                          ),
+                          horzcat(0, cos(self.yaw), cos(self.pitch) * sin(self.yaw)),
+                          horzcat(
+                              0,
+                              -sin(self.yaw),
+                              cos(self.pitch) * cos(self.yaw),
+                          ),
+                      )
+                  )
+
         d_ori = mtimes(
-            inv(
-                vertcat(
-                    horzcat(
-                        1,
-                        0,
-                        -sin(self.pitch),
-                    ),
-                    horzcat(0, cos(self.yaw), cos(self.pitch) * sin(self.yaw)),
-                    horzcat(
-                        0,
-                        -sin(self.yaw),
-                        cos(self.pitch) * cos(self.yaw),
-                    ),
-                )
-            ),
+            R_angvel,
             ang_vel,
         )
+        
         self.model.set_rhs("roll", d_ori[0])
         self.model.set_rhs("pitch", d_ori[1])
         self.model.set_rhs("yaw", d_ori[2])
@@ -220,7 +223,7 @@ class QuadcopterMPC:
                 self.tvp_template["_tvp", k, "target_pos_x"] = 0
                 self.tvp_template["_tvp", k, "target_pos_y"] = 0
                 self.tvp_template["_tvp", k, "target_pos_z"] = 0
-                self.tvp_template["_tvp", k, "target_yaw"] = 0
+                self.tvp_template["_tvp", k, "target_yaw"] = 0.3
             return self.tvp_template
 
         self.mpc.set_tvp_fun(tvp_fun)
@@ -259,8 +262,7 @@ class QuadcopterMPC:
         self.mpc.bounds["upper", "_x", "roll"] = pi / 5
         self.mpc.bounds["lower", "_x", "pitch"] = -pi / 5
         self.mpc.bounds["upper", "_x", "pitch"] = pi / 5
-        self.mpc.bounds["lower", "_x", "yaw"] = -pi / 3
-        self.mpc.bounds["upper", "_x", "yaw"] = pi / 3
+
 
         # Define the optimizer
         self.mpc.setup()
