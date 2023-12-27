@@ -40,6 +40,9 @@ public:
 
   void cloudCallback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)
   {
+    // initialize timer
+    auto start = ros::Time::now();
+
     // Convert the sensor_msgs/PointCloud2 data to pcl/PointCloud
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
     pcl::fromROSMsg(*cloud_msg, *cloud);
@@ -102,10 +105,13 @@ public:
           coefficients_cylinder_position -
           coefficients_cylinder_position.dot(coefficients_cylinder_direction) * coefficients_cylinder_direction;
 
+      ROS_WARN_STREAM("time elapsed from sensor received: " << (ros::Time::now() - cloud_msg->header.stamp).toSec());
+      ROS_WARN_STREAM("processing time: " << (ros::Time::now() - start).toSec());
+
       // Publish the Marker
       visualization_msgs::Marker marker;
       marker.header.frame_id = cloud_msg->header.frame_id;
-      marker.header.stamp = ros::Time::now();
+      marker.header.stamp = cloud_msg->header.stamp;
       marker.ns = "cylinder";
       marker.id = 0;
       marker.type = visualization_msgs::Marker::ARROW;
@@ -128,7 +134,7 @@ public:
 
       // Publish the cylinder origin as a transform
       geometry_msgs::TransformStamped transformStamped;
-      transformStamped.header.stamp = ros::Time::now();
+      transformStamped.header.stamp = cloud_msg->header.stamp;
       transformStamped.header.frame_id = cloud_msg->header.frame_id;
       transformStamped.child_frame_id = "pipe_frame";
       transformStamped.transform.translation.x = cylinder_origin[0];
@@ -152,7 +158,7 @@ public:
 
       // Publish the drone pose
       geometry_msgs::PoseStamped pose;
-      pose.header.stamp = ros::Time::now();
+      pose.header.stamp = cloud_msg->header.stamp;
       pose.header.frame_id = "pipe_frame";
 
       // calculate the drone pose
@@ -169,7 +175,7 @@ public:
 
       // Publish the drone velocity
       geometry_msgs::TwistStamped velocity;
-      velocity.header.stamp = ros::Time::now();
+      velocity.header.stamp = cloud_msg->header.stamp;
       velocity.header.frame_id = "pipe_frame";
 
       // calculate the drone velocity
