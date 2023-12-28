@@ -153,7 +153,7 @@ if __name__ == '__main__':
     
     plt.show()
 
-    # 3D点群を出力(タイムスタンプ + ソース + ターゲット + 変換後)
-    output_points = np.hstack((synced_data[:, 0].reshape(-1, 1), source_points, target_points, transformed_points))
+    # 3D点群を出力(タイムスタンプ + ソース + ターゲット + 変換後 + オリエンテーション)
+    output_points = np.hstack((synced_data[:, 0].reshape(-1, 1), source_points, target_points, transformed_points, orientation_pose_data[:, 1:]))
 
     np.savetxt(f"{args.bag_file}_output.csv", output_points, delimiter=",")  # Save as CSV file
