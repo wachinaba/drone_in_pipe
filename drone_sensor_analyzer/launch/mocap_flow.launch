@@ -10,6 +10,7 @@
     <arg name="server" value="$(arg server_ip)"/>
     <arg name="local" value="$(arg local_ip)"/>
     <arg name="multicast_group" value="$(arg multicast_ip)"/>
+    <arg name="pub_residuals" value="true"/>
   </include>
 
   <!-- drone_sensor_analyzer node -->
