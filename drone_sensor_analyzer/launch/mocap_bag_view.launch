@@ -1,0 +1,27 @@
+<launch>
+  <param name="/use_sim_time" value="true"/>
+
+  <arg name="bag"/>
+
+  <node name="bag_view" pkg="rosbag" type="play" args="--clock $(arg bag)" />
+
+  <node pkg="drone_sensor_analyzer" type="flow_delta_visualizer.py"
+    name="flow_delta_visualizer_bottom" output="screen">
+    <remap from="flow_delta" to="/optical_flow_delta/bottom" />
+    <param name="namespace" value="bottom_delta" />
+    <rosparam>color: [1, 0, 0, 1]</rosparam>
+    <param name="delta_scale" value="0.01" />
+    <param name="frame_id" value="optical_flow_bottom_link" />
+  </node>
+
+  <node pkg="drone_sensor_analyzer" type="pose_to_tf2.py"
+    name="optitrack_to_tf2" output="screen">
+    <remap from="pose" to="/drone/world" />
+    <param name="frame_id" value="optitrack" />
+    <param name="child_frame_id" value="tracked_pose" />
+  </node>
+
+  <node name="rviz_locali" pkg="rviz" type="rviz" args="-d $(find drone_sensor_analyzer)/rviz/bag_view.rviz" />
+
+  <node name="rviz_mocap" pkg="rviz" type="rviz" args="-d $(find drone_sensor_analyzer)/rviz/mocap_vis.rviz" />
+</launch>
