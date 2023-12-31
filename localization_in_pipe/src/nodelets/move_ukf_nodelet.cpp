@@ -132,6 +132,9 @@ void move_ukf_nodelet::integratedFlowCallback(const localization_in_pipe_msgs::I
   filter_control_.acc_x() = body_accel_msg_->accel.linear.x * dt;
   filter_control_.acc_y() = body_accel_msg_->accel.linear.y * dt;
   filter_control_.acc_z() = body_accel_msg_->accel.linear.z * dt;
+  filter_control_.angular_vel_x() = body_angular_velocity_msg_->vector.x * dt;
+  filter_control_.angular_vel_y() = body_angular_velocity_msg_->vector.y * dt;
+  filter_control_.angular_vel_z() = body_angular_velocity_msg_->vector.z * dt;
 
   filter_state_ = filter_.predict(filter_system_model_, filter_control_);
 
