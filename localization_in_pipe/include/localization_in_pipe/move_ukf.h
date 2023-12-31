@@ -3,6 +3,7 @@
 
 #include <ros/ros.h>
 #include <Eigen/Dense>
+#include <Eigen/Geometry>
 
 #include <kalman/SystemModel.hpp>
 #include <kalman/UnscentedKalmanFilter.hpp>
@@ -50,10 +51,10 @@ public:
 };
 
 template <typename T>
-class Control : public Kalman::Vector<T, 3>
+class Control : public Kalman::Vector<T, 6>
 {
 public:
-  KALMAN_VECTOR(Control, T, 3)
+  KALMAN_VECTOR(Control, T, 6)
 
   //! Acceleration in x-direction
   static constexpr size_t ACC_X = 0;
@@ -61,6 +62,13 @@ public:
   static constexpr size_t ACC_Y = 1;
   //! Acceleration in z-direction
   static constexpr size_t ACC_Z = 2;
+
+  //! Angular velocity in x-direction
+  static constexpr size_t ANGULAR_VEL_X = 3;
+  //! Angular velocity in y-direction
+  static constexpr size_t ANGULAR_VEL_Y = 4;
+  //! Angular velocity in z-direction
+  static constexpr size_t ANGULAR_VEL_Z = 5;
 
   T acc_x() const
   {
@@ -75,6 +83,19 @@ public:
     return (*this)[ACC_Z];
   }
 
+  T angular_vel_x() const
+  {
+    return (*this)[ANGULAR_VEL_X];
+  }
+  T angular_vel_y() const
+  {
+    return (*this)[ANGULAR_VEL_Y];
+  }
+  T angular_vel_z() const
+  {
+    return (*this)[ANGULAR_VEL_Z];
+  }
+
   T& acc_x()
   {
     return (*this)[ACC_X];
@@ -86,6 +107,19 @@ public:
   T& acc_z()
   {
     return (*this)[ACC_Z];
+  }
+
+  T& angular_vel_x()
+  {
+    return (*this)[ANGULAR_VEL_X];
+  }
+  T& angular_vel_y()
+  {
+    return (*this)[ANGULAR_VEL_Y];
+  }
+  T& angular_vel_z()
+  {
+    return (*this)[ANGULAR_VEL_Z];
   }
 };
 
@@ -101,9 +135,27 @@ public:
   S f(const S& x, const C& u) const override
   {
     S x_;
-    x_.vel_x() = x.vel_x() + u.acc_x();
-    x_.vel_y() = x.vel_y() + u.acc_y();
-    x_.vel_z() = x.vel_z() + u.acc_z();
+
+    Eigen::Quaternion<T> q_x_ = Eigen::Quaternion<T>(0, x.vel_x(), x.vel_y(), x.vel_z());
+
+    auto angular_velocity = Eigen::Vector3d(u.angular_vel_x(), u.angular_vel_y(), u.angular_vel_z());
+    T norm = angular_velocity.norm();
+    T angle_half = norm / 2;
+
+    if (norm > 1e-6) { // avoid division by zero
+      Eigen::Quaternion<T> q_delta(cos(angle_half), sin(angle_half) * u.angular_vel_x() / norm,
+                                  sin(angle_half) * u.angular_vel_y() / norm,
+                                  sin(angle_half) * u.angular_vel_z() / norm);
+
+      auto rotated_velocity = q_delta.conjugate() * q_x_ * q_delta;
+      x_.vel_x() = rotated_velocity.x();
+      x_.vel_y() = rotated_velocity.y();
+      x_.vel_z() = rotated_velocity.z();
+    }
+
+    x_.vel_x() += u.acc_x();
+    x_.vel_y() += u.acc_y();
+    x_.vel_z() += u.acc_z();
     return x_;
   }
 };
