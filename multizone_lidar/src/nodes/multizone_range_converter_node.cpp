@@ -36,6 +36,7 @@ void MultizoneRangeConverterNode::multizoneRangeCallback(const multizone_lidar_m
 {
   sensor_msgs::PointCloud2 pointcloud;
   pointcloud.header = msg->header;
+  pointcloud.header.stamp = ros::Time::now();
   MultizoneLidarConverter::convertToPointCloud2(msg, pointcloud);
 
   sensor_msgs::Range range;

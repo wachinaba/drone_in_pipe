@@ -77,12 +77,16 @@ private:
       return;
     }
 
-    if ((*minmax_timestamp.second)->header.stamp.toSec() - (*minmax_timestamp.first)->header.stamp.toSec() >
-        delay_threshold_)
+    auto diffence = (*minmax_timestamp.second)->header.stamp.toSec() - (*minmax_timestamp.first)->header.stamp.toSec();
+
+    if (diffence > delay_threshold_)
     {
-      ROS_FATAL_STREAM("Timestamps of pointclouds differ by more than " << delay_threshold_ << " seconds");
+      ROS_FATAL_STREAM("The difference of timestamps of pointclouds :" << diffence << " secs, more than " << delay_threshold_ << " seconds, skip merging");
       return;
     }
+
+    // calc mean timestamp
+    ros::Time mean_timestamp = (*minmax_timestamp.first)->header.stamp + ros::Duration(diffence / 2);
 
     // Merge pointclouds
     sensor_msgs::PointCloud2 merged_pointcloud;
@@ -92,6 +96,7 @@ private:
       merged_pointcloud.data.insert(merged_pointcloud.data.end(), pointcloud->data.begin(), pointcloud->data.end());
     }
     merged_pointcloud.header = (*minmax_timestamp.first)->header;
+    merged_pointcloud.header.stamp = mean_timestamp;
     merged_pointcloud.height = 1;
     merged_pointcloud.row_step = merged_pointcloud.width * merged_pointcloud.point_step;
 
