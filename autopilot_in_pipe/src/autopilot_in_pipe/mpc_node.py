@@ -205,8 +205,8 @@ class QuadcopterMPC:
         self.mpc = do_mpc.controller.MPC(self.model)
 
         setup_mpc = {
-            "n_horizon": 20,
-            "t_step": 0.04,
+            "n_horizon": 25,
+            "t_step": 1 / 15, 
             "n_robust": 0,
             "store_full_solution": True,
             "suppress_ipopt_output": True,
@@ -222,23 +222,23 @@ class QuadcopterMPC:
             for k in range(self.mpc.settings.n_horizon + 1):
                 self.tvp_template["_tvp", k, "target_pos_x"] = 0
                 self.tvp_template["_tvp", k, "target_pos_y"] = 0
-                self.tvp_template["_tvp", k, "target_pos_z"] = 0
-                self.tvp_template["_tvp", k, "target_yaw"] = 0.3
+                self.tvp_template["_tvp", k, "target_pos_z"] = -0.1
+                self.tvp_template["_tvp", k, "target_yaw"] = 0
             return self.tvp_template
 
         self.mpc.set_tvp_fun(tvp_fun)
 
         # Define the objective function
         lterm = (
-            4
+            6
             * (
                 (self.model.x["pos_x"] - self.model.tvp["target_pos_x"]) ** 2
                 + (self.model.x["pos_y"] - self.model.tvp["target_pos_y"]) ** 2
-                + (self.model.x["pos_z"] - self.model.tvp["target_pos_z"]) ** 2
+                + 0.7 * (self.model.x["pos_z"] - self.model.tvp["target_pos_z"]) ** 2
             )
             + 1 * (self.vel_x**2 + self.vel_y**2 + self.vel_z**2)
             + 2 * (self.model.x["yaw"] - self.model.tvp["target_yaw"]) ** 2
-            + 0.2 * (self.ang_vel_x**2 + self.ang_vel_y**2 + self.ang_vel_z**2)
+            + 0.2 * (self.ang_vel_x**2 + self.ang_vel_y**2 + 2 * self.ang_vel_z**2)
         )
 
         self.mpc.set_objective(lterm=lterm, mterm=lterm)
@@ -303,7 +303,6 @@ class MPCNode:
                 self.pose.pose.orientation.w,
             ]
         ).as_euler("ZYX")
-        rospy.logerr(f"orientation: {self.orientation}")
         self.orientation[0] = pipe_orientation[0]
 
     def velocity_callback(self, msg: TwistStamped) -> None:
@@ -321,6 +320,33 @@ class MPCNode:
         ).as_euler("ZYX")
         self.orientation[1] = body_orientation[1]
         self.orientation[2] = body_orientation[2]
+
+    def get_target_attitude(self, time_horizon: int) -> AttitudeTarget:
+        target_attitude = np.zeros(4) # body_rate, thrust
+
+        # get optimal angular velocity
+        target_attitude[0] = self.quadcopter_mpc.mpc.data.prediction(
+            ("_x", "ang_vel_x", 0)
+        )[0, time_horizon, 0]
+        target_attitude[1] = self.quadcopter_mpc.mpc.data.prediction(
+            ("_x", "ang_vel_y", 0)
+        )[0, time_horizon, 0]
+        target_attitude[2] = self.quadcopter_mpc.mpc.data.prediction(
+            ("_x", "ang_vel_z", 0)
+        )[0, time_horizon, 0]
+
+        # get optimal thrust
+        relative_thrust = ((
+            self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_0", 0))[0, time_horizon, 0]
+            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_1", 0))[0, time_horizon, 0]
+            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_2", 0))[0, time_horizon, 0]
+            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_3", 0))[0, time_horizon, 0]
+        ) / self.max_thrust)
+
+        # linearize thrust
+        target_attitude[3] = relative_thrust ** 0.5
+
+        return target_attitude
 
     def step(self) -> None:
         # Set initial state
@@ -353,27 +379,14 @@ class MPCNode:
         self.target_attitude = AttitudeTarget()
         self.target_attitude.header.stamp = rospy.Time.now()
 
-        time_horizon = 2
+        target_attitudes = np.array([self.get_target_attitude(1), self.get_target_attitude(2)])
+        body_rate_weight = np.array([0.95, 0.05])
+        thrust_weight = np.array([0.95, 0.05])
 
-        self.target_attitude.body_rate.x = self.quadcopter_mpc.mpc.data.prediction(
-            ("_x", "ang_vel_x", 0)
-        )[0, time_horizon, 0]
-        self.target_attitude.body_rate.y = self.quadcopter_mpc.mpc.data.prediction(
-            ("_x", "ang_vel_y", 0)
-        )[0, time_horizon, 0]
-        self.target_attitude.body_rate.z = self.quadcopter_mpc.mpc.data.prediction(
-            ("_x", "ang_vel_z", 0)
-        )[0, time_horizon, 0]
-
-        # get optimal thrust
-        relative_thrust = ((
-            self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_0", 0))[0, time_horizon, 0]
-            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_1", 0))[0, time_horizon, 0]
-            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_2", 0))[0, time_horizon, 0]
-            + self.quadcopter_mpc.mpc.data.prediction(("_u", "thrust_3", 0))[0, time_horizon, 0]
-        ) / self.max_thrust)
-
-        self.target_attitude.thrust = relative_thrust ** 0.5
+        self.target_attitude.body_rate.x = np.dot(target_attitudes[:, 0], body_rate_weight)
+        self.target_attitude.body_rate.y = np.dot(target_attitudes[:, 1], body_rate_weight)
+        self.target_attitude.body_rate.z = np.dot(target_attitudes[:, 2], body_rate_weight)
+        self.target_attitude.thrust = np.dot(target_attitudes[:, 3], thrust_weight)
 
         self.target_attitude.type_mask = AttitudeTarget.IGNORE_ATTITUDE
 
@@ -383,7 +396,7 @@ class MPCNode:
 if __name__ == "__main__":
     rospy.init_node("mpc_node", anonymous=True)
 
-    rate = Rate(20)  # mpc rate
+    rate = Rate(30)  # mpc rate
     mpc_node = MPCNode()
 
     while not rospy.is_shutdown():
