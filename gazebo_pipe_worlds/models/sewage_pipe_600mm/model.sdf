@@ -1,0 +1,39 @@
+
+<?xml version='1.0'?>
+<sdf version="1.6">
+    <model name="sewage_pipe_600mm">
+      <pose>0 0 0 0 0 0</pose>
+      <static>true</static>
+      <link name="sewage_pipe_link">
+        <collision name="collision_pipe">
+          <geometry>
+            <mesh>
+                <uri>model://sewage_pipe_600mm/meshes/sewage_pipe_600mm.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual_pipe">
+          <geometry>
+            <mesh>
+                <uri>model://sewage_pipe_600mm/meshes/sewage_pipe_600mm.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+          <script>
+            <uri>model://sewage_pipe_600mm/materials/scripts</uri>
+            <uri>model://sewage_pipe_600mm/materials/textures</uri>
+            <name>pipe/concrete</name>
+          </script>
+        </material>
+        </visual>
+      </link>
+    </model>
+</sdf>

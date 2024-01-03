@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<sdf version="1.5">
+  <world name="default">
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://sewage_pipe_600mm</uri>
+      <static>true</static>
+      <pose>-6 0 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>
