@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="serial_port" default="/dev/ttyUSB1"/>
-  <arg name="server_ip" default="192.168.1.100"/>
+  <arg name="server_ip" default="192.168.1.35"/>
   <arg name="local_ip" default="192.168.1.237"/>
   <arg name="multicast_ip" default="224.0.0.1"/>
 
@@ -10,24 +10,14 @@
     <arg name="server" value="$(arg server_ip)"/>
     <arg name="local" value="$(arg local_ip)"/>
     <arg name="multicast_group" value="$(arg multicast_ip)"/>
+    <arg name="pub_residuals" value="true"/>
   </include>
-
-  <!-- rosserial node -->
-  <node name="rosserial_node" pkg="rosserial_python" type="serial_node.py" output="screen">
-    <param name="baud" value="115200"/>
-    <param name="port" value="$(arg serial_port)"/>
-  </node>
-
-  <!-- tfluna node -->
-  <node pkg="tfmini_ros" type="tfmini_ros_node" name="tfmini_ros_node">
-    <param name="serial_port" type="string" value="/dev/ttyUSB0" />
-    <param name="baud_rate" type="int" value="115200" />
-    <remap from="/tfmini_ros_node/TFmini" to="/range" />
-  </node>
 
   <!-- drone_sensor_analyzer node -->
   <node name="mocap_optical_flow_to_csv" pkg="drone_sensor_analyzer" type="mocap_optical_flow_to_csv.py" output="screen">
-    <remap from="/pose" to="/tester/world"/>
+    <remap from="/pose" to="/drone/world"/>
+    <remap from="/range" to="/multi_zone_lidar_bottom/range"/>
+    <remap from="/optical_flow_delta" to="/optical_flow_delta/bottom"/>
     <param name="csv_file" value="/home/wachinaba/flow"/>
   </node>
 
