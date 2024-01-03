@@ -1195,7 +1195,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.09</min>
+            <min>0.01</min>
             <max>3.0</max>
             <resolution>0.001</resolution>
           </range>
@@ -1208,7 +1208,7 @@
         <plugin name="multi_zone_lidar_left_plugin" filename="libgazebo_ros_block_laser.so">
           <topicName>multi_zone_lidar_left/scan_pc1</topicName>
           <frameName>multi_zone_lidar_left_link</frameName>
-          <min_range>0.09</min_range>
+          <min_range>0.01</min_range>
           <max_range>3.0</max_range>
           <updateRate>15</updateRate>
           <gaussianNoise>0.0015</gaussianNoise>
@@ -1258,7 +1258,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.09</min>
+            <min>0.01</min>
             <max>3.0</max>
             <resolution>0.001</resolution>
           </range>
@@ -1271,7 +1271,7 @@
         <plugin name="multi_zone_lidar_right_plugin" filename="libgazebo_ros_block_laser.so">
           <topicName>multi_zone_lidar_right/scan_pc1</topicName>
           <frameName>multi_zone_lidar_right_link</frameName>
-          <min_range>0.09</min_range>
+          <min_range>0.01</min_range>
           <max_range>3.0</max_range>
           <updateRate>15</updateRate>
           <gaussianNoise>0.0015</gaussianNoise>
@@ -1322,7 +1322,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.09</min>
+            <min>0.01</min>
             <max>3.0</max>
             <resolution>0.001</resolution>
           </range>
@@ -1336,7 +1336,7 @@
           filename="libgazebo_ros_block_laser.so">
           <topicName>multi_zone_lidar_front_left/scan_pc1</topicName>
           <frameName>multi_zone_lidar_front_left_link</frameName>
-          <min_range>0.09</min_range>
+          <min_range>0.01</min_range>
           <max_range>3.0</max_range>
           <updateRate>15</updateRate>
           <gaussianNoise>0.0015</gaussianNoise>
@@ -1387,7 +1387,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.09</min>
+            <min>0.01</min>
             <max>3.0</max>
             <resolution>0.001</resolution>
           </range>
@@ -1401,7 +1401,7 @@
           filename="libgazebo_ros_block_laser.so">
           <topicName>multi_zone_lidar_front_right/scan_pc1</topicName>
           <frameName>multi_zone_lidar_front_right_link</frameName>
-          <min_range>0.09</min_range>
+          <min_range>0.01</min_range>
           <max_range>3.0</max_range>
           <updateRate>15</updateRate>
           <gaussianNoise>0.0015</gaussianNoise>
@@ -1452,7 +1452,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.09</min>
+            <min>0.01</min>
             <max>3.0</max>
             <resolution>0.001</resolution>
           </range>
@@ -1466,7 +1466,7 @@
           filename="libgazebo_ros_block_laser.so">
           <topicName>multi_zone_lidar_rear_left/scan_pc1</topicName>
           <frameName>multi_zone_lidar_rear_left_link</frameName>
-          <min_range>0.09</min_range>
+          <min_range>0.01</min_range>
           <max_range>3.0</max_range>
           <updateRate>15</updateRate>
           <gaussianNoise>0.0015</gaussianNoise>
@@ -1518,7 +1518,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.09</min>
+            <min>0.01</min>
             <max>3.0</max>
             <resolution>0.001</resolution>
           </range>
@@ -1532,7 +1532,7 @@
           filename="libgazebo_ros_block_laser.so">
           <topicName>multi_zone_lidar_rear_right/scan_pc1</topicName>
           <frameName>multi_zone_lidar_rear_right_link</frameName>
-          <min_range>0.09</min_range>
+          <min_range>0.01</min_range>
           <max_range>3.0</max_range>
           <updateRate>15</updateRate>
           <gaussianNoise>0.0015</gaussianNoise>
@@ -1583,7 +1583,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.09</min>
+            <min>0.05</min>
             <max>3.0</max>
             <resolution>0.001</resolution>
           </range>
@@ -1597,7 +1597,7 @@
           filename="libgazebo_ros_block_laser.so">
           <topicName>multi_zone_lidar_bottom/scan_pc1</topicName>
           <frameName>multi_zone_lidar_bottom_link</frameName>
-          <min_range>0.09</min_range>
+          <min_range>0.01</min_range>
           <max_range>3.0</max_range>
           <updateRate>15</updateRate>
           <gaussianNoise>0.0015</gaussianNoise>
@@ -1648,7 +1648,7 @@
             </vertical>
           </scan>
           <range>
-            <min>0.09</min>
+            <min>0.01</min>
             <max>3.0</max>
             <resolution>0.001</resolution>
           </range>
@@ -1662,7 +1662,7 @@
           filename="libgazebo_ros_block_laser.so">
           <topicName>multi_zone_lidar_top/scan_pc1</topicName>
           <frameName>multi_zone_lidar_top_link</frameName>
-          <min_range>0.09</min_range>
+          <min_range>0.01</min_range>
           <max_range>3.0</max_range>
           <updateRate>15</updateRate>
           <gaussianNoise>0.0015</gaussianNoise>
