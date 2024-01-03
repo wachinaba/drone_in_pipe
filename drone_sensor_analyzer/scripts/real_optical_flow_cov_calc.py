@@ -8,7 +8,6 @@ import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 
 import matplotlib.pyplot as plt
-from torch import norm
 
 
 def main(args):
@@ -24,7 +23,7 @@ def main(args):
     df = df[df["mocap_v"] != 0]
 
     # remove zero delta
-    df = df[df["flow_v"] != 0]
+    df = df[df["flow_p"] != 0]
 
     print(df.head())
 
