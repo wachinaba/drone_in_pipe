@@ -12,7 +12,8 @@
   <!-- vehicle model and world -->
   <arg name="est" default="ekf2" />
   <arg name="vehicle" default="adrien" />
-  <arg name="world" default="$(find gazebo_pipe_worlds)/worlds/sewage_pipe_600mm.world" />
+  <arg name="pipe" default="sewage_pipe_03" />
+  <arg name="world" default="$(find gazebo_pipe_worlds)/worlds/$(arg pipe).world" />
   <arg name="sdf" default="$(find px4_gazebo_sim)/models/adrien/model.sdf" />
   <env name="PX4_SIM_MODEL" value="gazebo-classic_$(arg vehicle)" />
 
