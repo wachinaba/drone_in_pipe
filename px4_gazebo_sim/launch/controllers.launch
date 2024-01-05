@@ -4,6 +4,7 @@
     
     <remap from="/global_pose" to="/localizer/pose" />
     <remap from="/global_velocity" to="/localizer/velocity" />
+    <remap from="/local_velocity" to="/move_ukf/velocity" />
     <!--
     <remap from="/global_pose" to="/trackers/base_link/pose" />
     <remap from="/global_velocity" to="/trackers/base_link/twist" />
