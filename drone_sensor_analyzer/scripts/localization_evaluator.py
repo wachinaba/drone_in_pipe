@@ -133,27 +133,68 @@ if __name__ == '__main__':
 
     print("max absolute error:", np.max(np.abs(transformed_points - target_points)[:, 1:]))
 
-    # Y-tグラフ, Z-tグラフを出力
-    import matplotlib.pyplot as plt
-    plt.figure(figsize=(12, 4))
-    plt.subplot(3, 1, 1)
-    plt.plot(synced_data[:, 0], synced_data[:, 2], label="estimated (Y)")
-    plt.plot(synced_data[:, 0], transformed_points[:, 1], label="actual (Y)")
-
-    plt.subplot(3, 1, 2)
-    plt.plot(synced_data[:, 0], synced_data[:, 3], label="estimated (Z)")
-    plt.plot(synced_data[:, 0], transformed_points[:, 2], label="actual (Z)")
-
-    plt.subplot(3, 1, 3)
-    plt.plot(synced_data[:, 0], orientation_pose_data[:, 1], label="estimated (Yaw)")
-    plt.plot(synced_data[:, 0], orientation_pose_data[:, 2], label="estimated (Pitch)")
-    plt.plot(synced_data[:, 0], orientation_pose_data[:, 3], label="estimated (Roll)")
-
-    plt.legend()
-    
-    plt.show()
 
     # 3D点群を出力(タイムスタンプ + ソース + ターゲット + 変換後 + オリエンテーション)
     output_points = np.hstack((synced_data[:, 0].reshape(-1, 1), source_points, target_points, transformed_points, orientation_pose_data[:, 1:]))
 
     np.savetxt(f"{args.bag_file}_output.csv", output_points, delimiter=",")  # Save as CSV file
+
+    # Y-tグラフ, Z-tグラフを出力
+    import matplotlib.pyplot as plt
+    fig = plt.figure(figsize=(12, 8))  # Create a figure object with size 12x8 inches
+
+    # Set font size for all plots
+    plt.rcParams["font.size"] = 16
+
+    # Calculate time values from synced_data and adjust them
+    time = synced_data[:, 0] - 55
+
+    # Define major and minor ticks for the x-axis
+    major_ticks = np.arange(0, 11, 1)
+    minor_ticks = np.arange(0, 10.1, 0.1)
+
+    # First subplot: Position
+    ax1 = fig.add_subplot(3, 1, 1)
+    ax1.plot(time, synced_data[:, 2], label="estimated (Y)", color="green")
+    ax1.plot(time, transformed_points[:, 1], label="actual (Y)", color="orange")
+    ax1.plot(time, synced_data[:, 3], label="estimated (Z)", color="blue")
+    ax1.plot(time, transformed_points[:, 2], label="actual (Z)", color="magenta")
+    ax1.set_xlim([0, 10])
+    ax1.set_ylim([-0.25, 0.25])
+    ax1.set_xticks(major_ticks)
+    ax1.set_xticks(minor_ticks, minor=True)
+    ax1.set_ylabel("Position [m]")
+    ax1.legend(loc='upper right')
+    ax1.grid()
+    ax1.grid(which='minor', alpha=0.2)
+
+    # Second subplot: Error
+    ax2 = fig.add_subplot(3, 1, 2)
+    ax2.plot(time, transformed_points[:, 1] - synced_data[:, 2], label="Y error", color="green")
+    ax2.plot(time, transformed_points[:, 2] - synced_data[:, 3], label="Z error", color="blue")
+    ax2.set_xlim([0, 10])
+    ax2.set_ylim([-0.05, 0.05])
+    ax2.set_xticks(major_ticks)
+    ax2.set_xticks(minor_ticks, minor=True)
+    ax2.set_ylabel("Error [m]")
+    ax2.legend(loc='upper right')
+    ax2.grid()
+    ax2.grid(which='minor', alpha=0.2)
+
+    # Third subplot: Orientation
+    ax3 = fig.add_subplot(3, 1, 3)
+    ax3.plot(time, orientation_pose_data[:, 1], label="estimated (Yaw)")
+    ax3.set_xlim([0, 10])
+    ax3.set_ylim([-45, 45])
+    ax3.set_xticks(major_ticks)
+    ax3.set_xticks(minor_ticks, minor=True)
+    ax3.set_ylabel("Orientation [deg]")
+    ax3.legend(loc='upper right')
+    ax3.grid()
+    ax3.grid(which='minor', alpha=0.2)
+
+    # Set a common x-label for all subplots
+    plt.xlabel("Time [s]")
+
+    plt.tight_layout()  # Adjust subplots to fit into figure area.
+    plt.show()  # Display the plots
