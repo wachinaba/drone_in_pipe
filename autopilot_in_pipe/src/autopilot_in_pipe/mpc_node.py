@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import rospy
 from rospy import Rate, Subscriber, Publisher
-from geometry_msgs.msg import PoseStamped, TwistStamped
+from geometry_msgs.msg import PoseStamped, TwistStamped, TwistWithCovarianceStamped
 from sensor_msgs.msg import Imu
 from mavros_msgs.msg import AttitudeTarget
 from scipy.spatial.transform import Rotation
@@ -204,9 +204,11 @@ class QuadcopterMPC:
         # Define the controller
         self.mpc = do_mpc.controller.MPC(self.model)
 
+        time_step = 1 / 15
+
         setup_mpc = {
             "n_horizon": 25,
-            "t_step": 1 / 15, 
+            "t_step": time_step,
             "n_robust": 0,
             "store_full_solution": True,
             "suppress_ipopt_output": True,
@@ -220,7 +222,7 @@ class QuadcopterMPC:
 
         def tvp_fun(t_now):
             for k in range(self.mpc.settings.n_horizon + 1):
-                self.tvp_template["_tvp", k, "target_pos_x"] = 0
+                self.tvp_template["_tvp", k, "target_pos_x"] = 0.1
                 self.tvp_template["_tvp", k, "target_pos_y"] = 0
                 self.tvp_template["_tvp", k, "target_pos_z"] = -0.1
                 self.tvp_template["_tvp", k, "target_yaw"] = 0
@@ -232,11 +234,11 @@ class QuadcopterMPC:
         lterm = (
             6
             * (
-                (self.model.x["pos_x"] - self.model.tvp["target_pos_x"]) ** 2
+                1.0 * (self.model.x["pos_x"] - self.model.tvp["target_pos_x"]) ** 2
                 + (self.model.x["pos_y"] - self.model.tvp["target_pos_y"]) ** 2
                 + 0.7 * (self.model.x["pos_z"] - self.model.tvp["target_pos_z"]) ** 2
             )
-            + 1 * (self.vel_x**2 + self.vel_y**2 + self.vel_z**2)
+            + 1 * ((self.vel_x)**2 + self.vel_y**2 + self.vel_z**2)
             + 2 * (self.model.x["yaw"] - self.model.tvp["target_yaw"]) ** 2
             + 0.2 * (self.ang_vel_x**2 + self.ang_vel_y**2 + 2 * self.ang_vel_z**2)
         )
@@ -272,6 +274,7 @@ class MPCNode:
     def __init__(self) -> None:
         self.pose = PoseStamped()
         self.velocity = TwistStamped()
+        self.local_velocity = TwistStamped()
         self.imu = Imu()
         self.orientation = np.zeros(3)  # yaw, pitch, roll
         self.u0 = np.zeros(4)
@@ -287,6 +290,11 @@ class MPCNode:
             "/global_velocity",
             TwistStamped,
             self.velocity_callback,
+        )
+        self.local_vel_sub = Subscriber(
+            "/local_velocity",
+            TwistWithCovarianceStamped,
+            self.local_velocity_callback,
         )
         self.imu_sub = Subscriber("/imu", Imu, self.imu_callback)
         self.target_attitude_pub = Publisher(
@@ -307,6 +315,28 @@ class MPCNode:
 
     def velocity_callback(self, msg: TwistStamped) -> None:
         self.velocity = msg
+
+    def local_velocity_callback(self, msg: TwistStamped) -> None:
+        self.local_velocity = msg
+        local_velocity = np.array(
+            [
+                self.local_velocity.twist.twist.linear.x,
+                self.local_velocity.twist.twist.linear.y,
+                self.local_velocity.twist.twist.linear.z,
+            ]
+        )
+        
+        # nan check
+        if np.isnan(local_velocity).any():
+            global_velocity = np.zeros(3)
+            return
+
+        global_from_local = Rotation.from_euler("ZYX", self.orientation)
+        global_velocity = global_from_local.apply(local_velocity)
+
+        # extract only x velocity
+        # self.velocity.twist.linear.x = global_velocity[0] ## debug
+
 
     def imu_callback(self, msg: Imu) -> None:
         self.imu = msg
