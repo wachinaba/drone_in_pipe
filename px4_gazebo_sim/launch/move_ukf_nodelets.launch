@@ -80,6 +80,7 @@
     <remap from="integrated_flow" to="/move_ukf/integrated_flow" />
     <remap from="body_accel" to="/move_ukf/body_accel" />
     <remap from="body_angular_velocity" to="/move_ukf/body_angular_velocity" />
+    <remap from="velocity" to="/move_ukf/velocity" />
     <param name="process_noise_variance" value="0.001" />
     <param name="ukf_alpha" value="0.03" />
     <param name="ukf_beta" value="2.0" />
