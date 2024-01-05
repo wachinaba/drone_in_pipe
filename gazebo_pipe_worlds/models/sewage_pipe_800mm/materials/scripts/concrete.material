@@ -13,7 +13,7 @@ material pipe/concrete
 				texture concrete.jpg
 				filtering anistropic
 				max_anisotropy 16
-				scale 3 3
+				scale 1 1
 			}
 		}
 	}
